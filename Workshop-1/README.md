@@ -14,9 +14,7 @@ Administrators can create, edit, and delete data, while users can search and fil
 
 ## 🧠 Business Model Canvas
 
-The **Business Model Canvas** describes the fundamental structure of the project, including partners, activities, resources, value propositions, and more.
-
-📄 **File:** [`Business_Model_Canvas.pdf`](./Business_Model_Canvas.pdf)
+The **Canvas Business Model** describes the fundamental structure of the project, including partners, activities, resources, value propositions, and more.
 
 ### Canvas Sections
 1. **Key Partners** – Strategic alliances that support the system’s functionality and academic value.  
@@ -48,3 +46,4 @@ The **User Stories** describe the system requirements based on user roles:
 | US05 | Admin / User | Home page and access flow for administrator and user | Provide quick and role-based access to system features |
 
 Each story includes acceptance criteria for validation.
+
