@@ -16,7 +16,7 @@ Administrators can create, edit, and delete data, while users can search and fil
 
 The **Business Model Canvas** describes the fundamental structure of the project, including partners, activities, resources, value propositions, and more.
 
-📄 **File:** [`Business_Model_Canvas.md`](./Business_Model_Canvas.md)
+📄 **File:** [`Business_Model_Canvas.pdf`](./Business_Model_Canvas.pdf)
 
 ### Canvas Sections
 1. **Key Partners** – Strategic alliances that support the system’s functionality and academic value.  
@@ -37,8 +37,6 @@ The **User Stories** describe the system requirements based on user roles:
 - **Administrator** – Manages teachers and subjects (CRUD).  
 - **User** – Searches and filters academic data.
 
-📄 **File:** [`User_Stories.md`](./User_Stories.md)
-
 ### Implemented Stories (examples)
 | ID | Role | Story | Purpose |
 |----|------|--------|----------|
@@ -46,4 +44,5 @@ The **User Stories** describe the system requirements based on user roles:
 | US02 | Admin | Add new subjects | Expand the academic offer available on the platform |
 
 Each story follows the **INVEST** criteria and includes acceptance criteria for validation.
+
 
