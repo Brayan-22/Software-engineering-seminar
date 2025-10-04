@@ -37,12 +37,14 @@ The **User Stories** describe the system requirements based on user roles:
 - **Administrator** – Manages teachers and subjects (CRUD).  
 - **User** – Searches and filters academic data.
 
-### Implemented Stories (examples)
+### Implemented Stories
+
 | ID | Role | Story | Purpose |
 |----|------|--------|----------|
 | US01 | Admin | Register new professors | Keep the teacher database up to date |
 | US02 | Admin | Add new subjects | Expand the academic offer available on the platform |
+| US03 | Admin | Link professor to one or multiple courses | Ensure accurate relationships between teachers and courses |
+| US04 | User | Search courses by professor and professors by course | Allow users to find and explore academic information easily |
+| US05 | Admin / User | Home page and access flow for administrator and user | Provide quick and role-based access to system features |
 
-Each story follows the **INVEST** criteria and includes acceptance criteria for validation.
-
-
+Each story includes acceptance criteria for validation.
