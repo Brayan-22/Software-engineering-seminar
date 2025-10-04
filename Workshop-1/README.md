@@ -1,10 +1,10 @@
-# 📚 Academic Course Finder – Project Documentation
+# Academic Course Finder – Project Documentation
 
 This repository contains the documentation and supporting materials for the **Academic Course Finder Web Application**, a system that allows administrators to manage teachers and courses (CRUD operations) and lets users search for academic information without authentication.
 
 ---
 
-## 🧩 Project Overview
+## Project Overview
 
 **Goal:**  
 Develop a web application that facilitates access to academic information about teachers and courses.  
@@ -12,7 +12,7 @@ Administrators can create, edit, and delete data, while users can search and fil
 
 ---
 
-## 🧠 Business Model Canvas
+## Business Model Canvas
 
 The **Canvas Business Model** describes the fundamental structure of the project, including partners, activities, resources, value propositions, and more.
 
@@ -29,7 +29,7 @@ The **Canvas Business Model** describes the fundamental structure of the project
 
 ---
 
-## 🧾 User Stories
+## User Stories
 
 The **User Stories** describe the system requirements based on user roles:  
 - **Administrator** – Manages teachers and subjects (CRUD).  
@@ -46,4 +46,5 @@ The **User Stories** describe the system requirements based on user roles:
 | US05 | Admin / User | Home page and access flow for administrator and user | Provide quick and role-based access to system features |
 
 Each story includes acceptance criteria for validation.
+
 
