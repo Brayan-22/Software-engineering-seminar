@@ -28,6 +28,11 @@ The **Canvas Business Model** describes the fundamental structure of the project
 9. **Revenue Streams** – Potential sources of income or sustainability.
 
 ---
+### References
+The structure and conceptual framework for this Business Model Canvas were inspired by examples and methodologies from the following source:  
+> Corporate Finance Institute (CFI). *Business Model Canvas Examples*.  
+> Retrieved from: [https://corporatefinanceinstitute.com/resources/management/business-model-canvas-examples/](https://corporatefinanceinstitute.com/resources/management/business-model-canvas-examples/)
+
 
 ## User Stories
 
@@ -46,5 +51,6 @@ The **User Stories** describe the system requirements based on user roles:
 | US05 | Admin / User | Home page and access flow for administrator and user | Provide quick and role-based access to system features |
 
 Each story includes acceptance criteria for validation.
+
 
 
