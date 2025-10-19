@@ -243,33 +243,6 @@ Based on the design diagrams, the following technology stack is proposed:
 
 ---
 
-## Architecture Patterns
-
-The system follows several software engineering best practices:
-
-1. **Layered Architecture**
-   - Clear separation between Presentation, Business, and Data layers
-   - Promotes maintainability and testability
-
-2. **Repository Pattern**
-   - Abstracts data access logic
-   - Enables easier database migrations and testing
-
-3. **Service Layer Pattern**
-   - Encapsulates business logic
-   - Reusable across different controllers
-
-4. **MVC Pattern**
-   - Controllers handle routing
-   - Services contain business logic
-   - Repositories manage data access
-
-5. **Services Approach**
-   - Separate Auth service for security concerns
-   - Can be scaled independently
-
----
-
 ## Project Team
 
 **Universidad Distrital Francisco José de Caldas**
