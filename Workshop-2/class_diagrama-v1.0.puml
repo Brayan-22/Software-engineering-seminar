@@ -1,0 +1,193 @@
+@startuml
+title Class Diagram - Course Finder Platform
+
+' Configuración para flechas rectas y mejor organización
+skinparam linetype ortho
+skinparam classAttributeIconSize 0
+skinparam shadowing false
+skinparam nodesep 60
+skinparam ranksep 100
+
+' Controllers
+package "Controllers" #lightblue {
+
+  class ProfessorAuthController <<RequiresAuth>> {
+    +createProfessor(Professor): Response
+    +updateAll(id, professor: Professor): Response
+    +updatePartial(id, professor: Professor): Response
+    +delete(id): Response
+    +getAll(): List<Professor>
+    +getConnected(id): List<Course>
+  }
+
+  class CourseController <<RequiresAuth>> {
+    +createCourse(course: Course): Response
+    +updateAll(id, course: Course): Response
+    +updatePartial(id, course: Course): Response
+    +delete(id): Response
+    +getAll(): List<Course>
+    +getProfessorial(id): List<Professor>
+  }
+
+  class AssignmentController <<RequiresAuth>> {
+    +assignProfessorToCourse(profId: int, courseId: int): Response
+    +linkdegroupProfessorFromCourse(profId: int, courseId: int): Response
+    +getAllProfessorsForCourse(courseId: int): Response
+    +getAssignmentByGroup(groupId: int): ProfessorCourse
+  }
+
+  class DashboardController <<RequiresAuth>> {
+    +getOverview(): Dashboard
+    +getRecentActivity(limit: int): List<String>
+  }
+
+  class SearchController {
+    +searchByProfessor(name:name: String): List<Course>
+    +searchByCourseName(name: String): List<Course>
+    +advancedSearch(filters: Map): List<Result>
+  }
+
+  class AuthController {
+    +adminLogin(username: String, password: String): Response
+    +adminLogout(token: String): Response
+    +validateToken(token: String): bool
+  }
+}
+
+' Business Services
+package "Business Services" #lightyellow {
+
+  class Dashboard {
+    +getTotalId: Map<String,int>
+    +getRecentUpdates(limit: int): List<String>
+  }
+
+  class SearchService {
+    +searchByProfessor(name:name: String, partial: bool): List<Course>
+    +searchByCourse(name:name: String, partial: bool): List<Professor>
+  }
+
+  class ProfessorCourseManager {
+    +linkProfessorCourse(prof: Professor, course: Course): void
+    +unlinkProfessorCourse(prof: Professor, course: Course): void
+    +getProfessorsByCourse(course: int): List<Professor>
+    +getCoursesByProfessor(professor: int): List<Course>
+    +evaluateRoles(relationship: int, courseId: int): bool
+  }
+}
+
+' Authentication Service (separate)
+package "Authentication" #lavender {
+  class AuthService {
+    +authenticateAdmin(username: String, password: String): Admin
+    +generateToken(admin: Admin): String
+    +validateToken(token: String): bool
+  }
+}
+
+' Data Access
+package "Data Access" #pink {
+
+  interface ProfessorCourseRepository {
+    +save(pc: ProfessorCourse): ProfessorCourse
+    +existsById(professorAndCourseId: int, cid: int): bool
+    +deleteById(professorAndCourseId: int, cid: int): void
+  }
+
+  interface ProfessorRepository {
+    +save(p: Professor): Professor
+    +existsByEmail(DocumentByEmail: String, dec: String): bool
+    +findById(id: int): Professor
+  }
+
+  interface CourseRepository  {
+    +save(c: Course): Course
+    +existsByCodes(code: String): bool
+    +findById(id: int): Course
+  }
+}
+
+' Domain Model
+package "Domain Model" #lightgreen {
+
+  class Professor {
+    -id: int
+    -username: String
+    -name: String
+    -specialty: String
+    +getCourse(): List<Course>
+  }
+
+  class Course {
+    -id: int
+    -code: String
+    -name: String
+    -credits: int
+    -category: String
+    +getProfessor(): List<Professor>
+  }
+
+  class Admin {
+    -id: int
+    -username: String
+    -passwordHash: String
+    -email: String
+    +authenticate(): bool
+  }
+
+  class ProfessorCourse {
+    -professorId: int
+    -courseId: int
+    -groupId: String
+    -assignedAt: Date
+    -status: String
+  }
+}
+
+' Relationships between Controllers and Services
+ProfessorAuthController ..> ProfessorCourseManager
+ProfessorAuthController ..> ProfessorRepository
+
+CourseController ..> ProfessorCourseManager
+CourseController ..> CourseRepository
+
+AssignmentController ..> ProfessorCourseManager
+AssignmentController ..> ProfessorRepository
+AssignmentController ..> CourseRepository
+
+DashboardController ..> Dashboard
+
+SearchController ..> SearchService
+
+AuthController ..> AuthService
+
+' Relationships between Services and Repositories
+ProfessorCourseManager ..> ProfessorCourseRepository
+ProfessorCourseManager ..> ProfessorRepository
+ProfessorCourseManager ..> CourseRepository
+
+SearchService ..> ProfessorRepository
+SearchService ..> CourseRepository
+
+AuthService ..> Admin
+
+' Relationships between Repositories and Domain Model
+ProfessorRepository ..> Professor
+CourseRepository ..> Course
+ProfessorCourseRepository ..> ProfessorCourse
+
+' Relationships in Domain Model
+Professor "0..*" -- "0..*" Course
+(Professor, Course) .. ProfessorCourse
+
+' Hidden relationships to force layout order
+ProfessorAuthController -[hidden]down-> Dashboard
+Dashboard -[hidden]down-> ProfessorCourseRepository
+
+AuthController -[hidden]down-> AuthService
+AuthService -[hidden]down-> Admin
+
+ProfessorCourseRepository -[hidden]right-> Professor
+CourseRepository -[hidden]right-> Course
+ProfessorCourseRepository -[hidden]right-> ProfessorCourse
+@enduml

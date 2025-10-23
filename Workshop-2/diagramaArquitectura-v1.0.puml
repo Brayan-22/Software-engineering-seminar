@@ -1,0 +1,175 @@
+@startuml
+top to bottom direction
+skinparam shadowing false
+skinparam linetype ortho
+skinparam nodesep 60
+skinparam ranksep 80
+title Course Finder - Architecture Diagram
+
+
+skinparam component {
+  BackgroundColor White
+  BorderColor Black
+  FontSize 12
+}
+skinparam package {
+    BackgroundColor<<presentation>> LightBlue
+    BackgroundColor<<gateway>> Yellow
+    BackgroundColor<<auth>> LightYellow
+    BackgroundColor<<business>> LightGreen
+    BorderColor Black
+    FontSize 12
+    Style folder
+}
+skinparam rectangle {
+    BackgroundColor<<authService>> Gold
+    BackgroundColor<<businessService>> YellowGreen
+    BackgroundColor<<authRepo>> Orange
+    BackgroundColor<<businessRepo>> Green
+    BorderColor Black
+    FontSize 12
+    Style folder
+}
+skinparam database {
+    BackgroundColor<<authDb>> OrangeRed
+    BackgroundColor<<businessDb>> DarkGreen
+    BorderColor Black
+    FontSize 12
+}
+
+' ===== PRESENTATION & GATEWAY LAYER =====
+together {
+    package "Presentation Layer" as PresentationLayer <<presentation>> {
+        rectangle "React SPA" as ReactSPA <<presentation>> {
+            component [Search UI] as SearchUI
+            component [Admin Dashboard] as AdminDashboard
+            component [CRUD Forms] as CRUDForms
+        }
+    }
+
+    package "Gateway Layer" as GatewayLayer <<gateway>> {
+        component [Nginx] as Nginx
+    }
+}
+
+
+together {
+    package "Auth Service" as AuthService <<auth>> {
+        rectangle "Controllers" as AuthControllers {
+            component [AuthController] as AuthController
+        }
+        rectangle "Services" as AuthServices <<authService>> {
+            component [AuthService] as AuthServiceComp
+            component [TokenManager] as TokenManager
+        }
+        rectangle "Repositories" as AuthRepositories <<authRepo>> {
+            component [AdminRepository] as AdminRepository
+        }
+        database "professors_courses_db" as AuthDB <<authDb>>
+    }
+
+    package "Business Service" as BusinessService <<business>> {
+        rectangle "Controllers" as BusinessControllers {
+            component [AssignmentController] as AssignmentController
+            component [ProfessorController] as ProfessorController
+            component [CourseController] as CourseController
+            component [SearchController] as SearchController
+            component [DashboardController] as DashboardController
+        }
+
+        rectangle "Services" as BusinessServices <<businessService>> {
+            component [ProfessorCourseManager] as ProfessorCourseManager
+            component [SearchService] as SearchService
+            component [Dashboard] as Dashboard
+        }
+
+        rectangle "Repositories" as BusinessRepositories <<businessRepo>> {
+            component [ProfessorCourseRepository] as ProfessorCourseRepository
+            component [CourseRepository] as CourseRepository
+            component [ProfessorRepository] as ProfessorRepository
+        }
+
+        database "professors_courses_db" as BusinessDB <<businessDb>>
+    }
+}
+
+' ===== ORGANIZACIÓN HORIZONTAL =====
+' Auth a la izquierda, Business a la derecha
+AuthService -[hidden]right- BusinessService
+
+' Controllers en línea horizontal dentro de Business
+AssignmentController -[hidden]right- ProfessorController
+ProfessorController -[hidden]right- CourseController
+CourseController -[hidden]right- SearchController
+SearchController -[hidden]right- DashboardController
+
+' Services en línea horizontal
+ProfessorCourseManager -[hidden]right- SearchService
+
+' Repositories en línea horizontal
+ProfessorCourseRepository -[hidden]right- CourseRepository
+CourseRepository -[hidden]right- ProfessorRepository
+
+' ===== ALINEACIÓN VERTICAL =====
+' Auth Service
+AuthController -[hidden]down- AuthServiceComp
+AuthServiceComp -[hidden]down- AdminRepository
+TokenManager -[hidden]down- AdminRepository
+AdminRepository -[hidden]down- AuthDB
+
+' Business Service - alinear servicios debajo de controllers
+AssignmentController -[hidden]down- ProfessorCourseManager
+ProfessorController -[hidden]down- ProfessorCourseManager
+CourseController -[hidden]down- ProfessorCourseManager
+SearchController -[hidden]down- SearchService
+DashboardController -[hidden]down- Dashboard
+
+' Business Service - alinear repos debajo de services
+ProfessorCourseManager -[hidden]down- ProfessorCourseRepository
+ProfessorCourseManager -[hidden]down- CourseRepository
+SearchService -[hidden]down- CourseRepository
+SearchService -[hidden]down- ProfessorRepository
+
+' DB alineado debajo de repos
+ProfessorCourseRepository -[hidden]down- BusinessDB
+CourseRepository -[hidden]down- BusinessDB
+ProfessorRepository -[hidden]down- BusinessDB
+
+' ===== CONEXIONES REALES =====
+' Presentation -> Gateway
+ReactSPA --> Nginx
+
+' Gateway -> Controllers
+Nginx --> AuthController
+Nginx --> AssignmentController
+Nginx --> ProfessorController
+Nginx --> CourseController
+Nginx --> SearchController
+Nginx --> DashboardController
+
+' ===== AUTH SERVICE FLOW =====
+AuthController --> AuthServiceComp
+AuthServiceComp --> TokenManager
+AuthServiceComp --> AdminRepository
+AdminRepository --> AuthDB
+
+' ===== BUSINESS SERVICE FLOW =====
+' Controllers -> Services
+AssignmentController --> ProfessorCourseManager
+ProfessorController --> ProfessorCourseManager
+CourseController --> ProfessorCourseManager
+SearchController --> SearchService
+DashboardController --> Dashboard
+
+' Services -> Repositories
+ProfessorCourseManager --> ProfessorCourseRepository
+ProfessorCourseManager --> CourseRepository
+ProfessorCourseManager --> ProfessorRepository
+SearchService --> CourseRepository
+SearchService --> ProfessorRepository
+
+' Repositories -> Database
+ProfessorCourseRepository --> BusinessDB
+CourseRepository --> BusinessDB
+ProfessorRepository --> BusinessDB
+@enduml

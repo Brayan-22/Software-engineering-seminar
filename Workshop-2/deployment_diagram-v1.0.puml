@@ -1,0 +1,91 @@
+@startuml
+title Course Finder - Deployment Architecture
+
+' Dirección vertical
+top to bottom direction
+
+skinparam linetype ortho
+skinparam shadowing false
+skinparam packageStyle folder
+skinparam componentStyle rectangle
+
+skinparam actor {
+  BorderColor #888
+  BackgroundColor #lightblue
+}
+skinparam package {
+  BorderColor #888
+  BackgroundColor #white
+}
+skinparam cloud {
+  BorderColor #888
+  BackgroundColor #lightgreen
+}
+skinparam node {
+  BorderColor #888
+  BackgroundColor #wheat
+}
+skinparam database {
+  BorderColor #888
+  BackgroundColor #ffcccc
+}
+skinparam component {
+  BorderColor #888
+  BackgroundColor #f0f0f0
+}
+
+' Actores
+actor "Users\n(Public)" as Users #lightblue
+actor "Admins" as Admins #orange
+
+package "AWS Cloud" {
+
+  cloud "S3 Bucket" as S3 #lightgreen {
+    component "React App\n(HTML/CSS/JS)" as ReactApp
+  }
+
+  component "Static Hosting\n- CloudFront" as CloudFront #fffacd
+
+  ' --- Mantener S3 y CloudFront en la misma fila (arriba) ---
+  together {
+    S3 -[hidden]right-> CloudFront
+  }
+
+  package "VPC\n10.0.0.0/16" as VPC {
+
+    package "Public Subnet\n10.0.1.0/24"  #aliceblue {
+
+      node "EC2 Instance\n(Ubuntu)" as EC2 {
+
+        package "Docker Compose" {
+          component "Nginx\n:80" as Nginx
+          component "Auth Service\n:8081\n(Java)" as AuthService
+          component "Business Service\n:8082\n(Python)" as BusinessService
+
+          Nginx -down-> AuthService : "Proxy /auth/*"
+          Nginx -down-> BusinessService : "Proxy /api/*"
+        }
+      }
+    }
+
+    package "Private Subnet\n10.0.2.0/24"  #mistyrose {
+      database "RDS PostgreSQL\nprofessors_courses_db" as RDS #ffcccc
+    }
+  }
+}
+
+' Conexiones principales
+Users -down-> S3 : "1. Request"
+Admins -down-> S3 : "1. Request"
+
+' CloudFront usa S3 como origin (evita forzar posición del interior)
+CloudFront ..> S3 : origin
+
+S3 -down-> Nginx : "2. API Requests\n(HTTPS)"
+AuthService -down-> RDS
+BusinessService -down-> RDS
+
+
+' --- Forzar que S3 esté por encima del VPC ---
+S3 -[hidden]down-> VPC
+@enduml
