@@ -43,5 +43,15 @@ At this stage, the project focuses on:
 
 ---
 
+## Project Team
+
+**Universidad Distrital Francisco José de Caldas**
+Systems Engineering Program
+Software Engineering Seminar
+
+**Team Members:**
+- Brayan Alejandro Riveros Rodríguez (20201020084)
+- Carlos Andrés Pescador Castro (20182020139)
+- Cristian Santiago Ríos Vásquez (20201020107)
 
 > *“Catch-up version – preliminary deliverables for project evaluation.”*
