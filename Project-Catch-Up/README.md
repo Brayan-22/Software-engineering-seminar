@@ -9,10 +9,10 @@ These documents summarize the progress made so far in the design, research, and 
 
 | File | Description |
 |------|--------------|
-| **Paper.pdf** | The initial draft of the academic paper describing the project’s context, methodology, and progress. |
-| **Poster.pdf** | A concise and visual summary of the project, including the motivation, objectives, proposed solution, and preliminary results. |
-| **Report.pdf** | A written report summarizing all activities, including design decisions, architecture, and technical progress. |
-| **Presentation.pdf** | The slides used to present the project during the catch-up session, covering goals, mockups, and future work. |
+| **Paper-v1.0.pdf** | The initial draft of the academic paper describing the project’s context, methodology, and progress. |
+| **Poster-v1.0.pdf** | A concise and visual summary of the project, including the motivation, objectives, proposed solution, and preliminary results. |
+| **Report-v1.0.pdf** | A written report summarizing all activities, including design decisions, architecture, and technical progress. |
+| **PresentationSlides.pdf** | The slides used to present the project during the catch-up session, covering goals, mockups, and future work. |
 
 ---
 
