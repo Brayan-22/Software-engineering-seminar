@@ -17,6 +17,7 @@ export const Home = () => {
         Explora cursos, profesores y más información académica.
       </Typography>
       <SearchBar></SearchBar>
+      <SearchResults></SearchResults>
     </Box>
   );
 };
