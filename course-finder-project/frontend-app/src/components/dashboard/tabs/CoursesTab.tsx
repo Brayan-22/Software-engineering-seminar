@@ -8,6 +8,10 @@ import {
     DialogContent,
     DialogActions,
     TextField,
+    Select,
+    MenuItem,
+    FormControl,
+    FormHelperText,
 } from "@mui/material";
 import type { Course } from "../../../models/Course";
 import { CourseCard } from "../../home/CourseCard";
@@ -18,14 +22,29 @@ export const CoursesTab = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // estado modal
+    // modal state
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState({
         code: "",
         name: "",
-        description: "",
-        schedule: "",
+        day: "",
+        time: "",
     });
+
+    const [formErrors, setFormErrors] = useState({
+        code: "",
+        name: "",
+        day: "",
+        time: "",
+    });
+
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+    const timeSlots = [
+        "8am - 10am",
+        "10am - 12m",
+        "12m - 2pm",
+        "2pm - 4pm",
+    ];
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -41,26 +60,58 @@ export const CoursesTab = () => {
         };
 
         fetchCourses();
-    }, [courses]);
+    }, []);
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const handleChange = (
+        e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+    ) => {
+        const { name, value } = e.target;
+        setFormData((prev) => ({ ...prev, [name!]: value }));
+        setFormErrors((prev) => ({ ...prev, [name!]: "" }));
+    };
+
+    const validateForm = () => {
+        let valid = true;
+        const errors = { code: "", name: "", day: "", time: "" };
+
+        if (!formData.code.trim()) {
+            errors.code = "Code is required";
+            valid = false;
+        }
+        if (!formData.name.trim()) {
+            errors.name = "Name is required";
+            valid = false;
+        }
+        if (!formData.day) {
+            errors.day = "Please select a day";
+            valid = false;
+        }
+        if (!formData.time) {
+            errors.time = "Please select a time slot";
+            valid = false;
+        }
+
+        setFormErrors(errors);
+        return valid;
     };
 
     const handleCreateCourse = async () => {
+        if (!validateForm()) return;
+
         try {
+            const schedule = `${formData.day} ${formData.time}`;
             const course: Course = {
                 id: 0,
                 code: formData.code,
                 name: formData.name,
-                description: formData.description,
-                schedule: formData.schedule,
-            }
-            const newCourse = await createCourse(course);
+                schedule,
+            };
 
+            const newCourse = await createCourse(course);
             setCourses((prev) => [...prev, newCourse]);
             setOpen(false);
-            setFormData({ code: "", name: "", description: "", schedule: "" });
+            setFormData({ code: "", name: "", day: "", time: "" });
+            setFormErrors({ code: "", name: "", day: "", time: "" });
         } catch (err) {
             console.error("Error creating course:", err);
         }
@@ -79,13 +130,13 @@ export const CoursesTab = () => {
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex", justifyContent: "left", gap: "40px" }}>
-                <Typography variant="h4">Courses</Typography>
+                <Typography variant="h4">Courses 📘</Typography>
                 <Button variant="contained" onClick={() => setOpen(true)}>
                     +
                 </Button>
             </Box>
 
-            <Box>
+            <Box sx={{ mt: 3 }}>
                 {courses.length > 0 ? (
                     courses.map((course) => (
                         <CourseCard key={course.id} course={course} showActions />
@@ -101,12 +152,16 @@ export const CoursesTab = () => {
                 <DialogContent
                     sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
                 >
-                    <TextField
+                    <TextField sx={{
+                        mt:"4px"
+                    }}
                         label="Code"
                         name="code"
                         value={formData.code}
                         onChange={handleChange}
                         fullWidth
+                        error={!!formErrors.code}
+                        helperText={formErrors.code}
                     />
                     <TextField
                         label="Name"
@@ -114,22 +169,45 @@ export const CoursesTab = () => {
                         value={formData.name}
                         onChange={handleChange}
                         fullWidth
+                        error={!!formErrors.name}
+                        helperText={formErrors.name}
                     />
-                    <TextField
-                        label="Description"
-                        name="description"
-                        value={formData.description}
-                        onChange={handleChange}
-                        fullWidth
-                        multiline
-                    />
-                    <TextField
-                        label="Schedule"
-                        name="schedule"
-                        value={formData.schedule}
-                        onChange={handleChange}
-                        fullWidth
-                    />
+                    <FormControl fullWidth error={!!formErrors.day}>
+                        <Select
+                            displayEmpty
+                            name="day"
+                            value={formData.day}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="" disabled>
+                                Select Day
+                            </MenuItem>
+                            {days.map((day) => (
+                                <MenuItem key={day} value={day}>
+                                    {day}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{formErrors.day}</FormHelperText>
+                    </FormControl>
+                    <FormControl fullWidth error={!!formErrors.time}>
+                        <Select
+                            displayEmpty
+                            name="time"
+                            value={formData.time}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="" disabled>
+                                Select Time Slot
+                            </MenuItem>
+                            {timeSlots.map((slot) => (
+                                <MenuItem key={slot} value={slot}>
+                                    {slot}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{formErrors.time}</FormHelperText>
+                    </FormControl>
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>

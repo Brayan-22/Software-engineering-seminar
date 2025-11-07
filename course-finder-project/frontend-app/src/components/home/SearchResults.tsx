@@ -15,9 +15,9 @@ export const SearchResults = () => {
     ])
 
     const [proffesors, setProfessors] = useState<Professor[]>([
-        { id: 1, documentId: "CC", name: "Mr. Eduardo 1", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
-        { id: 2, documentId: "CC", name: "Mr. Eduardo 2", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
-        { id: 3, documentId: "CC", name: "Mr. Eduardo 3", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
+        { id: 1, name: "Mr. Eduardo 1", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
+        { id: 2, name: "Mr. Eduardo 2", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
+        { id: 3, name: "Mr. Eduardo 3", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
 
     ])
 
