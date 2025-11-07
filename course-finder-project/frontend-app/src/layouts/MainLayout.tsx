@@ -7,7 +7,7 @@ export const MainLayout = () => {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", backgroundColor: "#FBFBFB" }}>
       <Navbar />
-      <Container sx={{ flex: 1, py: 7 }}>
+      <Container sx={{ flex: 1, py: 4 }}>
         <Outlet />
       </Container>
       <Footer />

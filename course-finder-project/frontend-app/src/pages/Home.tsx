@@ -5,18 +5,26 @@ import { SearchResults } from "../components/home/SearchResults";
 export const Home = () => {
   return (
     <Box sx={{
-        display:"flex",
-        flexDirection:"column",
-    
+      display: "flex",
+      flexDirection: "column",
+      gap: "20px"
     }}
     >
-      <Typography variant="h4" gutterBottom>
-        Bienvenido a Academic Course Finder 🔍
-      </Typography>
-      <Typography variant="body1">
-        Explora cursos, profesores y más información académica.
-      </Typography>
+      <Box sx={{
+        display: "flex",
+        flexDirection: "column",
+        margin: "0 auto",
+        gap: "5px"
+      }}>
+        <Typography variant="h4">
+          Welcome to Academic Course Finder 🔍
+        </Typography>
+        <Typography variant="body1">
+          Explore courses, proffesors and more academic information.
+        </Typography>
+      </Box>
       <SearchBar></SearchBar>
+      <SearchResults></SearchResults>
     </Box>
   );
 };

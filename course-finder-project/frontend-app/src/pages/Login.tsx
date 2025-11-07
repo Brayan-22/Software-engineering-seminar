@@ -5,15 +5,25 @@ export const Login = () => {
     return (
         <Box
             display="flex"
-            alignItems="center"
-            justifyContent="center"
-            minHeight="100vh"
-            bgcolor="#f5f5f5"
+            justifyContent="center"   // centra horizontalmente
+            alignItems="center"       // centra verticalmente
+            flexGrow={1}              // ocupa todo el espacio disponible dentro del Container
+            minHeight="70vh"          // opcional, por si no alcanza a expandirse
         >
-            <Paper elevation={3} sx={{ p: 4, borderRadius: 3 }}>
+            <Paper
+                elevation={3}
+                sx={{
+                    p: 4,
+                    borderRadius: "20px",
+                    width: "100%",
+                    maxWidth: "420px",         // controla el ancho del formulario
+                    mx: 2,
+                    boxShadow: "10px 20px 80px rgba(0, 0, 0, 0.25)",
+                    // separación lateral
+                }}
+            >
                 <LoginForm />
             </Paper>
         </Box>
     );
 };
-

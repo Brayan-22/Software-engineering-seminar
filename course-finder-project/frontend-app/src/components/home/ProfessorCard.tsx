@@ -1,14 +1,14 @@
-import { Box, Button, Typography } from "@mui/material"
-import type { Course } from "../../models/Course"
+import { Box, Typography, Button } from "@mui/material"
+import type { Professor } from "../../models/Professor"
 
-type CourseCardProps = {
-    course: Course;
+type ProfessorCardProps = {
+    professor: Professor;
     showActions?: boolean;
     onEdit?: (id: number) => void;
     onDelete?: (id: number) => void;
 }
 
-export const CourseCard = ({ course, showActions = false, onEdit, onDelete }: CourseCardProps) => {
+export const ProfessorCard = ({ professor, showActions, onEdit, onDelete }: ProfessorCardProps) => {
 
     return (
         <Box sx={{
@@ -28,9 +28,9 @@ export const CourseCard = ({ course, showActions = false, onEdit, onDelete }: Co
                 flexDirection: "column",
                 justifyContent: "center"
             }}>
-                <Typography variant="h6">Name: {course.name}</Typography>
-                <Typography>Code: {course.code}</Typography>
-                <Typography>Schedule: {course.schedule}</Typography>
+                <Typography variant="h6">Name: {professor.name}</Typography>
+                <Typography>Email: {professor.email}</Typography>
+                <Typography>Specialty: {professor.specialty}</Typography>
             </Box>
 
             {showActions && <Box sx={{
@@ -47,5 +47,4 @@ export const CourseCard = ({ course, showActions = false, onEdit, onDelete }: Co
 
         </Box>
     )
-
 }
