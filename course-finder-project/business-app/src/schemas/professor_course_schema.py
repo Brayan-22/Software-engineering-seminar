@@ -4,8 +4,8 @@ ProfessorCourse Pydantic Schemas
 from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
-from app.schemas.professor_schema import ProfessorResponse
-from app.schemas.course_schema import CourseResponse
+from src.schemas.professor_schema import ProfessorResponse
+from src.schemas.course_schema import CourseResponse
 
 
 class ProfessorCourseBase(BaseModel):

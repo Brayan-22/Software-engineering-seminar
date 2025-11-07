@@ -4,9 +4,9 @@ Course Repository - Basic CRUD Operations
 from typing import Optional
 from sqlalchemy.orm import Session
 from fastapi import Depends
-from app.models.course import Course
-from app.repositories.base import BaseRepository
-from app.core.database import get_db
+from src.models.course import Course
+from src.repositories.base import BaseRepository
+from src.core.database import get_db
 
 
 class CourseRepository(BaseRepository[Course]):

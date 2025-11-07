@@ -2,7 +2,7 @@
 Pydantic Schemas (DTOs for request/response validation)
 """
 # Professor schemas
-from app.schemas.professor_schema import (
+from src.schemas.professor_schema import (
     ProfessorBase,
     ProfessorCreate,
     ProfessorUpdate,
@@ -12,7 +12,7 @@ from app.schemas.professor_schema import (
 )
 
 # Course schemas
-from app.schemas.course_schema import (
+from src.schemas.course_schema import (
     CourseBase,
     CourseCreate,
     CourseUpdate,
@@ -23,7 +23,7 @@ from app.schemas.course_schema import (
 )
 
 # ProfessorCourse schemas
-from app.schemas.professor_course_schema import (
+from src.schemas.professor_course_schema import (
     ProfessorCourseBase,
     ProfessorCourseCreate,
     ProfessorCourseUpdate,

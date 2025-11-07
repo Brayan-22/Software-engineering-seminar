@@ -4,7 +4,7 @@ Base Repository with common CRUD operations
 from typing import Generic, TypeVar, Type, Optional, List, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import select
-from app.core.database import Base
+from src.core.database import Base
 
 ModelType = TypeVar("ModelType", bound=Base)
 

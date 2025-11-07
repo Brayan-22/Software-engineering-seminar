@@ -2,8 +2,8 @@
 Course API Routes - Basic CRUD Operations
 """
 from fastapi import APIRouter, Depends, Query, status
-from app.services.course_service import CourseService, get_course_service
-from app.schemas.course_schema import (
+from src.services.course_service import CourseService, get_course_service
+from src.schemas.course_schema import (
     CourseCreate,
     CourseUpdate,
     CourseResponse,

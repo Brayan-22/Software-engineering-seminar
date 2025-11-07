@@ -5,7 +5,7 @@ This module serves as the central registry for all API routers.
 Import this module to access all configured routers.
 """
 from fastapi import APIRouter
-from app.api.routes import professor, course, assignment
+from src.api.routes import professor, course, assignment
 
 # Create main API router
 api_router = APIRouter()

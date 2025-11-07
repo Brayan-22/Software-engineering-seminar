@@ -2,11 +2,11 @@
 Professor-Course Assignment API Routes - Basic CRUD Operations
 """
 from fastapi import APIRouter, Depends, Query, status, Path
-from app.services.professor_course_service import (
+from src.services.professor_course_service import (
     ProfessorCourseService,
     get_professor_course_service,
 )
-from app.schemas.professor_course_schema import (
+from src.schemas.professor_course_schema import (
     ProfessorCourseCreate,
     ProfessorCourseUpdate,
     ProfessorCourseDetailResponse,

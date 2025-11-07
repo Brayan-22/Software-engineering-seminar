@@ -2,8 +2,8 @@
 Professor API Routes - Basic CRUD Operations
 """
 from fastapi import APIRouter, Depends, Query, status
-from app.services.professor_service import ProfessorService, get_professor_service
-from app.schemas.professor_schema import (
+from src.services.professor_service import ProfessorService, get_professor_service
+from src.schemas.professor_schema import (
     ProfessorCreate,
     ProfessorUpdate,
     ProfessorResponse,

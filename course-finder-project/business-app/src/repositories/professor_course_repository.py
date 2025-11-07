@@ -4,9 +4,9 @@ ProfessorCourse Repository - Basic CRUD Operations
 from typing import Optional
 from sqlalchemy.orm import Session
 from fastapi import Depends
-from app.models.professor_course import ProfessorCourse
-from app.repositories.base import BaseRepository
-from app.core.database import get_db
+from src.models.professor_course import ProfessorCourse
+from src.repositories.base import BaseRepository
+from src.core.database import get_db
 
 
 class ProfessorCourseRepository(BaseRepository[ProfessorCourse]):

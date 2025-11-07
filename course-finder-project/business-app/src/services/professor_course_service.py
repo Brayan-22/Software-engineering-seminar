@@ -2,20 +2,20 @@
 ProfessorCourse Service - Basic CRUD Business Logic
 """
 from fastapi import Depends, HTTPException, status
-from app.models.professor_course import ProfessorCourse
-from app.repositories.professor_course_repository import (
+from src.models.professor_course import ProfessorCourse
+from src.repositories.professor_course_repository import (
     ProfessorCourseRepository,
     get_professor_course_repository,
 )
-from app.repositories.professor_repository import (
+from src.repositories.professor_repository import (
     ProfessorRepository,
     get_professor_repository,
 )
-from app.repositories.course_repository import (
+from src.repositories.course_repository import (
     CourseRepository,
     get_course_repository,
 )
-from app.schemas.professor_course_schema import (
+from src.schemas.professor_course_schema import (
     ProfessorCourseCreate,
     ProfessorCourseUpdate,
     ProfessorCourseDetailResponse,

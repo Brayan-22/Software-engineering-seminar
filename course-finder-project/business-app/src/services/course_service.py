@@ -2,12 +2,12 @@
 Course Service - Basic CRUD Business Logic
 """
 from fastapi import Depends, HTTPException, status
-from app.models.course import Course
-from app.repositories.course_repository import (
+from src.models.course import Course
+from src.repositories.course_repository import (
     CourseRepository,
     get_course_repository,
 )
-from app.schemas.course_schema import (
+from src.schemas.course_schema import (
     CourseCreate,
     CourseUpdate,
     CourseResponse,

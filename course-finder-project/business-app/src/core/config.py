@@ -3,18 +3,18 @@ from typing import List
 import os
 from pathlib import Path
 
-# Get the project root directory (business-app/)
+# Get the project root directory (business-src/)
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 class Settings(BaseSettings):
     """
-    Application settings using Pydantic BaseSettings.
+    srclication settings using Pydantic BaseSettings.
     Loads configuration from .env file using python-dotenv
     """
-    # Application
-    APP_NAME: str = "Course Finder API"
-    APP_VERSION: str = "1.0.0"
+    # srclication
+    src_NAME: str = "Course Finder API"
+    src_VERSION: str = "1.0.0"
     DEBUG: bool = False
     API_PREFIX: str = "/api/v1"
 

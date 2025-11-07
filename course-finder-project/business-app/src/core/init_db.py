@@ -9,8 +9,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 
-from app.core.database import engine, Base
-from app.models import Professor, Course, ProfessorCourse
+from src.core.database import engine, Base
+from src.models import Professor, Course, ProfessorCourse
 
 
 def init_db():
