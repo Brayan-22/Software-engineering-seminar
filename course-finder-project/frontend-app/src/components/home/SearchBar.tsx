@@ -49,7 +49,9 @@ export const SearchBar = () => {
             <TextField
                 fullWidth
                 placeholder="Search by professor or course..."
-               
+                slotProps={{
+                    input: { sx: inputStyles }
+                }}
             />
 
 

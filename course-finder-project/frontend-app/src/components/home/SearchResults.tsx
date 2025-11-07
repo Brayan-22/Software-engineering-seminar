@@ -30,7 +30,7 @@ export const SearchResults = () => {
             <Typography variant="h5">Search results</Typography>
 
             {courses.map((course) => (
-                <CourseCard key={course.id} course={course} />
+                <CourseCard key={course.id} course={course}/>
             ))}
 
         </Box>
