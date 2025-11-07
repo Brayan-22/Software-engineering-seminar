@@ -1,6 +1,16 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
+import os
+from pathlib import Path
+
+# Load environment variables from .env file
+BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
+
+# Import settings after loading .env
 from app.core.config import settings
+from app.api.routes import api_router
 
 # Create FastAPI app
 app = FastAPI(
@@ -20,6 +30,9 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include API router with all endpoints
+app.include_router(api_router, prefix=settings.API_PREFIX)
 
 
 # Health check endpoint
@@ -41,8 +54,3 @@ async def root():
         "message": f"Welcome to {settings.APP_NAME}",
         "docs": f"{settings.API_PREFIX}/docs"
     }
-
-
-# Include routers here
-# from app.api.routes import example
-# app.include_router(example.router, prefix=f"{settings.API_PREFIX}/example", tags=["example"])
