@@ -11,10 +11,10 @@ export const Home = () => {
     }}
     >
       <Typography variant="h4" gutterBottom>
-        Bienvenido a Academic Course Finder 🔍
+        Welcome to Academic Course Finder 🔍
       </Typography>
       <Typography variant="body1">
-        Explora cursos, profesores y más información académica.
+        Explore courses, proffesors and more academic information.
       </Typography>
       <SearchBar></SearchBar>
       <SearchResults></SearchResults>
