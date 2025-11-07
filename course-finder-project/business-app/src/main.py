@@ -11,7 +11,7 @@ load_dotenv(dotenv_path=os.path.join(BASE_DIR, ".env"))
 # Import settings after loading .env
 from src.core.config import settings
 from src.api.routes import api_router
-
+from src.core.init_db import create_db_and_tables
 # Create FastAPI app
 app = FastAPI(
     title=settings.APP_NAME,
@@ -35,3 +35,9 @@ app.add_middleware(
 app.include_router(api_router, prefix=settings.API_PREFIX)
 
 
+def startup_event():
+    """Actions to perform on startup."""
+    create_db_and_tables()
+    print("Database initialized and tables created.")
+
+app.add_event_handler("startup", startup_event)

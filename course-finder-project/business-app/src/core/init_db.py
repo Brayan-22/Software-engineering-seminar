@@ -4,6 +4,7 @@ Database initialization utility
 from dotenv import load_dotenv
 import os
 from pathlib import Path
+from sqlalchemy import inspect
 
 # Load environment variables from .env file
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
@@ -13,30 +14,7 @@ from src.core.database import engine, Base
 from src.models import Professor, Course, ProfessorCourse
 
 
-def init_db():
-    """
-    Create all database tables based on the defined models.
-
-    This function should be called once to initialize the database schema.
-    For production, consider using Alembic migrations instead.
-    """
-    print("Creating database tables...")
-    Base.metadata.create_all(bind=engine)
-    print("Database tables created successfully!")
-
-
-def drop_all_tables():
-    """
-    Drop all database tables.
-
-    WARNING: This will delete all data in the database!
-    Use with caution, preferably only in development.
-    """
-    print("WARNING: Dropping all database tables...")
+def create_db_and_tables():
     Base.metadata.drop_all(bind=engine)
-    print("All tables dropped!")
+    Base.metadata.create_all(bind=engine)
 
-
-if __name__ == "__main__":
-    # Initialize database when running this script directly
-    init_db()
