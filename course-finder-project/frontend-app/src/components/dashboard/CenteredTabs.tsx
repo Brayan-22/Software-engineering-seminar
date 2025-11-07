@@ -4,7 +4,7 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 
 import { CoursesTab } from "../dashboard/tabs/CoursesTab"
-import { ProfessorTab } from './tabs/ProfessorsTab';
+import { ProfessorsTab } from './tabs/ProfessorsTab';
 export const CenteredTabs = () => {
     const [value, setValue] = useState(0);
 
@@ -27,7 +27,7 @@ export const CenteredTabs = () => {
             {/* Contenido dinámico según tab */}
             <Box sx={{ p: 3 }}>
                 {value === 0 && <CoursesTab></CoursesTab>}
-                {value === 1 && <ProfessorTab></ProfessorTab>}
+                {value === 1 && <ProfessorsTab></ProfessorsTab>}
                 {value === 2 && <Typography>Assignments ⚙️</Typography>}
             </Box>
         </Box>

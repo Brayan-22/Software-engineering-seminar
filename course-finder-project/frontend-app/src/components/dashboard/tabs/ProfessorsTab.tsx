@@ -2,7 +2,7 @@ import { useState } from "react"
 import { Box, Typography, Button } from "@mui/material"
 import type { Professor } from "../../../models/Professor"
 import { ProfessorCard } from "../../home/ProfessorCard"
-export const ProfessorTab = () => {
+export const ProfessorsTab = () => {
 
     const [proffesors, setProfessors] = useState<Professor[]>([
         { id: 1, documentId: "CC", name: "Mr. Eduardo 1", email: "edu@ardo.com", specialty: "Phd. Mathematics" },
