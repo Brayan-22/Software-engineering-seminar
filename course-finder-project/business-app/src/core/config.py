@@ -9,22 +9,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 class Settings(BaseSettings):
     """
-    srclication settings using Pydantic BaseSettings.
+    Application settings using Pydantic BaseSettings.
     Loads configuration from .env file using python-dotenv
     """
-    # srclication
-    src_NAME: str = "Course Finder API"
-    src_VERSION: str = "1.0.0"
+    # Application
+    APP_NAME: str = "Course Finder API"
+    APP_VERSION: str = "1.0.0"
     DEBUG: bool = False
     API_PREFIX: str = "/api/v1"
 
     # Database
     DATABASE_URL: str
-
-    # Security
-    SECRET_KEY: str
-    ALGORITHM: str = "HS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
 
     # CORS
     CORS_ORIGINS: List[str] = ["http://localhost:3000"]
