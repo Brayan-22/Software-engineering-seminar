@@ -14,7 +14,7 @@ export const CourseCard = ( {course }: CourseCardProps) => {
             justifyContent: "left",
             backgroundColor: "#EBF1F4",
             borderRadius: "16px",
-            padding: "10px",
+            py: "10px",
             px: "20px",
             mt: "15px"
         }}>
