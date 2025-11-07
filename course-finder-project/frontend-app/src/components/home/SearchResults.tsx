@@ -2,12 +2,14 @@ import { Box, Typography } from "@mui/material"
 import { CourseCard } from "./CourseCard"
 import { useState } from "react"
 import type { Course } from "../../models/Course"
+
 export const SearchResults = () => {
 
     const [courses, setCourses] = useState<Course[]>([
         { id: 1, code: "100", name: "calculus", description: "Si", schedule: "no" },
         { id: 2, code: "200", name: "calculus", description: "Si", schedule: "no" },
-        { id: 3, code: "300", name: "calculus", description: "Si", schedule: "no" }
+        { id: 3, code: "300", name: "calculus", description: "Si", schedule: "no" },
+        { id: 4, code: "400", name: "calculus", description: "Si", schedule: "no" }
 
     ])
 

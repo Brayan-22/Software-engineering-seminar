@@ -43,6 +43,7 @@ export const SearchBar = () => {
                 borderRadius: "16px",
                 boxShadow: "10px 20px 80px rgba(0, 0, 0, 0.25)",
                 margin: "0 auto", // centra horizontalmente si el padre no es flex
+                mt: "20px",
                 px: 6,
                 py: 7,
             }}

@@ -5,14 +5,18 @@ type CourseCardProps = {
   course: Course;
 }
 
-export const CourseCard = ({ course }: CourseCardProps) => {
+export const CourseCard = ( {course }: CourseCardProps) => {
 
     return (
         <Box sx={{
             display: "flex",
             flexDirection: "column",
             justifyContent: "left",
-
+            backgroundColor: "#EBF1F4",
+            borderRadius: "16px",
+            padding: "10px",
+            px: "20px",
+            mt: "15px"
         }}>
             <Typography variant="h6">Name: {course.name}</Typography>
             <Typography>Code: {course.code}</Typography>
