@@ -19,3 +19,8 @@ export const searchByTeacher = async (teacherName: string) => {
   const res = await api.get(`/teachers/search`, { params: { name: teacherName } });
   return res.data;
 };
+
+export const deleteCourse = async (id: number) => {
+  const res = await api.delete(`/courses/${id}`);
+  return res.data;
+};

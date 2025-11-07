@@ -41,7 +41,7 @@ export const CourseCard = ({ course, showActions = false, onEdit, onDelete }: Co
                 gap: "10px"
             }}>
                 <Button variant="contained">Edit</Button>
-                <Button variant="contained">Delete</Button>
+                <Button variant="contained"  onClick={() => onDelete?.(course.id)}>Delete</Button>
 
             </Box>}
 

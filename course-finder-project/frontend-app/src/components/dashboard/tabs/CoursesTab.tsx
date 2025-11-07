@@ -15,15 +15,24 @@ import {
 } from "@mui/material";
 import type { Course } from "../../../models/Course";
 import { CourseCard } from "../../home/CourseCard";
-import { getCourses, createCourse } from "../../../api/businessApi/CourseService";
+import {
+    getCourses,
+    createCourse,
+    deleteCourse,
+} from "../../../api/businessApi/CourseService";
 
 export const CoursesTab = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // modal state
+    // modal create
     const [open, setOpen] = useState(false);
+
+    // modal delete confirm
+    const [confirmOpen, setConfirmOpen] = useState(false);
+    const [selectedCourse, setSelectedCourse] = useState<Course | null>(null);
+
     const [formData, setFormData] = useState({
         code: "",
         name: "",
@@ -39,12 +48,7 @@ export const CoursesTab = () => {
     });
 
     const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-    const timeSlots = [
-        "8am - 10am",
-        "10am - 12m",
-        "12m - 2pm",
-        "2pm - 4pm",
-    ];
+    const timeSlots = ["8am - 10am", "10am - 12m", "12m - 2pm", "2pm - 4pm"];
 
     useEffect(() => {
         const fetchCourses = async () => {
@@ -117,6 +121,25 @@ export const CoursesTab = () => {
         }
     };
 
+    const handleDeleteClick = (course: Course) => {
+        setSelectedCourse(course);
+        setConfirmOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (!selectedCourse) return;
+
+        try {
+            await deleteCourse(selectedCourse.id);
+            setCourses((prev) => prev.filter((c) => c.id !== selectedCourse.id));
+        } catch (err) {
+            console.error("Error deleting course:", err);
+        } finally {
+            setConfirmOpen(false);
+            setSelectedCourse(null);
+        }
+    };
+
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading courses...</Typography>;
 
@@ -139,22 +162,25 @@ export const CoursesTab = () => {
             <Box sx={{ mt: 3 }}>
                 {courses.length > 0 ? (
                     courses.map((course) => (
-                        <CourseCard key={course.id} course={course} showActions />
+                        <CourseCard
+                            key={course.id}
+                            course={course}
+                            onDelete={() => handleDeleteClick(course)}
+                            showActions
+                        />
                     ))
                 ) : (
                     <Typography variant="body1">No courses found.</Typography>
                 )}
             </Box>
 
-            {/* Modal */}
+            {/* Modal create */}
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Create Course</DialogTitle>
                 <DialogContent
                     sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
                 >
-                    <TextField sx={{
-                        mt:"4px"
-                    }}
+                    <TextField
                         label="Code"
                         name="code"
                         value={formData.code}
@@ -213,6 +239,23 @@ export const CoursesTab = () => {
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
                     <Button variant="contained" onClick={handleCreateCourse}>
                         Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Modal confirm delete */}
+            <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Are you sure you want to delete{" "}
+                        <strong>{selectedCourse?.name}</strong>?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setConfirmOpen(false)}>Cancel</Button>
+                    <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>
