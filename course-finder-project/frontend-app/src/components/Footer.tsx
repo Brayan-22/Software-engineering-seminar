@@ -13,7 +13,7 @@ export const Footer = () => {
       }}
     >
       <Typography variant="body2">
-        © {new Date().getFullYear()} Academic Course Finder. Todos los derechos reservados.
+        © {new Date().getFullYear()} Academic Course Finder. All rights reserved ®.
       </Typography>
     </Box>
   );
