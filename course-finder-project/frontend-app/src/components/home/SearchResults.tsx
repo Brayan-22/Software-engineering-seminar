@@ -19,7 +19,6 @@ export const SearchResults = () => {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
-            mt: "30px",
             width: "95%",
             heigh: "100hv",
             backgroundColor: "#FFFFFF",
