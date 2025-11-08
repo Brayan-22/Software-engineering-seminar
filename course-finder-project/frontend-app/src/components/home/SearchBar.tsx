@@ -9,7 +9,7 @@ const inputStyles = {
         color: "#3A6F90",
         fontWeight: 700,
         "&::placeholder": {
-            color: "rgba(58,111,144,0.6)", // placeholder más suave
+            color: "rgba(58,111,144,0.6)",
             opacity: 1,
             fontWeight: 600,
         },
@@ -34,14 +34,14 @@ export const SearchBar = () => {
                 display: "flex",
                 flexDirection: "column",
                 gap: "15px",
-                justifyContent: "center", // centra vertical
-                alignItems: "center",     // centra horizontal
+                justifyContent: "center", 
+                alignItems: "center",  
                 width: "70%",
                 height: "160px",
                 backgroundColor: "#FFFFFF",
                 borderRadius: "16px",
                 boxShadow: "10px 20px 80px rgba(0, 0, 0, 0.25)",
-                margin: "0 auto", // centra horizontalmente si el padre no es flex
+                margin: "0 auto", 
                 px: 6,
                 py: 7,
             }}

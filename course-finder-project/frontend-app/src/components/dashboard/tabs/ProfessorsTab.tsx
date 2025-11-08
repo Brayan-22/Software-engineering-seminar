@@ -18,6 +18,7 @@ import { ProfessorCard } from "../../home/ProfessorCard";
 import {
     getProfessors,
     createProfessor,
+    deleteProfessor,
 } from "../../../api/businessApi/ProfessorService";
 
 export const ProfessorsTab = () => {
@@ -25,8 +26,13 @@ export const ProfessorsTab = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
-    // Modal state
+    // Modal create
     const [open, setOpen] = useState(false);
+
+    // Modal delete
+    const [deleteOpen, setDeleteOpen] = useState(false);
+    const [selectedProfessorId, setSelectedProfessorId] = useState<number | null>(null);
+
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -120,6 +126,24 @@ export const ProfessorsTab = () => {
         }
     };
 
+    const handleOpenDeleteModal = (id: number) => {
+        setSelectedProfessorId(id);
+        setDeleteOpen(true);
+    };
+
+    const handleConfirmDelete = async () => {
+        if (selectedProfessorId === null) return;
+        try {
+            await deleteProfessor(selectedProfessorId);
+            setProfessors((prev) => prev.filter(p => p.id !== selectedProfessorId));
+        } catch (err) {
+            console.error("Error deleting professor:", err);
+        } finally {
+            setDeleteOpen(false);
+            setSelectedProfessorId(null);
+        }
+    };
+
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading professors...</Typography>;
 
@@ -146,6 +170,7 @@ export const ProfessorsTab = () => {
                             key={professor.id}
                             professor={professor}
                             showActions
+                            onDelete={handleOpenDeleteModal}
                         />
                     ))
                 ) : (
@@ -153,15 +178,14 @@ export const ProfessorsTab = () => {
                 )}
             </Box>
 
-            {/* Modal */}
+            {/* Modal Create */}
             <Dialog open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Create Professor</DialogTitle>
                 <DialogContent
                     sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
                 >
-                    <TextField sx={{
-                        mt: "4px"
-                    }}
+                    <TextField
+                        sx={{ mt: "4px" }}
                         label="Name"
                         name="name"
                         value={formData.name}
@@ -202,6 +226,26 @@ export const ProfessorsTab = () => {
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
                     <Button variant="contained" onClick={handleCreateProfessor}>
                         Save
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
+            {/* Modal confirm delete */}
+            <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
+                <DialogTitle>Confirm Delete</DialogTitle>
+                <DialogContent>
+                    <Typography>
+                        Are you sure you want to delete this professor?
+                    </Typography>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDeleteOpen(false)}>Cancel</Button>
+                    <Button
+                        color="error"
+                        variant="contained"
+                        onClick={handleConfirmDelete}
+                    >
+                        Delete
                     </Button>
                 </DialogActions>
             </Dialog>

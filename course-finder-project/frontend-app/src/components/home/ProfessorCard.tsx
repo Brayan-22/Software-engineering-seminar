@@ -41,7 +41,7 @@ export const ProfessorCard = ({ professor, showActions, onEdit, onDelete }: Prof
                 gap: "10px"
             }}>
                 <Button variant="contained">Edit</Button>
-                <Button variant="contained">Delete</Button>
+                <Button variant="contained" onClick={() => onDelete?.(professor.id)}>Delete</Button>
 
             </Box>}
 
