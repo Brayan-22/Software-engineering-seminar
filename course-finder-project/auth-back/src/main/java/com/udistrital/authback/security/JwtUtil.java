@@ -19,14 +19,16 @@ public class JwtUtil {
 
     @Autowired
     private PrivateKey privateKey;
-
-
+    @Value("${spring.application.name}")
+    private String applicationName;
 
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
+                .setAudience("course-finder")
+                .setIssuer(applicationName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 hours
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
