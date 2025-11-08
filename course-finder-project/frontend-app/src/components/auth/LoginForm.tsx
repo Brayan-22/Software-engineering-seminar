@@ -1,5 +1,8 @@
 import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { useAuth } from "../../context/AuthContext";
+import { useGlobalAlert } from "../../context/AlertContext";
+import { useNavigate } from "react-router-dom";
 
 const inputStyles = {
   justifyContent: "left",
@@ -10,26 +13,39 @@ const inputStyles = {
     color: "#3A6F90",
     fontWeight: 700,
     "&::placeholder": {
-      color: "rgba(58,111,144,0.6)", // placeholder más suave
+      color: "rgba(58,111,144,0.6)",
       opacity: 1,
       fontWeight: 600,
     },
   },
-
-
 };
 
 interface LoginInputs {
-  email: string;
+  username: string;
   password: string;
 }
 
 export const LoginForm = () => {
   const { register, handleSubmit } = useForm<LoginInputs>();
+  const { login } = useAuth();
+  const { showAlert } = useGlobalAlert();
+  const navigate = useNavigate();
+  
+  const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
+    try {
+      const success = await login(data.username, data.password);
+      if (success) {
+        showAlert("Login successful", "success");
+        navigate("/dashboard");
 
-  const onSubmit: SubmitHandler<LoginInputs> = (data) => {
-    console.log("Login data:", data);
-    // TODO: Handle authentication logic (API call or context update)
+      } else {
+        showAlert("Invalid credentials", "error");
+
+      }
+    } catch (error) {
+      showAlert("Error al conectar con el servidor", "error");
+      console.error(error);
+    }
   };
 
   return (
@@ -48,12 +64,11 @@ export const LoginForm = () => {
 
       <TextField
         variant="outlined"
-        label="Email"
-        placeholder="Email"
-        {...register("email")}
-        required
+        label="Username"
+        placeholder="Username"
+        {...register("username", { required: true })}
         slotProps={{
-          input: { sx: inputStyles }
+          input: { sx: inputStyles },
         }}
       />
 
@@ -62,25 +77,29 @@ export const LoginForm = () => {
         placeholder="**********"
         type="password"
         variant="outlined"
-        {...register("password")}
-        required
+        {...register("password", { required: true })}
         fullWidth
         slotProps={{
-          input: { sx: inputStyles }
+          input: { sx: inputStyles },
         }}
       />
 
-      <Button type="submit" variant="contained" color="primary" sx={{
-        borderRadius: "5px",
-        width: "40%",
-        margin: "0 auto"
-      }}>
+      <Button
+        type="submit"
+        variant="contained"
+        color="primary"
+        sx={{
+          borderRadius: "5px",
+          width: "40%",
+          margin: "0 auto",
+        }}
+      >
         Login
       </Button>
-      
-      <Link sx={{
-        margin: "0 auto"
-      }} href="#">Forgot your password?</Link>
+
+      <Link sx={{ margin: "0 auto" }} href="#">
+        Forgot your password?
+      </Link>
     </Box>
   );
 };
