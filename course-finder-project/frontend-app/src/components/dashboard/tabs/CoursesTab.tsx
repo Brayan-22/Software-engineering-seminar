@@ -190,7 +190,7 @@ export const CoursesTab = () => {
             <Box sx={{ display: "flex", justifyContent: "left", gap: "40px" }}>
                 <Typography variant="h4">Courses 📘</Typography>
                 <Button variant="contained" onClick={() => setOpen(true)}>
-                    +
+                    Add +
                 </Button>
             </Box>
 
