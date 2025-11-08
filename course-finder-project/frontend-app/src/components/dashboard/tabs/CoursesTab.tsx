@@ -108,6 +108,7 @@ export const CoursesTab = () => {
 
         try {
             const schedule = `${formData.day} ${formData.time}`;
+            console.log("sch: "+ schedule);
             const course: Course = {
                 id: 0,
                 code: formData.code,

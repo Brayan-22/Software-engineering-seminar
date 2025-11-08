@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (token) {
-      localStorage.setItem("token", token);
+      localStorage.setItem("token", JSON.stringify(token));
       setIsAuth(true);
     } else {
       localStorage.removeItem("token");
@@ -29,7 +29,6 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (username: string, password: string) => {
     try {
       const token = await apiLogin(username, password);
-      console.log("TOKEN: " + token);
       if (token) {
         setToken(token);
         return true;
