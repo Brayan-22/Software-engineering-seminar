@@ -21,4 +21,5 @@ public class AuthController {
         String token = authService.login(request);
         return ResponseEntity.ok(new LoginResponse(token));
     }
+
 }
