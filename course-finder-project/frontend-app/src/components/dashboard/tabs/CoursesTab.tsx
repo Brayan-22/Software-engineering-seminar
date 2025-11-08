@@ -21,11 +21,13 @@ import {
     deleteCourse,
     updateCourse
 } from "../../../api/businessApi/CourseService";
+import { useGlobalAlert } from "../../../context/AlertContext";
 
 export const CoursesTab = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { showAlert } = useGlobalAlert();
 
     // modal create
     const [open, setOpen] = useState(false);
@@ -59,6 +61,7 @@ export const CoursesTab = () => {
             } catch (err) {
                 console.error(err);
                 setError("Error loading courses");
+                showAlert("Error loading courses", "error");
             } finally {
                 setLoading(false);
             }
@@ -117,8 +120,10 @@ export const CoursesTab = () => {
             setOpen(false);
             setFormData({ code: "", name: "", day: "", time: "" });
             setFormErrors({ code: "", name: "", day: "", time: "" });
+            showAlert("Course created successfully!", "success");
         } catch (err) {
             console.error("Error creating course:", err);
+            showAlert("Failed to create course", "error");
         }
     };
 
@@ -133,8 +138,10 @@ export const CoursesTab = () => {
         try {
             await deleteCourse(selectedCourse.id);
             setCourses((prev) => prev.filter((c) => c.id !== selectedCourse.id));
+            showAlert(`Deleted course "${selectedCourse.name}"`, "success");
         } catch (err) {
             console.error("Error deleting course:", err);
+            showAlert("Error deleting course", "error");
         } finally {
             setConfirmOpen(false);
             setSelectedCourse(null);
@@ -161,11 +168,12 @@ export const CoursesTab = () => {
                 prev.map((c) => (c.id === selectedCourse.id ? response : c))
             );
             setSelectedCourse(null);
+            showAlert("Course updated successfully!", "success");
         } catch (err) {
             console.error("Error updating course:", err);
+            showAlert("Error updating course", "error");
         }
     };
-
 
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading courses...</Typography>;
@@ -317,7 +325,6 @@ export const CoursesTab = () => {
                     <Button variant="contained" onClick={handleUpdateCourse}>Save Changes</Button>
                 </DialogActions>
             </Dialog>
-
 
             {/* Modal confirm delete */}
             <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>
