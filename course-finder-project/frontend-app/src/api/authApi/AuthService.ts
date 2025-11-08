@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AUTH_API = "https://authbackbs.glud.org/api/auth";
+const AUTH_API = "/auth-api/auth";
 
 export const login = async (username: string, password: string) => {
  

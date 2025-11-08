@@ -8,7 +8,7 @@ export const AdminNavbar = () => {
   const { logout } = useAuth();
   const handleLogout = () => {
     logout();
-   // navigate("/home")
+    // navigate("/home")
   }
 
   return (

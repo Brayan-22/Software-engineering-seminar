@@ -29,7 +29,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const login = async (username: string, password: string) => {
     try {
       const token = await apiLogin(username, password);
-      console.log(token);
+      console.log("TOKEN: " + token);
       if (token) {
         setToken(token);
         return true;
