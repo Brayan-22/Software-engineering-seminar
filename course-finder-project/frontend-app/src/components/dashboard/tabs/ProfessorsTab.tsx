@@ -21,11 +21,13 @@ import {
     deleteProfessor,
     updateProfessor
 } from "../../../api/businessApi/ProfessorService";
+import { useGlobalAlert } from "../../../context/AlertContext";
 
 export const ProfessorsTab = () => {
     const [professors, setProfessors] = useState<Professor[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const { showAlert } = useGlobalAlert();
 
     // Modal create
     const [open, setOpen] = useState(false);
@@ -33,7 +35,6 @@ export const ProfessorsTab = () => {
     // Modal edit
     const [editOpen, setEditOpen] = useState(false);
     const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
-
 
     // Modal delete
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -68,6 +69,7 @@ export const ProfessorsTab = () => {
             } catch (err) {
                 console.error(err);
                 setError("Error loading professors");
+                showAlert("Error loading professors", "error");
             } finally {
                 setLoading(false);
             }
@@ -127,8 +129,10 @@ export const ProfessorsTab = () => {
             setOpen(false);
             setFormData({ name: "", email: "", specialty: "" });
             setFormErrors({ name: "", email: "", specialty: "" });
+            showAlert("Professor created successfully", "success");
         } catch (err) {
             console.error("Error creating professor:", err);
+            showAlert("Error creating professor", "error");
         }
     };
 
@@ -142,8 +146,10 @@ export const ProfessorsTab = () => {
         try {
             await deleteProfessor(selectedProfessorId);
             setProfessors((prev) => prev.filter(p => p.id !== selectedProfessorId));
+            showAlert("Professor deleted successfully", "success");
         } catch (err) {
             console.error("Error deleting professor:", err);
+            showAlert("Error deleting professor", "error");
         } finally {
             setDeleteOpen(false);
             setSelectedProfessorId(null);
@@ -180,11 +186,12 @@ export const ProfessorsTab = () => {
             setEditOpen(false);
             setSelectedProfessor(null);
             setFormData({ name: "", email: "", specialty: "" });
+            showAlert("Professor updated successfully", "success");
         } catch (err) {
             console.error("Error updating professor:", err);
+            showAlert("Error updating professor", "error");
         }
     };
-
 
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading professors...</Typography>;
@@ -319,7 +326,6 @@ export const ProfessorsTab = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-
 
             {/* Modal confirm delete */}
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
