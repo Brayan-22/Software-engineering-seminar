@@ -61,3 +61,10 @@ htmlcov/
 
 # Docker
 docker-compose.override.yml
+# Ignore all key files
+*.pem
+*.key
+*.pub
+
+# But track the README
+!README.md
