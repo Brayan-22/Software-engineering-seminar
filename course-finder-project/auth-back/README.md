@@ -66,7 +66,7 @@ auth-back/
 Create the database and table using the following script (already included in `/src/main/resources/db/init_auth_db.sql`):
 
 ```sql
--- Script: init_auth_db.sql
+-- Script:schema_db.sql
 -- Database: auth_db_course
 
 CREATE DATABASE IF NOT EXISTS auth_db_course CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -1,16 +1,16 @@
--- Script de inicializacion de base de datos para auth-back
--- Base de datos: auth_db_course
+-- Database initialization script for auth-back
+-- Database: auth_db_course
 
--- Crear la base de datos si no existe
+-- Create the database if it does not exist
 CREATE DATABASE IF NOT EXISTS auth_db_course CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 
--- Usar la base de datos
+-- Use the database
 USE auth_db_course;
 
--- Eliminar tabla si existe , (usar en dev o testing)
+-- Drop table if it exists (useful for development or testing)
 DROP TABLE IF EXISTS admins;
 
--- Crear tabla admins
+-- Create admins table
 CREATE TABLE admins (
     id INT AUTO_INCREMENT PRIMARY KEY,
     username VARCHAR(255) NOT NULL UNIQUE,
