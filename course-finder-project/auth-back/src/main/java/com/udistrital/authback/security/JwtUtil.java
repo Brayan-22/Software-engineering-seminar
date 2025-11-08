@@ -19,9 +19,8 @@ public class JwtUtil {
 
     @Autowired
     private PrivateKey privateKey;
-    @Value("${spring.application.name}")
-    private String applicationName;
-    private static final Long EXPIRATION_TIME = 60000L; // 1 minute
+
+    private static final Long EXPIRATION_TIME =  30L * 60L * 1000L; // 30 minutes
 
     public String generateToken(String username) {
         return Jwts.builder()
