@@ -31,27 +31,29 @@ It handles administrator login using **JWT (JSON Web Token)** and connects to a 
 
 ## Project Structure
 
+```
 auth-back/
-├─ init_db_scripts/              # SQL scripts for database initialization
-│    └─ init_auth_db.sql
-├─ src/
-│   ├─ main/
-│   │   ├─ java/com/udistrital/authback/
-│   │   │   ├─ config/           # Security configuration 
-│   │   │   ├─ controller/       # REST controllers 
-│   │   │   ├─ dto/              # Data Transfer Objects 
-│   │   │   ├─ entity/           # JPA entities 
-│   │   │   ├─ repository/       # JPA repositories 
-│   │   │   ├─ security/         # JWT utilities and token management
-│   │   │   ├─ service/          # Business logic 
-│   │   │   └─ AuthBackApplication.java  # Spring Boot main class
-│   │   └─ resources/            # Application configuration and assets
-│   └─ test/
-│       └─ java/com/udistrital/authback/
-│           ├─ service/          # Unit tests for AuthService
-│           │   └─ AuthServiceTest.java
-│           └─ AuthBackApplicationTests.java  # Spring Boot context test
-
+├── init_db_scripts/                     # SQL scripts for database initialization
+│    ├── schema_db.sql
+│    └── data_db.sql
+├── src/
+│   ├── main/
+│   │   ├── java/com/udistrital/authback/
+│   │   │   ├── config/                  # Security configuration
+│   │   │   ├── controller/              # REST controllers
+│   │   │   ├── dto/                     # Data Transfer Objects
+│   │   │   ├── entity/                  # JPA entities
+│   │   │   ├── repository/              # JPA repositories
+│   │   │   ├── security/                # JWT utilities and token management
+│   │   │   ├── service/                 # Business logic
+│   │   │   └── AuthBackApplication.java # Spring Boot main class
+│   │   └── resources/                   # Application configuration and assets
+│   └── test/
+│       └── java/com/udistrital/authback/
+│           ├── service/                 # Unit tests for AuthService
+│           │   └── AuthServiceTest.java
+│           └── AuthBackApplicationTests.java  # Spring Boot context test
+```
 
 
 
