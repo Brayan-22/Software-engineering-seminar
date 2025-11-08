@@ -1,117 +1,70 @@
-"""
-ProfessorCourse Pydantic Schemas
-"""
 from typing import Optional, List
 from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from src.schemas.professor_schema import ProfessorResponse
 from src.schemas.course_schema import CourseResponse
+from src.schemas.professor_schema import ProfessorCreate
+from src.schemas.course_schema import CourseCreate
 
 
 class ProfessorCourseBase(BaseModel):
-    """
-    Base schema with common ProfessorCourse attributes.
-    """
-    professor_id: int = Field(..., gt=0, description="ID of the professor")
-    course_id: int = Field(..., gt=0, description="ID of the course")
-    status: str = Field(
-        default="active",
-        pattern="^(active|inactive|pending)$",
-        description="Assignment status: active, inactive, or pending"
-    )
+    professor_id: int = Field(..., gt=0)
+    course_id: int = Field(..., gt=0)
+    status: str = Field(default="active", pattern="^(active|inactive|pending)$")
 
 
 class ProfessorCourseCreate(BaseModel):
-    """
-    Schema for creating a new ProfessorCourse assignment.
-    """
-    professor_id: int = Field(..., gt=0, description="ID of the professor")
-    course_id: int = Field(..., gt=0, description="ID of the course")
-    status: str = Field(
-        default="active",
-        pattern="^(active|inactive|pending)$",
-        description="Assignment status: active, inactive, or pending"
-    )
+    professor_id: int = Field(..., gt=0)
+    course_id: int = Field(..., gt=0)
+    status: str = Field(default="active", pattern="^(active|inactive|pending)$")
 
 
 class ProfessorCourseUpdate(BaseModel):
-    """
-    Schema for updating an existing ProfessorCourse assignment.
-    Typically used to change status.
-    """
-    status: str = Field(
-        ...,
-        pattern="^(active|inactive|pending)$",
-        description="Assignment status: active, inactive, or pending"
-    )
+    status: str = Field(..., pattern="^(active|inactive|pending)$")
 
 
 class ProfessorCourseResponse(ProfessorCourseBase):
-    """
-    Schema for ProfessorCourse responses.
-    Includes database-generated fields.
-    """
-    id: int = Field(..., description="Assignment's unique identifier")
-    assigned_at: datetime = Field(..., description="Timestamp when the assignment was created")
-
+    id: int
+    assigned_at: datetime
     model_config = ConfigDict(from_attributes=True)
 
 
 class ProfessorCourseDetailResponse(ProfessorCourseResponse):
-    """
-    Schema for detailed ProfessorCourse responses with related entities.
-    Includes professor and course information.
-    """
-    professor: Optional[ProfessorResponse] = Field(None, description="Professor information")
-    course: Optional[CourseResponse] = Field(None, description="Course information")
-
+    professor: Optional[ProfessorResponse] = Field(None)
+    course: Optional[CourseResponse] = Field(None)
     model_config = ConfigDict(from_attributes=True)
 
 
 class ProfessorWithCoursesDetail(BaseModel):
-    """
-    Schema for Professor with detailed course assignments.
-    """
-    id: int = Field(..., description="Professor's unique identifier")
-    name: str = Field(..., description="Professor's full name")
-    email: str = Field(..., description="Professor's email address")
-    specialty: Optional[str] = Field(None, description="Professor's area of specialty")
-    courses: List[CourseResponse] = Field(default_factory=list, description="List of assigned courses")
-
+    id: int
+    name: str
+    email: str
+    specialty: Optional[str] = Field(None)
+    courses: List[CourseResponse] = Field(default_factory=list)
     model_config = ConfigDict(from_attributes=True)
 
 
 class CourseWithProfessorsDetail(BaseModel):
-    """
-    Schema for Course with detailed professor assignments.
-    """
-    id: int = Field(..., description="Course's unique identifier")
-    name: str = Field(..., description="Course name")
-    code: str = Field(..., description="Unique course code")
-    category: Optional[str] = Field(None, description="Course category")
-    professors: List[ProfessorResponse] = Field(default_factory=list, description="List of assigned professors")
-
+    id: int
+    name: str
+    code: str
+    schedule: Optional[str] = Field(None)
+    professors: List[ProfessorResponse] = Field(default_factory=list)
     model_config = ConfigDict(from_attributes=True)
 
 
 class ProfessorCourseListResponse(BaseModel):
-    """
-    Schema for paginated list of professor-course assignments.
-    """
     assignments: List[ProfessorCourseDetailResponse]
-    total: int = Field(..., description="Total number of assignments")
-    skip: int = Field(..., ge=0, description="Number of records skipped")
-    limit: int = Field(..., ge=1, le=100, description="Maximum number of records returned")
-
+    total: int
     model_config = ConfigDict(from_attributes=True)
 
 
 class AssignmentStatusUpdate(BaseModel):
-    """
-    Schema for updating assignment status.
-    """
-    status: str = Field(
-        ...,
-        pattern="^(active|inactive|pending)$",
-        description="New assignment status"
-    )
+    status: str = Field(..., pattern="^(active|inactive|pending)$")
+
+
+class AssignmentProfessorCourse(BaseModel):
+    professor: ProfessorCreate
+    course: CourseCreate
+    status: str = Field(default="active", pattern="^(active|inactive|pending)$")
+    model_config = ConfigDict(from_attributes=True)

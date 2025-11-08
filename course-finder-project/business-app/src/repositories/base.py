@@ -39,7 +39,17 @@ class BaseRepository(Generic[ModelType]):
         """
         return self.db.query(self.model).filter(self.model.id == id).first()
 
-    def get_all(self, skip: int = 0, limit: int = 100) -> List[ModelType]:
+
+    def get_all(self) -> List[ModelType]:
+        """
+        Get all records.
+
+        Returns:
+            List of model instances
+        """
+        return self.db.query(self.model).all()
+
+    def get_all_paginated(self, skip: int = 0, limit: int = 100) -> List[ModelType]:
         """
         Get all records with pagination.
 

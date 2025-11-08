@@ -67,7 +67,6 @@ class ProfessorCourseRepository(BaseRepository[ProfessorCourse]):
             query = query.filter(ProfessorCourse.id != exclude_id)
         return query.first() is not None
 
-
 def get_professor_course_repository(
     db: Session = Depends(get_db),
 ) -> ProfessorCourseRepository:

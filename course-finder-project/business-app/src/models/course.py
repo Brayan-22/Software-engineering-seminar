@@ -8,14 +8,14 @@ from src.core.database import Base
 
 class Course(Base):
     """
-    Course domain model representing courses available in the system.
+    Course domain model representing courses
     """
     __tablename__ = "courses"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False)
     code = Column(String(50), unique=True, nullable=False, index=True)
-    category = Column(String(100), nullable=True)
+    schedule = Column(String(100), nullable=True)
 
     # Relationship to professors through ProfessorCourse association table
     course_professors = relationship(

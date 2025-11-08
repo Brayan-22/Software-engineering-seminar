@@ -3,6 +3,8 @@ ProfessorCourse Service - Basic CRUD Business Logic
 """
 from fastapi import Depends, HTTPException, status
 from src.models.professor_course import ProfessorCourse
+from src.models.course import Course
+from src.models.professor import Professor
 from src.repositories.professor_course_repository import (
     ProfessorCourseRepository,
     get_professor_course_repository,
@@ -16,11 +18,14 @@ from src.repositories.course_repository import (
     get_course_repository,
 )
 from src.schemas.professor_course_schema import (
-    ProfessorCourseCreate,
+    AssignmentProfessorCourse,
     ProfessorCourseUpdate,
     ProfessorCourseDetailResponse,
     ProfessorCourseListResponse,
 )
+
+from src.schemas.professor_schema import ProfessorCreate
+from src.schemas.course_schema import CourseCreate
 
 
 class ProfessorCourseService:
@@ -46,56 +51,43 @@ class ProfessorCourseService:
         self.professor_repository = professor_repository
         self.course_repository = course_repository
 
-    def assign_course_to_professor(
-        self, assignment_data: ProfessorCourseCreate
-    ) -> ProfessorCourseDetailResponse:
+    def create_assing(self, assignment_data: AssignmentProfessorCourse):
         """
-        Create a new professor-course assignment.
-
-        Args:
-            assignment_data: Assignment creation data
-
-        Returns:
-            Created assignment with details
-
-        Raises:
-            HTTPException: If professor or course not found, or assignment already exists
+        Create a new professor-course assignment
         """
-        # Verify professor exists
-        professor = self.professor_repository.get_by_id(assignment_data.professor_id)
-        if not professor:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Professor with id {assignment_data.professor_id} not found",
-            )
+        # Search or craete professor
+        if assignment_data.professor.id:
+            professor = self.professor_repository.get_by_id(assignment_data.professor.id)
+            if not professor:
+                raise HTTPException(status_code=404, detail="Professor id not found")
+        else:
+            professor_to_create = Professor(**assignment_data.professor.model_dump(exclude={"id"}))
+            professor = self.professor_repository.create(professor_to_create)
 
-        # Verify course exists
-        course = self.course_repository.get_by_id(assignment_data.course_id)
-        if not course:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail=f"Course with id {assignment_data.course_id} not found",
-            )
-
+        # Search or create course
+        if assignment_data.course.id:
+            course = self.course_repository.get_by_id(assignment_data.course.id)
+            if not course:
+                raise HTTPException(status_code=404, detail="Course id not found")
+        else:
+            course_to_create = Course(**assignment_data.course.model_dump(exclude={"id"}))
+            course = self.course_repository.create(course_to_create)
         # Check if assignment already exists
-        if self.repository.assignment_exists(
-            assignment_data.professor_id, assignment_data.course_id
-        ):
+        if self.repository.assignment_exists(assignment_data.professor.id, assignment_data.course.id):
             raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT,
-                detail=f"Assignment already exists for professor {assignment_data.professor_id} and course {assignment_data.course_id}",
+                detail=f"Assignment for professor {professor.id} and course {course.id} already exists",
             )
 
         # Create assignment
-        assignment = ProfessorCourse(**assignment_data.model_dump())
-        created_assignment = self.repository.create(assignment)
-
-        # Load relationships for response
-        created_assignment.professor = professor
-        created_assignment.course = course
+        new_assignment = ProfessorCourse(
+            professor_id=assignment_data.professor_id,
+            course_id=assignment_data.course_id,
+            status=assignment_data.status,
+        )
+        created_assignment = self.repository.create(new_assignment)
 
         return ProfessorCourseDetailResponse.model_validate(created_assignment)
-
     def get_assignment_by_id(self, assignment_id: int) -> ProfessorCourseDetailResponse:
         """
         Get assignment by ID with details.
@@ -118,20 +110,14 @@ class ProfessorCourseService:
 
         return ProfessorCourseDetailResponse.model_validate(assignment)
 
-    def get_all_assignments(
-        self, skip: int = 0, limit: int = 100
-    ) -> ProfessorCourseListResponse:
+    def get_all_assignments(self) -> ProfessorCourseListResponse:
         """
-        Get all assignments with pagination.
-
-        Args:
-            skip: Number of records to skip
-            limit: Maximum number of records to return
+        Get all assignments
 
         Returns:
-            Paginated list of all assignments
+            List of assignments with details and total count
         """
-        assignments = self.repository.get_all(skip=skip, limit=limit)
+        assignments = self.repository.get_all()
         total = self.repository.count()
 
         return ProfessorCourseListResponse(
@@ -139,8 +125,6 @@ class ProfessorCourseService:
                 ProfessorCourseDetailResponse.model_validate(a) for a in assignments
             ],
             total=total,
-            skip=skip,
-            limit=limit,
         )
 
     def update_assignment_status(
@@ -217,7 +201,6 @@ class ProfessorCourseService:
         return {
             "message": f"Assignment for professor {professor_id} and course {course_id} deleted successfully"
         }
-
 
 def get_professor_course_service(
     repository: ProfessorCourseRepository = Depends(get_professor_course_repository),

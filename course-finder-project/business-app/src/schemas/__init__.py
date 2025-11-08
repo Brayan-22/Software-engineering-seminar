@@ -19,7 +19,6 @@ from src.schemas.course_schema import (
     CourseResponse,
     CourseWithProfessorsResponse,
     CourseListResponse,
-    CourseCategoryResponse,
 )
 
 # ProfessorCourse schemas
@@ -50,7 +49,6 @@ __all__ = [
     "CourseResponse",
     "CourseWithProfessorsResponse",
     "CourseListResponse",
-    "CourseCategoryResponse",
     # ProfessorCourse
     "ProfessorCourseBase",
     "ProfessorCourseCreate",
