@@ -3,7 +3,6 @@ from pydantic import BaseModel, EmailStr, ConfigDict, Field
 
 
 class ProfessorBase(BaseModel):
-    id: int = None
     name: str = Field(..., min_length=1, max_length=255)
     email: EmailStr = Field(...)
     specialty: Optional[str] = Field(None, max_length=255)
@@ -12,6 +11,8 @@ class ProfessorBase(BaseModel):
 class ProfessorCreate(ProfessorBase):
     pass
 
+class ProfessorCreateMany(ProfessorBase):
+    id: Optional[int] = Field(None, gt=0)
 
 class ProfessorUpdate(BaseModel):
     name: Optional[str] = Field(None, min_length=1, max_length=255)
@@ -20,6 +21,7 @@ class ProfessorUpdate(BaseModel):
 
 
 class ProfessorResponse(ProfessorBase):
+    id: int
     model_config = ConfigDict(from_attributes=True)
 
 

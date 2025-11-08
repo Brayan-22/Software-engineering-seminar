@@ -3,8 +3,8 @@ from datetime import datetime
 from pydantic import BaseModel, ConfigDict, Field
 from src.schemas.professor_schema import ProfessorResponse
 from src.schemas.course_schema import CourseResponse
-from src.schemas.professor_schema import ProfessorCreate
-from src.schemas.course_schema import CourseCreate
+from src.schemas.professor_schema import ProfessorCreateMany
+from src.schemas.course_schema import CourseCreateMany
 
 
 class ProfessorCourseBase(BaseModel):
@@ -64,7 +64,7 @@ class AssignmentStatusUpdate(BaseModel):
 
 
 class AssignmentProfessorCourse(BaseModel):
-    professor: ProfessorCreate
-    course: CourseCreate
+    professor: ProfessorCreateMany
+    course: CourseCreateMany
     status: str = Field(default="active", pattern="^(active|inactive|pending)$")
     model_config = ConfigDict(from_attributes=True)
