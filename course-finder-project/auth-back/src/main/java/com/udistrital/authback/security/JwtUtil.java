@@ -21,14 +21,13 @@ public class JwtUtil {
     private PrivateKey privateKey;
     @Value("${spring.application.name}")
     private String applicationName;
+    private static final Long EXPIRATION_TIME = 60000L; // 1 minute
 
     public String generateToken(String username) {
         return Jwts.builder()
                 .setSubject(username)
-                .setAudience("course-finder")
-                .setIssuer(applicationName)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
