@@ -4,6 +4,7 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { AppRouter } from "./routes/AppRouter";
 import { theme } from "./theme/theme";
 import { AlertProvider } from "./context/AlertContext";
+import { AuthProvider } from "./context/AuthContext";
 import GlobalAlert from "./components/GlobalAlert";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
@@ -11,8 +12,10 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <AlertProvider>
-        <AppRouter />
-        <GlobalAlert />
+        <AuthProvider>
+          <AppRouter />
+          <GlobalAlert />
+        </AuthProvider>
       </AlertProvider>
     </ThemeProvider>
   </React.StrictMode>

@@ -4,7 +4,7 @@ import { Login } from "../pages/Login";
 import { AdminDashboard } from "../pages/AdminDashboard";
 import { MainLayout } from "../layouts/MainLayout";
 import { AdminLayout } from "../layouts/AdminLayout";
-
+import { ProtectedRoute } from "./ProtectedRoute"
 export const AppRouter = () => {
     return (
         <BrowserRouter>
@@ -15,8 +15,11 @@ export const AppRouter = () => {
                     <Route path="/login" element={<Login />} />
 
                 </Route>
-                <Route element={<AdminLayout />}>
-                    <Route path="/dashboard" element={<AdminDashboard />} />
+                {/* Protected layout */}
+                <Route element={<ProtectedRoute />}>
+                    <Route element={<AdminLayout />}>
+                        <Route path="/dashboard" element={<AdminDashboard />} />
+                    </Route>
                 </Route>
             </Routes>
         </BrowserRouter>
