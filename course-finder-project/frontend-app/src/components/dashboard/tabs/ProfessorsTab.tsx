@@ -219,7 +219,7 @@ export const ProfessorsTab = () => {
                             key={professor.id}
                             professor={professor}
                             showActions
-                            onEdit={() => handleEditClick(professor)} 
+                            onEdit={() => handleEditClick(professor)}
                             onDelete={handleOpenDeleteModal}
                         />
                     ))
