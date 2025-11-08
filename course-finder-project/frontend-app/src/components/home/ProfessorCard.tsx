@@ -40,7 +40,7 @@ export const ProfessorCard = ({ professor, showActions, onEdit, onDelete }: Prof
                 alignItems: "center",
                 gap: "10px"
             }}>
-                <Button variant="contained">Edit</Button>
+                <Button variant="contained" onClick={() => onEdit?.(professor.id)}>Edit</Button>
                 <Button variant="contained" onClick={() => onDelete?.(professor.id)}>Delete</Button>
 
             </Box>}

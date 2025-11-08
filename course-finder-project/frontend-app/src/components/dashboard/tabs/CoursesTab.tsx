@@ -19,6 +19,7 @@ import {
     getCourses,
     createCourse,
     deleteCourse,
+    updateCourse
 } from "../../../api/businessApi/CourseService";
 
 export const CoursesTab = () => {
@@ -140,6 +141,32 @@ export const CoursesTab = () => {
         }
     };
 
+    const handleEditClick = (course: Course) => {
+        const [day, time] = course.schedule.split(" ");
+        setFormData({ code: course.code, name: course.name, day, time });
+        setSelectedCourse(course);
+    };
+
+    const handleUpdateCourse = async () => {
+        if (!selectedCourse || !validateForm()) return;
+        try {
+            const updatedCourse = {
+                ...selectedCourse,
+                code: formData.code,
+                name: formData.name,
+                schedule: `${formData.day} ${formData.time}`,
+            };
+            const response = await updateCourse(selectedCourse.id, updatedCourse);
+            setCourses((prev) =>
+                prev.map((c) => (c.id === selectedCourse.id ? response : c))
+            );
+            setSelectedCourse(null);
+        } catch (err) {
+            console.error("Error updating course:", err);
+        }
+    };
+
+
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading courses...</Typography>;
 
@@ -165,6 +192,7 @@ export const CoursesTab = () => {
                         <CourseCard
                             key={course.id}
                             course={course}
+                            onEdit={() => handleEditClick(course)}
                             onDelete={() => handleDeleteClick(course)}
                             showActions
                         />
@@ -242,6 +270,54 @@ export const CoursesTab = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Modal edit */}
+            <Dialog open={!!selectedCourse && !confirmOpen && !open} onClose={() => setSelectedCourse(null)}>
+                <DialogTitle>Edit Course</DialogTitle>
+                <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+                    <TextField
+                        label="Code"
+                        name="code"
+                        value={formData.code}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!formErrors.code}
+                        helperText={formErrors.code}
+                    />
+                    <TextField
+                        label="Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!formErrors.name}
+                        helperText={formErrors.name}
+                    />
+                    <FormControl fullWidth error={!!formErrors.day}>
+                        <Select displayEmpty name="day" value={formData.day} onChange={handleChange}>
+                            <MenuItem value="" disabled>Select Day</MenuItem>
+                            {days.map((day) => (
+                                <MenuItem key={day} value={day}>{day}</MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{formErrors.day}</FormHelperText>
+                    </FormControl>
+                    <FormControl fullWidth error={!!formErrors.time}>
+                        <Select displayEmpty name="time" value={formData.time} onChange={handleChange}>
+                            <MenuItem value="" disabled>Select Time Slot</MenuItem>
+                            {timeSlots.map((slot) => (
+                                <MenuItem key={slot} value={slot}>{slot}</MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{formErrors.time}</FormHelperText>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setSelectedCourse(null)}>Cancel</Button>
+                    <Button variant="contained" onClick={handleUpdateCourse}>Save Changes</Button>
+                </DialogActions>
+            </Dialog>
+
 
             {/* Modal confirm delete */}
             <Dialog open={confirmOpen} onClose={() => setConfirmOpen(false)}>

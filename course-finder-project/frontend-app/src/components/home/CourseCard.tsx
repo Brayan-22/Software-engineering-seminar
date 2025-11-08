@@ -40,8 +40,8 @@ export const CourseCard = ({ course, showActions = false, onEdit, onDelete }: Co
                 alignItems: "center",
                 gap: "10px"
             }}>
-                <Button variant="contained">Edit</Button>
-                <Button variant="contained"  onClick={() => onDelete?.(course.id)}>Delete</Button>
+                <Button variant="contained" onClick={() => onEdit?.(course.id)}>Edit</Button>
+                <Button variant="contained" onClick={() => onDelete?.(course.id)}>Delete</Button>
 
             </Box>}
 

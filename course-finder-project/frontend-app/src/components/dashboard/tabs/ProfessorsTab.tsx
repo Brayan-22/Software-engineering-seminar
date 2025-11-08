@@ -19,6 +19,7 @@ import {
     getProfessors,
     createProfessor,
     deleteProfessor,
+    updateProfessor
 } from "../../../api/businessApi/ProfessorService";
 
 export const ProfessorsTab = () => {
@@ -28,6 +29,11 @@ export const ProfessorsTab = () => {
 
     // Modal create
     const [open, setOpen] = useState(false);
+
+    // Modal edit
+    const [editOpen, setEditOpen] = useState(false);
+    const [selectedProfessor, setSelectedProfessor] = useState<Professor | null>(null);
+
 
     // Modal delete
     const [deleteOpen, setDeleteOpen] = useState(false);
@@ -144,6 +150,42 @@ export const ProfessorsTab = () => {
         }
     };
 
+    const handleEditClick = (professor: Professor) => {
+        setSelectedProfessor(professor);
+        setFormData({
+            name: professor.name,
+            email: professor.email,
+            specialty: professor.specialty,
+        });
+        setEditOpen(true);
+    };
+
+    const handleUpdateProfessor = async () => {
+        if (!selectedProfessor || !validateForm()) return;
+
+        try {
+            const updatedProfessor: Professor = {
+                ...selectedProfessor,
+                name: formData.name,
+                email: formData.email,
+                specialty: formData.specialty,
+            };
+
+            const response = await updateProfessor(updatedProfessor);
+
+            setProfessors((prev) =>
+                prev.map((p) => (p.id === selectedProfessor.id ? response : p))
+            );
+
+            setEditOpen(false);
+            setSelectedProfessor(null);
+            setFormData({ name: "", email: "", specialty: "" });
+        } catch (err) {
+            console.error("Error updating professor:", err);
+        }
+    };
+
+
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading professors...</Typography>;
 
@@ -170,6 +212,7 @@ export const ProfessorsTab = () => {
                             key={professor.id}
                             professor={professor}
                             showActions
+                            onEdit={() => handleEditClick(professor)} 
                             onDelete={handleOpenDeleteModal}
                         />
                     ))
@@ -229,6 +272,54 @@ export const ProfessorsTab = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
+
+            {/* Modal Edit */}
+            <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
+                <DialogTitle>Edit Professor</DialogTitle>
+                <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
+                    <TextField
+                        label="Name"
+                        name="name"
+                        value={formData.name}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!formErrors.name}
+                        helperText={formErrors.name}
+                    />
+                    <TextField
+                        label="Email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        fullWidth
+                        error={!!formErrors.email}
+                        helperText={formErrors.email}
+                    />
+                    <FormControl fullWidth error={!!formErrors.specialty}>
+                        <Select
+                            displayEmpty
+                            name="specialty"
+                            value={formData.specialty}
+                            onChange={handleChange}
+                        >
+                            <MenuItem value="" disabled>Select Specialty</MenuItem>
+                            {specialties.map((spec) => (
+                                <MenuItem key={spec} value={spec}>
+                                    {spec}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                        <FormHelperText>{formErrors.specialty}</FormHelperText>
+                    </FormControl>
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setEditOpen(false)}>Cancel</Button>
+                    <Button variant="contained" onClick={handleUpdateProfessor}>
+                        Save Changes
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
 
             {/* Modal confirm delete */}
             <Dialog open={deleteOpen} onClose={() => setDeleteOpen(false)}>
