@@ -1,6 +1,9 @@
 import { AppBar, Toolbar, Typography, Button, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 export const Navbar = () => {
+
+  const navigate = useNavigate();
   return (
     <AppBar position="static" color="primary" elevation={1}>
       <Toolbar>
@@ -8,8 +11,8 @@ export const Navbar = () => {
           Academic Course Finder
         </Typography>
         <Box>
-          <Button color="inherit">Home</Button>
-          <Button color="inherit">Login as Admin</Button>
+          <Button color="inherit" onClick={() => navigate("/")}>Home</Button>
+          <Button color="inherit" onClick={() => navigate("/login")}>Login as Admin</Button>
         </Box>
       </Toolbar>
     </AppBar>

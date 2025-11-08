@@ -30,13 +30,13 @@ export const LoginForm = () => {
   const { login } = useAuth();
   const { showAlert } = useGlobalAlert();
   const navigate = useNavigate();
-  
+
   const onSubmit: SubmitHandler<LoginInputs> = async (data) => {
     try {
       const success = await login(data.username, data.password);
       if (success) {
-        showAlert("Login successful", "success");
         navigate("/dashboard");
+        showAlert("Login successful", "success");
 
       } else {
         showAlert("Invalid credentials", "error");
