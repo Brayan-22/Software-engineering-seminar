@@ -14,6 +14,27 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+
+/**
+ * Unit tests for {@link AuthService}.
+ *
+ * These tests verify the authentication logic responsible for validating
+ * admin credentials and generating JWT tokens.
+ *
+ * Test coverage includes:
+ *  - Successful login when valid credentials are provided.
+ *  - Failed login when the password is incorrect.
+ *  - Failed login when the user does not exist.
+ *
+ * Mocks are used for:
+ *  - {@link AdminRepository} to simulate database queries.
+ *  - {@link PasswordEncoder} to verify password matching.
+ *  - {@link JwtUtil} to simulate token generation without requiring real signing.
+ *
+ * This ensures the authentication logic is correctly validated
+ * in isolation, without connecting to an actual database or security layer.
+ */
 class AuthServiceTest {
 
     private AuthService authService;

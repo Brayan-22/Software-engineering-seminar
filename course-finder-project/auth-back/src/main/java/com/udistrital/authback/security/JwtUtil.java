@@ -30,4 +30,8 @@ public class JwtUtil {
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
     }
+
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
+    }
 }

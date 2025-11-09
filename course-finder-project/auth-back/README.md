@@ -20,7 +20,7 @@ It handles administrator login using **JWT (JSON Web Token)** and connects to a 
 | Layer             | Technology            |
 |-------------------|-----------------------|
 | Backend Framework | Spring Boot 3.5.7     |
-| Database          | MySQL 8+              |
+| Database          | MySQL 8               |
 | ORM               | Spring Data JPA       |
 | Security          | JWT (io.jsonwebtoken) |
 | Testing           | JUnit 5 + Mockito     |
@@ -50,8 +50,10 @@ auth-back/
 │   │   └── resources/                   # Application configuration and assets
 │   └── test/
 │       └── java/com/udistrital/authback/
-│           ├── service/                 # Unit tests for AuthService
-│           │   └── AuthServiceTest.java
+│           ├── security/
+│           │   └── JwtUtilTest.java     # Unit tests for JwtUtil
+│           ├── service/                 
+│           │   └── AuthServiceTest.java # Unit tests for AuthService   
 │           └── AuthBackApplicationTests.java  # Spring Boot context test
 ```
 
@@ -63,7 +65,7 @@ auth-back/
 
 ### Database Script
 
-Create the database and table using the following script (already included in `/src/main/resources/db/init_auth_db.sql`):
+Create the database and table using the following script (already included in `/init_db_scripts/schema_db.sql`):
 
 ```sql
 -- Script:schema_db.sql
@@ -127,7 +129,7 @@ Tomcat initialized with port 8080 (http)
 Started AuthBackApplication in 3.2 seconds
 ```
 
-### Running Unit Tests
+## Running Unit Tests
 This project includes unit tests for authentication logic.
 
 Run all tests using:
@@ -140,6 +142,37 @@ Expected output:
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 ```
+#### Unit Test Results
+
+![AuthServiceTest](https://i.imgur.com/ftaVBUZ.png)
+
+This screenshot shows the successful execution of the unit tests for the AuthService class.
+These tests validate the authentication logic, including:
+
+- Successful login: verifies that a valid username and password produce a JWT token.
+
+
+- Invalid password: ensures that incorrect credentials trigger an exception.
+
+
+- User not found: confirms that the service correctly handles missing users in the repository.
+
+All test cases passed, confirming that the authentication flow behaves as expected and interacts properly with mocked dependencies (AdminRepository, PasswordEncoder, and JwtUtil).
+
+![JwtUtilTest](https://i.imgur.com/Q8KZxDu.png)
+
+This screenshot displays the successful execution of the unit tests for the JwtUtil class.
+These tests verify the correct generation and validation of JWT tokens, ensuring that:
+
+- Tokens are generated with a valid signature (RS256) using the configured private key.
+
+
+- The generated token contains the expected claims (username, issued date, expiration).
+
+
+- Token expiration logic functions correctly within the defined time window.
+
+All tests passed, confirming that the JWT generation and signing process works reliably.
 
 ## REST API Documentation
 
@@ -152,6 +185,8 @@ Once the backend is running (for example, at `http://localhost:8080`),
 you can open the API documentation in your browser at:
 
 **http://localhost:8080/swagger-ui/index.html**
+
+![Swagger](https://i.imgur.com/bBPolrC.png)
 
 Swagger UI provides an interactive interface where you can:
 - Explore all available REST endpoints.
@@ -171,10 +206,11 @@ Swagger UI provides an interactive interface where you can:
   "password": "admin123"
 }
 ```
-
+![Login Endpoint](https://i.imgur.com/6Y8zh2n.png)
 #### Example response
 ```
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5..."
 }
 ```
+![Login Endpoint](https://i.imgur.com/cp18UZg.png)
