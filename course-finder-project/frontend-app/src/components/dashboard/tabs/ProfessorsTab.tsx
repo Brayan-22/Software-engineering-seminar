@@ -132,7 +132,7 @@ export const ProfessorsTab = () => {
             showAlert("Professor created successfully", "success");
         } catch (err) {
             console.error("Error creating professor:", err);
-            showAlert("Error creating professor", "error");
+            showAlert(err.message, "error");
         }
     };
 
@@ -149,7 +149,7 @@ export const ProfessorsTab = () => {
             showAlert("Professor deleted successfully", "success");
         } catch (err) {
             console.error("Error deleting professor:", err);
-            showAlert("Error deleting professor", "error");
+            showAlert(err.message, "error");
         } finally {
             setDeleteOpen(false);
             setSelectedProfessorId(null);
@@ -189,7 +189,7 @@ export const ProfessorsTab = () => {
             showAlert("Professor updated successfully", "success");
         } catch (err) {
             console.error("Error updating professor:", err);
-            showAlert("Error updating professor", "error");
+            showAlert(err.message, "error");
         }
     };
 
@@ -286,7 +286,7 @@ export const ProfessorsTab = () => {
                 <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
                     <TextField
                         sx={{
-                            mt:"5px"
+                            mt: "5px"
                         }}
                         label="Name"
                         name="name"

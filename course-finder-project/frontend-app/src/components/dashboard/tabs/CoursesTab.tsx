@@ -124,7 +124,7 @@ export const CoursesTab = () => {
             showAlert("Course created successfully!", "success");
         } catch (err) {
             console.error("Error creating course:", err);
-            showAlert("Failed to create course", "error");
+            showAlert(err.message, "error");
         }
     };
 
@@ -142,7 +142,7 @@ export const CoursesTab = () => {
             showAlert(`Deleted course "${selectedCourse.name}"`, "success");
         } catch (err) {
             console.error("Error deleting course:", err);
-            showAlert("Error deleting course", "error");
+            showAlert(err.message, "error");
         } finally {
             setConfirmOpen(false);
             setSelectedCourse(null);
@@ -173,7 +173,7 @@ export const CoursesTab = () => {
             showAlert("Course updated successfully!", "success");
         } catch (err) {
             console.error("Error updating course:", err);
-            showAlert("Error updating course", "error");
+            showAlert(err.message, "error");
         }
     };
 
