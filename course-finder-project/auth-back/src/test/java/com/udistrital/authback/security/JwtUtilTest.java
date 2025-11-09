@@ -28,12 +28,11 @@ class JwtUtilTest {
 
     @BeforeEach
     void setUp() throws Exception {
-        // Generate a temporary RSA key pair for testing
         keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
 
         jwtUtil = new JwtUtil();
         // Manually inject the private key (simulating @Autowired)
-        jwtUtil.privateKey = keyPair.getPrivate();
+        jwtUtil.setPrivateKey(keyPair.getPrivate());
     }
 
     @Test

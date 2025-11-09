@@ -18,7 +18,7 @@ import java.util.Date;
 public class JwtUtil {
 
     @Autowired
-    protected PrivateKey privateKey;
+    private PrivateKey privateKey;
 
     private static final Long EXPIRATION_TIME =  30L * 60L * 1000L; // 30 minutes
 
@@ -29,5 +29,9 @@ public class JwtUtil {
                 .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                 .signWith(privateKey, SignatureAlgorithm.RS256)
                 .compact();
+    }
+
+    public void setPrivateKey(PrivateKey privateKey) {
+        this.privateKey = privateKey;
     }
 }

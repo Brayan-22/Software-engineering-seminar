@@ -52,8 +52,8 @@ auth-back/
 │       └── java/com/udistrital/authback/
 │           ├── security/
 │           │   └── JwtUtilTest.java     # Unit tests for JwtUtil
-│           ├── service/                 # Unit tests for AuthService
-│           │   └── AuthServiceTest.java
+│           ├── service/                 
+│           │   └── AuthServiceTest.java # Unit tests for AuthService   
 │           └── AuthBackApplicationTests.java  # Spring Boot context test
 ```
 
@@ -129,7 +129,7 @@ Tomcat initialized with port 8080 (http)
 Started AuthBackApplication in 3.2 seconds
 ```
 
-### Running Unit Tests
+## Running Unit Tests
 This project includes unit tests for authentication logic.
 
 Run all tests using:
@@ -142,7 +142,7 @@ Expected output:
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 ```
-## Unit Test Results
+#### Unit Test Results
 
 ![AuthServiceTest](https://i.imgur.com/ftaVBUZ.png)
 
@@ -186,6 +186,8 @@ you can open the API documentation in your browser at:
 
 **http://localhost:8080/swagger-ui/index.html**
 
+![Swagger](https://i.imgur.com/bBPolrC.png)
+
 Swagger UI provides an interactive interface where you can:
 - Explore all available REST endpoints.
 - Test requests directly from the browser.
@@ -204,10 +206,11 @@ Swagger UI provides an interactive interface where you can:
   "password": "admin123"
 }
 ```
-
+![Login Endpoint](https://i.imgur.com/6Y8zh2n.png)
 #### Example response
 ```
 {
   "token": "eyJhbGciOiJIUzI1NiIsInR5..."
 }
 ```
+![Login Endpoint](https://i.imgur.com/cp18UZg.png)
