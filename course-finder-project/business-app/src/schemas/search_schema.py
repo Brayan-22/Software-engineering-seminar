@@ -5,6 +5,7 @@ from typing import List, Optional
 from pydantic import BaseModel, ConfigDict, Field
 from src.schemas.professor_schema import ProfessorResponse
 from src.schemas.course_schema import CourseResponse
+from src.schemas.professor_course_schema import ProfessorCourseDetailResponse
 
 
 class CourseListSearchResponse(BaseModel):
@@ -50,9 +51,13 @@ class AdvancedSearchRequest(BaseModel):
 
 class AdvancedSearchResponse(BaseModel):
     """
-    Response model for advanced search results
+    Response model for advanced search results.
+
+    Returns assignments (professor-course relationships) matching the search criteria.
     """
-    professors: List[ProfessorResponse]
-    courses: List[CourseResponse]
-    total_results: int = Field(..., description="Total number of results (professors + courses)")
+    assignments: List[ProfessorCourseDetailResponse] = Field(
+        ...,
+        description="List of unique assignments matching the search criteria"
+    )
+    total: int = Field(..., description="Total number of unique assignments found")
     model_config = ConfigDict(from_attributes=True)

@@ -21,7 +21,6 @@ from src.specifications import (
     CourseNameSpecification,
     CourseCodeSpecification,
     ProfessorNameSpecification,
-    ProfessorSpecialtySpecification,
 )
 
 
@@ -52,52 +51,31 @@ class SearchService:
         self, search_term: str, partial: bool = True
     ) -> List[Course]:
         """
-        Search courses by professor name or course name using Specification Pattern.
+        Search courses by professor name only using Specification Pattern.
 
-        This method searches for courses matching the search term in:
-        - Course name
-        - Course code
-        - Professor names assigned to courses
+        This method searches for courses assigned to professors whose name matches the search term.
 
         Args:
-            search_term: Term to search
+            search_term: Term to search in professor names
             partial: If True, uses LIKE search; if False, uses exact match
 
         Returns:
-            List of courses matching the search criteria
+            List of courses assigned to matching professors
         """
-        # Build course specifications
-        course_name_spec = CourseNameSpecification(search_term, partial)
-        course_code_spec = CourseCodeSpecification(search_term, partial)
-        course_spec = course_name_spec | course_code_spec
-
-        # Search in courses directly using specifications
-        courses_by_name = (
-            self.db.query(Course)
-            .filter(course_spec.to_sql_filter())
-            .all()
-        )
-
-        # Build professor specifications
+        # Build professor name specification
         professor_name_spec = ProfessorNameSpecification(search_term, partial)
-        professor_specialty_spec = ProfessorSpecialtySpecification(search_term, partial)
-        professor_spec = professor_name_spec | professor_specialty_spec
 
-        # Search courses by professor using specifications
-        courses_by_professor = (
+        # Search courses by professor name using specifications
+        courses = (
             self.db.query(Course)
             .join(ProfessorCourse, Course.id == ProfessorCourse.course_id)
             .join(Professor, ProfessorCourse.professor_id == Professor.id)
-            .filter(professor_spec.to_sql_filter())
+            .filter(professor_name_spec.to_sql_filter())
+            .distinct()
             .all()
         )
 
-        # Combine and deduplicate results
-        course_dict = {course.id: course for course in courses_by_name}
-        for course in courses_by_professor:
-            course_dict[course.id] = course
-
-        return list(course_dict.values())
+        return courses
 
     def search_by_course_names(
         self, search_term: str, partial: bool = True
@@ -135,11 +113,12 @@ class SearchService:
         self,
         professor_term: str | None = None,
         course_term: str | None = None
-    ) -> Dict[str, List]:
+    ) -> Dict[str, any]:
         """
-        Advanced LIKE search across professors and courses using Specification Pattern.
+        Advanced LIKE search that returns assignments (professor-course relationships).
 
-        Performs flexible searches using partial matching (LIKE).
+        Performs flexible searches using partial matching (LIKE) and returns
+        unique assignments matching the criteria without duplicates.
         - professor_term: searches in professor name field
         - course_term: searches in course name and code fields
 
@@ -148,52 +127,48 @@ class SearchService:
             course_term: Optional search term for course name and code
 
         Returns:
-            Dictionary with search results
+            Dictionary with assignments
                 Example: {
-                    "professors": [<Professor>, ...],
-                    "courses": [<Course>, ...],
-                    "total_results": 15
+                    "assignments": [<ProfessorCourse>, ...],
+                    "total": 10
                 }
         """
-        results = {
-            "professors": [],
-            "courses": [],
-            "total_results": 0
-        }
+        # Start with base query for assignments
+        query = self.db.query(ProfessorCourse).options(
+            joinedload(ProfessorCourse.professor),
+            joinedload(ProfessorCourse.course)
+        )
 
-        # Search in professors if term provided
+        # Build filters based on provided search terms
+        filters = []
+
+        # Add professor name filter if provided
         if professor_term:
-            # Create specification for professor name
             professor_spec = ProfessorNameSpecification(professor_term, partial=True)
+            query = query.join(Professor, ProfessorCourse.professor_id == Professor.id)
+            filters.append(professor_spec.to_sql_filter())
 
-            professors = (
-                self.db.query(Professor)
-                .filter(professor_spec.to_sql_filter())
-                .distinct()
-                .all()
-            )
-            results["professors"] = professors
-
-        # Search in courses if term provided
+        # Add course name/code filter if provided
         if course_term:
-            # Create specifications for course name and code
             name_spec = CourseNameSpecification(course_term, partial=True)
             code_spec = CourseCodeSpecification(course_term, partial=True)
-
-            # Combine with OR (name OR code)
             course_spec = name_spec | code_spec
 
-            courses = (
-                self.db.query(Course)
-                .filter(course_spec.to_sql_filter())
-                .distinct()
-                .all()
-            )
-            results["courses"] = courses
+            query = query.join(Course, ProfessorCourse.course_id == Course.id)
+            filters.append(course_spec.to_sql_filter())
 
-        results["total_results"] = len(results["professors"]) + len(results["courses"])
+        # Apply all filters
+        if filters:
+            from sqlalchemy import and_
+            query = query.filter(and_(*filters))
 
-        return results
+        # Execute query and get unique assignments
+        assignments = query.distinct().all()
+
+        return {
+            "assignments": assignments,
+            "total": len(assignments)
+        }
 
 
 def get_search_service(
