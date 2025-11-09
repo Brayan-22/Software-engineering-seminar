@@ -20,7 +20,7 @@ It handles administrator login using **JWT (JSON Web Token)** and connects to a 
 | Layer             | Technology            |
 |-------------------|-----------------------|
 | Backend Framework | Spring Boot 3.5.7     |
-| Database          | MySQL 8+              |
+| Database          | MySQL 8               |
 | ORM               | Spring Data JPA       |
 | Security          | JWT (io.jsonwebtoken) |
 | Testing           | JUnit 5 + Mockito     |
@@ -142,6 +142,36 @@ Expected output:
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 ```
+
+![AuthServiceTest](https://i.imgur.com/ftaVBUZ.png)
+
+This screenshot shows the successful execution of the unit tests for the AuthService class.
+These tests validate the authentication logic, including:
+
+- Successful login: verifies that a valid username and password produce a JWT token.
+
+
+- Invalid password: ensures that incorrect credentials trigger an exception.
+
+
+- User not found: confirms that the service correctly handles missing users in the repository.
+
+All test cases passed, confirming that the authentication flow behaves as expected and interacts properly with mocked dependencies (AdminRepository, PasswordEncoder, and JwtUtil).
+
+![JwtUtilTest](https://i.imgur.com/Q8KZxDu.png)
+
+This screenshot displays the successful execution of the unit tests for the JwtUtil class.
+These tests verify the correct generation and validation of JWT tokens, ensuring that:
+
+- Tokens are generated with a valid signature (RS256) using the configured private key.
+
+
+- The generated token contains the expected claims (username, issued date, expiration).
+
+
+- Token expiration logic functions correctly within the defined time window.
+
+All tests passed, confirming that the JWT generation and signing process works reliably.
 
 ## REST API Documentation
 
