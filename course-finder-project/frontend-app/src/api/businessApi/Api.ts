@@ -52,7 +52,7 @@ api.interceptors.response.use(
           message = "Conflict. The resource already exists or is duplicated.";
           break;
         case 500:
-          message = "Internal server error. Try again later.";
+          message = "Operation not allowed.";
           break;
         default:
           message = `Unexpected error (${status}).`;
