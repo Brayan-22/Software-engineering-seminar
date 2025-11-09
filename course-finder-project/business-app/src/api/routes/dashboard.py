@@ -52,8 +52,6 @@ async def get_recent_activities(
 
     Args:
         limit: Maximum number of activities to return (1-100, default: 10)
-        service: DashboardService dependency
-
     Returns:
         List of recent activity descriptions
     """

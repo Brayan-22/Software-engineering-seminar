@@ -30,7 +30,6 @@ async def search_by_professors(
 
     Args:
         search_term: Professor name to search
-        service: SearchService dependency
 
     Returns:
         List of courses assigned to professors matching the search criteria
@@ -79,12 +78,8 @@ async def advanced_search(
     """
     Advanced LIKE search that returns unique assignments (professor-course relationships).
 
-    Performs flexible searches using partial matching (LIKE).
-    Provide one or both search terms to find matching assignments without duplicates.
-
     Args:
         request: AdvancedSearchRequest with optional professor and course search terms
-        service: SearchService dependency
 
     Returns:
         List of unique assignments (professor-course relationships) with full details
