@@ -18,7 +18,7 @@ import java.util.Date;
 public class JwtUtil {
 
     @Autowired
-    private PrivateKey privateKey;
+    protected PrivateKey privateKey;
 
     private static final Long EXPIRATION_TIME =  30L * 60L * 1000L; // 30 minutes
 

@@ -50,6 +50,8 @@ auth-back/
 │   │   └── resources/                   # Application configuration and assets
 │   └── test/
 │       └── java/com/udistrital/authback/
+│           ├── security/
+│           │   └── JwtUtilTest.java     # Unit tests for JwtUtil
 │           ├── service/                 # Unit tests for AuthService
 │           │   └── AuthServiceTest.java
 │           └── AuthBackApplicationTests.java  # Spring Boot context test
