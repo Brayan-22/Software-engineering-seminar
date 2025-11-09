@@ -65,7 +65,7 @@ auth-back/
 
 ### Database Script
 
-Create the database and table using the following script (already included in `/src/main/resources/db/init_auth_db.sql`):
+Create the database and table using the following script (already included in `/init_db_scripts/schema_db.sql`):
 
 ```sql
 -- Script:schema_db.sql
