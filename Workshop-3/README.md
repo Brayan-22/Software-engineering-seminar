@@ -217,7 +217,7 @@ Swagger UI provides an interactive interface where you can:
 
 
 Pille el de python si quiere cambielo: 
-# Course Finder API — Python Backend
+# Python Backend
 
 A FastAPI-based REST API for managing professors, courses, and professor–course assignments.
 
