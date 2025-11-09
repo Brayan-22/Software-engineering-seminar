@@ -65,6 +65,7 @@ app.include_router(api_router, prefix=settings.API_PREFIX)
 
 
 def startup_event():
-    create_db_and_tables()
+    #create_db_and_tables()
+    pass
 
 app.add_event_handler("startup", startup_event)
