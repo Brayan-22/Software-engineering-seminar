@@ -108,7 +108,7 @@ export const CoursesTab = () => {
 
         try {
             const schedule = `${formData.day} ${formData.time}`;
-            console.log("sch: "+ schedule);
+            console.log("sch: " + schedule);
             const course: Course = {
                 id: 0,
                 code: formData.code,
@@ -164,7 +164,8 @@ export const CoursesTab = () => {
                 name: formData.name,
                 schedule: `${formData.day} ${formData.time}`,
             };
-            const response = await updateCourse(selectedCourse.id, updatedCourse);
+            console.log("UPDATED COURSE: " + JSON.stringify(updatedCourse,null,2));
+            const response = await updateCourse(updatedCourse);
             setCourses((prev) =>
                 prev.map((c) => (c.id === selectedCourse.id ? response : c))
             );
@@ -218,6 +219,7 @@ export const CoursesTab = () => {
                     sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
                 >
                     <TextField
+                        sx={{ mt: "5px" }}
                         label="Code"
                         name="code"
                         value={formData.code}
@@ -285,6 +287,7 @@ export const CoursesTab = () => {
                 <DialogTitle>Edit Course</DialogTitle>
                 <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
                     <TextField
+                        sx={{ mt: "5px" }}
                         label="Code"
                         name="code"
                         value={formData.code}

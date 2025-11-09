@@ -29,7 +29,7 @@ export const ProfessorCard = ({ professor, showActions, onEdit, onDelete }: Prof
                     flexDirection: "column",
                     alignItems: "flex-start",
                     justifyContent: "center",
-                    minWidth: "120px",
+                    minWidth: "140px",
                 }}
             >
                 <Typography variant="h6">Specialty</Typography>

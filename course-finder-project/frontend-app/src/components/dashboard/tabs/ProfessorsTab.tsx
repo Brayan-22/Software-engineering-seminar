@@ -235,7 +235,7 @@ export const ProfessorsTab = () => {
                     sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
                 >
                     <TextField
-                        sx={{ mt: "4px" }}
+                        sx={{ mt: "5px" }}
                         label="Name"
                         name="name"
                         value={formData.name}
@@ -285,6 +285,9 @@ export const ProfessorsTab = () => {
                 <DialogTitle>Edit Professor</DialogTitle>
                 <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
                     <TextField
+                        sx={{
+                            mt:"5px"
+                        }}
                         label="Name"
                         name="name"
                         value={formData.name}
