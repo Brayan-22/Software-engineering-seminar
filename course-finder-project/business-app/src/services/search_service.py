@@ -117,11 +117,6 @@ class SearchService:
         """
         Advanced LIKE search that returns assignments (professor-course relationships).
 
-        Performs flexible searches using partial matching (LIKE) and returns
-        unique assignments matching the criteria without duplicates.
-        - professor_term: searches in professor name field
-        - course_term: searches in course name and code fields
-
         Args:
             professor_term: Optional search term for professor name
             course_term: Optional search term for course name and code
@@ -133,11 +128,17 @@ class SearchService:
                     "total": 10
                 }
         """
-        # Start with base query for assignments
+        # Start with base query for assignments with eager loading
         query = self.db.query(ProfessorCourse).options(
             joinedload(ProfessorCourse.professor),
             joinedload(ProfessorCourse.course)
         )
+
+        # Always join the necessary tables for filtering
+        query = query.join(Professor, ProfessorCourse.professor_id == Professor.id)
+
+        # Join Course table (needed if course_term is provided)
+        query = query.join(Course, ProfessorCourse.course_id == Course.id)
 
         # Build filters based on provided search terms
         filters = []
@@ -145,7 +146,6 @@ class SearchService:
         # Add professor name filter if provided
         if professor_term:
             professor_spec = ProfessorNameSpecification(professor_term, partial=True)
-            query = query.join(Professor, ProfessorCourse.professor_id == Professor.id)
             filters.append(professor_spec.to_sql_filter())
 
         # Add course name/code filter if provided
@@ -153,21 +153,27 @@ class SearchService:
             name_spec = CourseNameSpecification(course_term, partial=True)
             code_spec = CourseCodeSpecification(course_term, partial=True)
             course_spec = name_spec | code_spec
-
-            query = query.join(Course, ProfessorCourse.course_id == Course.id)
             filters.append(course_spec.to_sql_filter())
 
-        # Apply all filters
+        # Apply all filters with AND logic
         if filters:
             from sqlalchemy import and_
             query = query.filter(and_(*filters))
 
-        # Execute query and get unique assignments
+        # Execute query and get assignments
         assignments = query.distinct().all()
 
+        # Additional deduplication by assignment ID to ensure uniqueness
+        seen_ids = set()
+        unique_assignments = []
+        for assignment in assignments:
+            if assignment.id not in seen_ids:
+                seen_ids.add(assignment.id)
+                unique_assignments.append(assignment)
+
         return {
-            "assignments": assignments,
-            "total": len(assignments)
+            "assignments": unique_assignments,
+            "total": len(unique_assignments)
         }
 
 
