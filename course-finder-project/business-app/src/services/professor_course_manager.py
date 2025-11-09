@@ -1,5 +1,5 @@
 """
-ProfessorCourse Service - Basic CRUD Business Logic
+ProfessorCourse Manager - Business Logic for Assignment Management
 """
 from fastapi import Depends, HTTPException, status
 from src.models.professor_course import ProfessorCourse
@@ -28,9 +28,9 @@ from src.schemas.professor_schema import ProfessorCreate
 from src.schemas.course_schema import CourseCreate
 
 
-class ProfessorCourseService:
+class ProfessorCourseManager:
     """
-    Service class for ProfessorCourse basic CRUD business logic.
+    Manager class for ProfessorCourse assignment business logic.
     """
 
     def __init__(
@@ -40,7 +40,7 @@ class ProfessorCourseService:
         course_repository: CourseRepository = Depends(get_course_repository),
     ):
         """
-        Initialize ProfessorCourse service with repositories.
+        Initialize ProfessorCourse manager with repositories.
 
         Args:
             repository: ProfessorCourse repository
@@ -81,8 +81,8 @@ class ProfessorCourseService:
 
         # Create assignment
         new_assignment = ProfessorCourse(
-            professor_id=assignment_data.professor_id,
-            course_id=assignment_data.course_id,
+            professor_id=assignment_data.professor.id,
+            course_id=assignment_data.course.id,
             status=assignment_data.status,
         )
         created_assignment = self.repository.create(new_assignment)
@@ -202,13 +202,13 @@ class ProfessorCourseService:
             "message": f"Assignment for professor {professor_id} and course {course_id} deleted successfully"
         }
 
-def get_professor_course_service(
+def get_professor_course_manager(
     repository: ProfessorCourseRepository = Depends(get_professor_course_repository),
     professor_repository: ProfessorRepository = Depends(get_professor_repository),
     course_repository: CourseRepository = Depends(get_course_repository),
-) -> ProfessorCourseService:
+) -> ProfessorCourseManager:
     """
-    Dependency function to get ProfessorCourse service instance.
+    Dependency function to get ProfessorCourse manager instance.
 
     Args:
         repository: ProfessorCourse repository
@@ -216,6 +216,6 @@ def get_professor_course_service(
         course_repository: Course repository
 
     Returns:
-        ProfessorCourseService instance
+        ProfessorCourseManager instance
     """
-    return ProfessorCourseService(repository, professor_repository, course_repository)
+    return ProfessorCourseManager(repository, professor_repository, course_repository)

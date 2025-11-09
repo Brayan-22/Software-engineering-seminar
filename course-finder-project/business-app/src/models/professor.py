@@ -20,8 +20,7 @@ class Professor(Base):
     # Relationship to courses through ProfessorCourse association table
     professor_courses = relationship(
         "ProfessorCourse",
-        back_populates="professor",
-        cascade="all, delete-orphan"
+        back_populates="professor"
     )
 
     def __repr__(self):

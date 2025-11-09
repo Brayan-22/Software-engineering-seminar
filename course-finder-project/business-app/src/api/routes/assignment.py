@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, Query, status, Path
-from src.services.professor_course_service import (
-    ProfessorCourseService,
-    get_professor_course_service,
+from src.services.professor_course_manager import (
+    ProfessorCourseManager,
+    get_professor_course_manager,
 )
 from src.api.dependencies import get_current_user
 from src.schemas.professor_course_schema import (
@@ -23,7 +23,7 @@ router = APIRouter()
 async def create_assignment(
     assignment_data: AssignmentProfessorCourse,
     current_user: dict = Depends(get_current_user),
-    service: ProfessorCourseService = Depends(get_professor_course_service),
+    service: ProfessorCourseManager = Depends(get_professor_course_manager),
 ):
     return service.create_assing(assignment_data)
 
@@ -34,7 +34,7 @@ async def create_assignment(
     summary="Get all assignments",
 )
 async def get_all_assignments(
-    service: ProfessorCourseService = Depends(get_professor_course_service),
+    service: ProfessorCourseManager = Depends(get_professor_course_manager),
 ):
     return service.get_all_assignments()
 
@@ -46,7 +46,7 @@ async def get_all_assignments(
 )
 async def get_assignment_by_id(
     assignment_id: int = Path(..., gt=0),
-    service: ProfessorCourseService = Depends(get_professor_course_service),
+    service: ProfessorCourseManager = Depends(get_professor_course_manager),
 ):
     return service.get_assignment_by_id(assignment_id)
 
@@ -60,7 +60,7 @@ async def update_assignment(
     assignment_data: ProfessorCourseUpdate,
     assignment_id: int = Path(..., gt=0),
     current_user: dict = Depends(get_current_user),
-    service: ProfessorCourseService = Depends(get_professor_course_service),
+    service: ProfessorCourseManager = Depends(get_professor_course_manager),
 ):
     assignment = service.get_assignment_by_id(assignment_id)
     return service.update_assignment_status(
@@ -78,7 +78,7 @@ async def update_assignment(
 async def delete_assignment(
     assignment_id: int = Path(..., gt=0),
     current_user: dict = Depends(get_current_user),
-    service: ProfessorCourseService = Depends(get_professor_course_service),
+    service: ProfessorCourseManager = Depends(get_professor_course_manager),
 ):
     assignment = service.get_assignment_by_id(assignment_id)
     return service.unassign_course_from_professor(
