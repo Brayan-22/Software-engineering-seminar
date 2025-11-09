@@ -1,12 +1,3 @@
--- ===================================================================
--- Course Finder Platform - Database Schema
--- ===================================================================
--- Description: Database initialization script for Course Finder application
--- Author: Claude Code
--- Database: PostgreSQL 13+
--- Date: 2025-11-08
--- ===================================================================
-
 -- Drop tables if they exist (for clean re-initialization)
 DROP TABLE IF EXISTS professor_courses CASCADE;
 DROP TABLE IF EXISTS courses CASCADE;
