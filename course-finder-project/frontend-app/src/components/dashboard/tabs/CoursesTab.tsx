@@ -60,8 +60,7 @@ export const CoursesTab = () => {
                 setCourses(data.courses);
             } catch (err) {
                 console.error(err);
-                setError("Error loading courses");
-                showAlert("Error loading courses", "error");
+                showAlert(err.message, "error");
             } finally {
                 setLoading(false);
             }

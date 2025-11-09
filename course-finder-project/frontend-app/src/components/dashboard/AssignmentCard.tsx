@@ -26,13 +26,17 @@ export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) =>
                 sx={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "flex-start",
+                    alignItems: "center",
                     justifyContent: "center",
                     minWidth: "120px",
+                                    flexGrow: 1,
+
                 }}
             >
-                <Typography variant="h6">Code</Typography>
-                <Typography>{assignment.professor.name}</Typography>
+                <Typography variant="h6">{assignment.professor.name}</Typography>
+                <Typography>{assignment.professor.email}</Typography>
+                <Typography>{assignment.professor.specialty}</Typography>
+
             </Box>
             <Divider orientation="vertical" flexItem />
 
@@ -44,9 +48,8 @@ export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) =>
                 flexGrow: 1,
             }}
             >
-                <Typography variant="h6">ID: {assignment.id}</Typography>
-                <Typography>Course: {assignment.course.name}</Typography>
-                <Typography>Professor: {assignment.professor.name}</Typography>
+                <Typography variant="h6"> {assignment.course.name}</Typography>
+                <Typography>{assignment.course.schedule}</Typography>
             </Box>
 
             <Divider orientation="vertical" flexItem />
@@ -56,12 +59,13 @@ export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) =>
                     flexDirection: "row",
                     justifyContent: "flex-end",
                     gap: "10px",
-                    minWidth: "200px",
+                    minWidth: "110px",
                 }}
             >
                 <Button
                     variant="contained"
                     color="error"
+                    onClick={() => onDelete?.(assignment.id)}
                 >
                     Delete
                 </Button>

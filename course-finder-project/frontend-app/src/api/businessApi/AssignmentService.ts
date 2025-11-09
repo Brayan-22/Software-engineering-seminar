@@ -8,6 +8,11 @@ export const createAssignment = async (assignmentData: Assignment) => {
 };
 
 export const getAssignments = async () => {
-    const rest = await api.get("/assignments");
-    return rest.data;
+    const res = await api.get("/assignments");
+    return res.data;
+}
+
+export const deleteAssignment = async (id: number) => {
+    const res = await api.delete(`/assignmnets${id}`)
+    return res.data;
 }
