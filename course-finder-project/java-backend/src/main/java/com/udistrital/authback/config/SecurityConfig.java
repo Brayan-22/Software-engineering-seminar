@@ -51,7 +51,7 @@ public class SecurityConfig {
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
             .csrf(AbstractHttpConfigurer::disable)
-            .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+            // .cors(cors -> cors.configurationSource(corsConfigurationSource()))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/swagger-ui/**").permitAll()
                 .requestMatchers("/v3/api-docs/**").permitAll()
@@ -68,16 +68,16 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-  @Bean
-  public CorsConfigurationSource corsConfigurationSource() {
-      CorsConfiguration config = new CorsConfiguration();
-      config.addAllowedOriginPattern("*");
-      config.addAllowedMethod("*");
-      config.addAllowedHeader("*");
-      config.setAllowCredentials(false);
+//   @Bean
+//   public CorsConfigurationSource corsConfigurationSource() {
+//       CorsConfiguration config = new CorsConfiguration();
+//       config.addAllowedOriginPattern("*");
+//       config.addAllowedMethod("*");
+//       config.addAllowedHeader("*");
+//       config.setAllowCredentials(false);
 
-      UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-      source.registerCorsConfiguration("/**", config);
-      return source;
-  }
+//       UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//       source.registerCorsConfiguration("/**", config);
+//       return source;
+//   }
 }
