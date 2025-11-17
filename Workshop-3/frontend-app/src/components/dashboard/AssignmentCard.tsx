@@ -3,7 +3,7 @@ import type { Assignment } from "../../models/Assignment"
 
 type AssignmentCardProps = {
     assignment: Assignment;
-    onDelete?: (id: number) => void;
+    onDelete?: (assignment_id: number) => void;
 }
 
 export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) => {

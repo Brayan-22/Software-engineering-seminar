@@ -12,6 +12,6 @@ export const getAssignments = async () => {
 }
 
 export const deleteAssignment = async (id: number) => {
-    const res = await api.delete(`/assignmnets${id}`)
+    const res = await api.delete(`/assignments/${id}`)
     return res.data;
 }

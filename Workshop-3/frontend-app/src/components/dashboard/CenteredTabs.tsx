@@ -1,5 +1,5 @@
 import { useState, type SyntheticEvent } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 

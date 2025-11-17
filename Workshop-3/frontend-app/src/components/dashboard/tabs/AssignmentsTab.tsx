@@ -18,9 +18,12 @@ import {
 } from "../../../api/businessApi/AssignmentService";
 import { getCourses } from "../../../api/businessApi/CourseService";
 import { getProfessors } from "../../../api/businessApi/ProfessorService";
+import { set } from "react-hook-form";
 
 export const AssignmentsTab = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] =
     useState<Assignment | null>(null);
@@ -31,29 +34,30 @@ export const AssignmentsTab = () => {
   const [selectedCourse, setSelectedCourse] = useState<number | "">("");
   const [selectedProfessor, setSelectedProfessor] = useState<number | "">("");
 
-  const fetchAssignments = async () => {
-    try {
-      const data = await getAssignments();
-      setAssignments(data.assignments);
-    } catch (err) {
-      console.error("Error fetching assignments:", err);
-    }
-  };
-
-  const fetchData = async () => {
-    try {
-      const [courseData, professorData] = await Promise.all([
-        getCourses(),
-        getProfessors(),
-      ]);
-      setCourses(courseData.courses);
-      setProfessors(professorData.professors);
-    } catch (err) {
-      console.error("Error fetching dropdown data:", err);
-    }
-  };
-
   useEffect(() => {
+    const fetchAssignments = async () => {
+      try {
+        const data = await getAssignments();
+        setAssignments(data.assignments);
+      } catch (err) {
+        console.error("Error fetching assignments:", err);
+      }
+    };
+
+    const fetchData = async () => {
+      try {
+        const [courseData, professorData] = await Promise.all([
+          getCourses(),
+          getProfessors(),
+        ]);
+        setCourses(courseData.courses);
+        setProfessors(professorData.professors);
+      } catch (err) {
+        console.error("Error fetching dropdown data:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
     fetchAssignments();
     fetchData();
   }, []);
@@ -107,6 +111,9 @@ export const AssignmentsTab = () => {
     }
   };
 
+  if (loading)
+    return <Typography sx={{ mt: 2 }}>Loading assignments...</Typography>;
+
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
@@ -122,7 +129,7 @@ export const AssignmentsTab = () => {
             <AssignmentCard
               key={assignment.id}
               assignment={assignment}
-              onDelete={handleDeleteClick}
+              onDelete={() => handleDeleteClick(assignment)}
             />
           ))
         ) : (
