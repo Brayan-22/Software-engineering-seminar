@@ -22,13 +22,15 @@ import {
     updateProfessor
 } from "../../../api/businessApi/ProfessorService";
 import { useGlobalAlert } from "../../../context/AlertContext";
+import { useApiErrorHandler } from "../../../util/ApiErrorHandler";
+import { type FormEvent } from "../../../util/FormEvent";
 
 export const ProfessorsTab = () => {
     const [professors, setProfessors] = useState<Professor[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { showAlert } = useGlobalAlert();
-
+    const { handleApiError } = useApiErrorHandler();
     // Modal create
     const [open, setOpen] = useState(false);
 
@@ -67,9 +69,7 @@ export const ProfessorsTab = () => {
                 const data = await getProfessors();
                 setProfessors(data.professors);
             } catch (err) {
-                console.error(err);
-                setError("Error loading professors");
-                showAlert("Error loading professors", "error");
+                handleApiError(err, setError, "Error fetching professors.");
             } finally {
                 setLoading(false);
             }
@@ -79,7 +79,7 @@ export const ProfessorsTab = () => {
     }, []);
 
     const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
+        e: FormEvent
     ) => {
         const { name, value } = e.target;
         setFormData((prev) => ({ ...prev, [name!]: value }));
@@ -131,8 +131,7 @@ export const ProfessorsTab = () => {
             setFormErrors({ name: "", email: "", specialty: "" });
             showAlert("Professor created successfully", "success");
         } catch (err) {
-            console.error("Error creating professor:", err);
-            showAlert(err.message, "error");
+            handleApiError(err, setError, "Error creating professor.");
         }
     };
 
@@ -148,8 +147,7 @@ export const ProfessorsTab = () => {
             setProfessors((prev) => prev.filter(p => p.id !== selectedProfessorId));
             showAlert("Professor deleted successfully", "success");
         } catch (err) {
-            console.error("Error deleting professor:", err);
-            showAlert(err.message, "error");
+            handleApiError(err, setError, "Error deleting professor.");
         } finally {
             setDeleteOpen(false);
             setSelectedProfessorId(null);
@@ -188,8 +186,7 @@ export const ProfessorsTab = () => {
             setFormData({ name: "", email: "", specialty: "" });
             showAlert("Professor updated successfully", "success");
         } catch (err) {
-            console.error("Error updating professor:", err);
-            showAlert(err.message, "error");
+            handleApiError(err, setError, "Error updating professor.");
         }
     };
 

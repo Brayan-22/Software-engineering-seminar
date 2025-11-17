@@ -18,11 +18,12 @@ import {
 } from "../../../api/businessApi/AssignmentService";
 import { getCourses } from "../../../api/businessApi/CourseService";
 import { getProfessors } from "../../../api/businessApi/ProfessorService";
-import { set } from "react-hook-form";
+import { useApiErrorHandler } from "../../../util/ApiErrorHandler";
 
 export const AssignmentsTab = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] =
@@ -34,13 +35,14 @@ export const AssignmentsTab = () => {
   const [selectedCourse, setSelectedCourse] = useState<number | "">("");
   const [selectedProfessor, setSelectedProfessor] = useState<number | "">("");
 
+  const { handleApiError} = useApiErrorHandler();
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
         const data = await getAssignments();
         setAssignments(data.assignments);
       } catch (err) {
-        console.error("Error fetching assignments:", err);
+        handleApiError(err, setError, "Error fetching Assignments.");
       }
     };
 
@@ -53,7 +55,7 @@ export const AssignmentsTab = () => {
         setCourses(courseData.courses);
         setProfessors(professorData.professors);
       } catch (err) {
-        console.error("Error fetching dropdown data:", err);
+        handleApiError(err, setError, "Error fetching data.");
       } finally {
         setLoading(false);
       }
@@ -113,6 +115,13 @@ export const AssignmentsTab = () => {
 
   if (loading)
     return <Typography sx={{ mt: 2 }}>Loading assignments...</Typography>;
+
+  if (error)
+    return (
+      <Typography sx={{ mt: 2, color: "red" }} variant="body1">
+        {error}
+      </Typography>
+    );
 
   return (
     <Box>

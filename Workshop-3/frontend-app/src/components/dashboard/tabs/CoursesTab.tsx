@@ -12,6 +12,7 @@ import {
     MenuItem,
     FormControl,
     FormHelperText,
+ 
 } from "@mui/material";
 import type { Course } from "../../../models/Course";
 import { CourseCard } from "../../home/CourseCard";
@@ -22,13 +23,15 @@ import {
     updateCourse
 } from "../../../api/businessApi/CourseService";
 import { useGlobalAlert } from "../../../context/AlertContext";
+import { useApiErrorHandler } from "../../../util/ApiErrorHandler";
+import { type FormEvent } from "../../../util/FormEvent";
 
 export const CoursesTab = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const { showAlert } = useGlobalAlert();
-
+    const { handleApiError } = useApiErrorHandler();
     // modal create
     const [open, setOpen] = useState(false);
 
@@ -59,8 +62,7 @@ export const CoursesTab = () => {
                 const data = await getCourses();
                 setCourses(data.courses);
             } catch (err) {
-                console.error(err);
-                showAlert(err.message, "error");
+                handleApiError(err, setError, "Error fetching courses.");
             } finally {
                 setLoading(false);
             }
@@ -69,12 +71,10 @@ export const CoursesTab = () => {
         fetchCourses();
     }, []);
 
-    const handleChange = (
-        e: React.ChangeEvent<HTMLInputElement | { name?: string; value: unknown }>
-    ) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name!]: value }));
-        setFormErrors((prev) => ({ ...prev, [name!]: "" }));
+    const handleChange = (e: FormEvent) => {
+        const { name, value } = e.target as HTMLInputElement;
+        setFormData(prev => ({ ...prev, [name]: value }));
+        setFormErrors(prev => ({ ...prev, [name]: "" }));
     };
 
     const validateForm = () => {
@@ -122,8 +122,7 @@ export const CoursesTab = () => {
             setFormErrors({ code: "", name: "", day: "", time: "" });
             showAlert("Course created successfully!", "success");
         } catch (err) {
-            console.error("Error creating course:", err);
-            showAlert(err.message, "error");
+            handleApiError(err, setError, "Error creating course.");
         }
     };
 
@@ -140,8 +139,8 @@ export const CoursesTab = () => {
             setCourses((prev) => prev.filter((c) => c.id !== selectedCourse.id));
             showAlert(`Deleted course "${selectedCourse.name}"`, "success");
         } catch (err) {
-            console.error("Error deleting course:", err);
-            showAlert(err.message, "error");
+            handleApiError(err, setError, "Error deleting course");
+
         } finally {
             setConfirmOpen(false);
             setSelectedCourse(null);
@@ -163,7 +162,7 @@ export const CoursesTab = () => {
                 name: formData.name,
                 schedule: `${formData.day} ${formData.time}`,
             };
-            console.log("UPDATED COURSE: " + JSON.stringify(updatedCourse,null,2));
+            console.log("UPDATED COURSE: " + JSON.stringify(updatedCourse, null, 2));
             const response = await updateCourse(updatedCourse);
             setCourses((prev) =>
                 prev.map((c) => (c.id === selectedCourse.id ? response : c))
@@ -171,8 +170,7 @@ export const CoursesTab = () => {
             setSelectedCourse(null);
             showAlert("Course updated successfully!", "success");
         } catch (err) {
-            console.error("Error updating course:", err);
-            showAlert(err.message, "error");
+            handleApiError(err, setError, "Error updating course.");
         }
     };
 

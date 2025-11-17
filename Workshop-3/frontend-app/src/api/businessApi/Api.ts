@@ -49,7 +49,7 @@ api.interceptors.response.use(
           message = "Resource not found.";
           break;
         case 409:
-          message = "Conflict. The resource already exists or is duplicated.";
+          message = "Conflict. The resource already exists.";
           break;
         case 500:
           message = "Operation not allowed.";
