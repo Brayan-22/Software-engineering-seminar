@@ -19,7 +19,7 @@ export const Home = () => {
 
     setLoading(true);
     try {
-      const data = await advancedSearch(query, query);
+      const data = await advancedSearch(query);
       setAssignments(data.assignments || []);
       setSearched(true);
     } catch (error) {

@@ -1,4 +1,4 @@
-import { useState, type SyntheticEvent } from 'react';
+import { useState } from 'react';
 import { Box } from '@mui/material';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -9,7 +9,7 @@ import { AssignmentsTab } from './tabs/AssignmentsTab';
 export const CenteredTabs = () => {
     const [value, setValue] = useState(0);
 
-    const handleChange = (event: SyntheticEvent, newValue: number) => {
+    const handleChange = (_: unknown, newValue: number) => {
         setValue(newValue);
     };
 

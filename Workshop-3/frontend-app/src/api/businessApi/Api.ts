@@ -2,8 +2,8 @@ import axios from "axios";
 
 const api = axios.create({
   // baseURL: "http://localhost:8000/api/v1",
-  // baseURL: "https://coursefinderbs.glud.org/api/v1",
-  baseURL: "/course-api",
+  baseURL: "https://coursefinderbs.glud.org/api/v1",
+  // baseURL: "/course-api",
   headers: {
     "Content-Type": "application/json",
   },
