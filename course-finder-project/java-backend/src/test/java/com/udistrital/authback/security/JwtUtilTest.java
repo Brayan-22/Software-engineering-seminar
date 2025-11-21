@@ -4,6 +4,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.*;
  *
  * Uses a temporary RSA key pair instead of the real private key.
  */
+@ExtendWith(MockitoExtension.class)
 class JwtUtilTest {
 
     private JwtUtil jwtUtil;
@@ -30,9 +33,8 @@ class JwtUtilTest {
     void setUp() throws Exception {
         keyPair = KeyPairGenerator.getInstance("RSA").generateKeyPair();
 
-        jwtUtil = new JwtUtil();
-        // Manually inject the private key (simulating @Autowired)
-        jwtUtil.setPrivateKey(keyPair.getPrivate());
+        jwtUtil = new JwtUtil(keyPair);
+        jwtUtil.setup(); // Manually call @PostConstruct method because spring context is not used
     }
 
     @Test

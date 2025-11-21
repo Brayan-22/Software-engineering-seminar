@@ -1,6 +1,6 @@
 package com.udistrital.authback.service;
 
-import com.udistrital.authback.dto.LoginRequest;
+import com.udistrital.authback.dto.LoginRequestDTO;
 import com.udistrital.authback.entity.Admin;
 import com.udistrital.authback.repository.AdminRepository;
 import com.udistrital.authback.security.JwtUtil;
@@ -17,7 +17,7 @@ import static org.mockito.Mockito.*;
 
 
 /**
- * Unit tests for {@link AuthService}.
+ * Unit tests for {@link AuthServiceImpl}.
  *
  * These tests verify the authentication logic responsible for validating
  * admin credentials and generating JWT tokens.
@@ -37,7 +37,7 @@ import static org.mockito.Mockito.*;
  */
 class AuthServiceTest {
 
-    private AuthService authService;
+    private AuthServiceImpl authService;
     private AdminRepository adminRepository;
     private PasswordEncoder passwordEncoder;
     private JwtUtil jwtUtil;
@@ -48,7 +48,7 @@ class AuthServiceTest {
         passwordEncoder = Mockito.mock(PasswordEncoder.class);
         jwtUtil = Mockito.mock(JwtUtil.class);
 
-        authService = new AuthService(adminRepository, passwordEncoder, jwtUtil);
+        authService = new AuthServiceImpl(adminRepository, passwordEncoder, jwtUtil);
     }
 
     @Test
@@ -60,7 +60,7 @@ class AuthServiceTest {
         when(jwtUtil.generateToken("admin")).thenReturn("fake.jwt.token");
 
         // Act
-        String token = authService.login(new LoginRequest("admin", "1234"));
+        String token = authService.login(new LoginRequestDTO("admin", "1234"));
 
         // Assert
         assertEquals("fake.jwt.token", token);
@@ -73,7 +73,7 @@ class AuthServiceTest {
         when(passwordEncoder.matches("wrong", "hashed")).thenReturn(false);
 
         assertThrows(RuntimeException.class,
-                () -> authService.login(new LoginRequest("admin", "wrong")));
+                () -> authService.login(new LoginRequestDTO("admin", "wrong")));
     }
 
     @Test
@@ -81,6 +81,6 @@ class AuthServiceTest {
         when(adminRepository.findByUsername("missing")).thenReturn(Optional.empty());
 
         assertThrows(RuntimeException.class,
-                () -> authService.login(new LoginRequest("missing", "1234")));
+                () -> authService.login(new LoginRequestDTO("missing", "1234")));
     }
 }

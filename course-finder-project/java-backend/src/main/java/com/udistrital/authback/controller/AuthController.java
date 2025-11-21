@@ -1,25 +1,31 @@
 package com.udistrital.authback.controller;
 
+import com.udistrital.authback.dto.ValidateTokenRequestDTO;
+import com.udistrital.authback.dto.ValidateTokenResponseDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.udistrital.authback.dto.LoginRequest;
-import com.udistrital.authback.dto.LoginResponse;
-import com.udistrital.authback.service.AuthService;
+import com.udistrital.authback.dto.LoginRequestDTO;
+import com.udistrital.authback.dto.LoginResponseDTO;
+import com.udistrital.authback.service.AuthServiceImpl;
 
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    private final AuthService authService;
+    private final AuthServiceImpl authService;
 
-    public AuthController(AuthService authService) {
+    public AuthController(AuthServiceImpl authService) {
         this.authService = authService;
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+    public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO request) {
         String token = authService.login(request);
-        return ResponseEntity.ok(new LoginResponse(token));
+        return ResponseEntity.ok(new LoginResponseDTO(token));
     }
 
+    @PostMapping("/validate")
+    public ResponseEntity<ValidateTokenResponseDTO> validateToken(@RequestBody ValidateTokenRequestDTO request) {
+        return ResponseEntity.ok().body(authService.validateToken(request));
+    }
 }

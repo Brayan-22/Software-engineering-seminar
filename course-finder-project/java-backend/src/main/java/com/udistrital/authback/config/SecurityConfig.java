@@ -18,35 +18,44 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.security.KeyFactory;
-import java.security.NoSuchAlgorithmException;
-import java.security.PrivateKey;
+import java.security.*;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.X509EncodedKeySpec;
 import java.util.Base64;
 
 @Configuration
 public class SecurityConfig {
 
+
     @Bean
-    public PrivateKey getPrivateKey() throws InvalidKeySpecException, IOException, NoSuchAlgorithmException {
-        // Recupperar la clave privada desde el archivo
+    public KeyPair keyPair() throws InvalidKeySpecException, IOException, NoSuchAlgorithmException{
         Resource privateKeyResource = new ClassPathResource("keys/private-key.pem");
+        Resource publicKeyResource = new ClassPathResource("keys/public-key.pem");
         KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        if(privateKeyResource.exists()){
-            // Cargar la clave privada desde el archivo PEM
+        if (privateKeyResource.exists() && publicKeyResource.exists()){
+            // Lectura de la clave privada desde el archivo PEM
             String privateKeyPem = privateKeyResource.getContentAsString(Charset.defaultCharset())
                     .replace("-----BEGIN PRIVATE KEY-----", "")
                     .replaceAll(System.lineSeparator(), "")
                     .replace("-----END PRIVATE KEY-----", "");
             byte[] privateKeyBytes = Base64.getDecoder().decode(privateKeyPem);
             PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(privateKeyBytes);
-            return keyFactory.generatePrivate(privateKeySpec);
+            // Lectura de la clave pública desde el archivo PEM
+            String publicKeyPem = publicKeyResource.getContentAsString(Charset.defaultCharset())
+                    .replace("-----BEGIN PUBLIC KEY-----", "")
+                    .replaceAll(System.lineSeparator(), "")
+                    .replace("-----END PUBLIC KEY-----", "");
+            byte[] publicKeyBytes = Base64.getDecoder().decode(publicKeyPem);
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(publicKeyBytes);
+            // Generación de las claves
+            PrivateKey privateKey = keyFactory.generatePrivate(privateKeySpec);
+            PublicKey publicKey = keyFactory.generatePublic(publicKeySpec);
+            return new KeyPair(publicKey, privateKey);
         }
         return null;
     }
-
     @Bean
     public SecurityFilterChain configure(HttpSecurity http) throws Exception {
         http
