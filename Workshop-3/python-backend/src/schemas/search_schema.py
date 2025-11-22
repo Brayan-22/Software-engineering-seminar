@@ -26,26 +26,41 @@ class ProfessorListSearchResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+# class AdvancedSearchRequest(BaseModel):
+#     """
+#     Request model for advanced search.
+
+#     Provide search terms for professors and/or courses.
+#     Searches are performed on:
+#     - professor: searches in professor name field
+#     - course: searches in course name and code fields
+#     """
+#     professor: Optional[str] = Field(
+#         None,
+#         min_length=1,
+#         description="Search term for professor name",
+#         example="John"
+#     )
+#     course: Optional[str] = Field(
+#         None,
+#         min_length=1,
+#         description="Search term for course name and code",
+#         example="Calculus"
+#     )
 class AdvancedSearchRequest(BaseModel):
     """
-    Request model for advanced search.
+    Request model for unified advanced search.
 
-    Provide search terms for professors and/or courses.
-    Searches are performed on:
-    - professor: searches in professor name field
-    - course: searches in course name and code fields
+    Searches in:
+    - professor name
+    - course name
+    - course code
     """
-    professor: Optional[str] = Field(
-        None,
+    search_term: str = Field(
+        ...,
         min_length=1,
-        description="Search term for professor name",
-        example="John"
-    )
-    course: Optional[str] = Field(
-        None,
-        min_length=1,
-        description="Search term for course name and code",
-        example="Calculus"
+        description="Search term for professor, course name, or course code",
+        example="John or Calculus or MAT101"
     )
 
 

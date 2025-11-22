@@ -84,10 +84,12 @@ async def advanced_search(
     Returns:
         List of unique assignments (professor-course relationships) with full details
     """
-    results = service.advanced_search(
-        professor_term=request.professor,
-        course_term=request.course
-    )
+    # results = service.advanced_search(
+    #     professor_term=request.professor,
+    #     course_term=request.course
+    # )
+    results = service.advanced_search(request.search_term)
+
 
     return AdvancedSearchResponse(
         assignments=[ProfessorCourseDetailResponse.model_validate(a) for a in results["assignments"]],

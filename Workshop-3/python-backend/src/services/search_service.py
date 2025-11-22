@@ -109,71 +109,108 @@ class SearchService:
 
         return professors
 
-    def advanced_search(
-        self,
-        professor_term: str | None = None,
-        course_term: str | None = None
-    ) -> Dict[str, any]:
-        """
-        Advanced LIKE search that returns assignments (professor-course relationships).
+    # def advanced_search(
+    #     self,
+    #     professor_term: str | None = None,
+    #     course_term: str | None = None
+    # ) -> Dict[str, any]:
+    #     """
+    #     Advanced LIKE search that returns assignments (professor-course relationships).
 
-        Args:
-            professor_term: Optional search term for professor name
-            course_term: Optional search term for course name and code
+    #     Args:
+    #         professor_term: Optional search term for professor name
+    #         course_term: Optional search term for course name and code
 
-        Returns:
-            Dictionary with assignments
-                Example: {
-                    "assignments": [<ProfessorCourse>, ...],
-                    "total": 10
-                }
+    #     Returns:
+    #         Dictionary with assignments
+    #             Example: {
+    #                 "assignments": [<ProfessorCourse>, ...],
+    #                 "total": 10
+    #             }
+    #     """
+    #     # Start with base query for assignments with eager loading
+    #     query = self.db.query(ProfessorCourse).options(
+    #         joinedload(ProfessorCourse.professor),
+    #         joinedload(ProfessorCourse.course)
+    #     )
+
+    #     # Always join the necessary tables for filtering
+    #     query = query.join(Professor, ProfessorCourse.professor_id == Professor.id)
+
+    #     # Join Course table (needed if course_term is provided)
+    #     query = query.join(Course, ProfessorCourse.course_id == Course.id)
+
+    #     # Build filters based on provided search terms
+    #     filters = []
+
+    #     # Add professor name filter if provided
+    #     if professor_term:
+    #         professor_spec = ProfessorNameSpecification(professor_term, partial=True)
+    #         filters.append(professor_spec.to_sql_filter())
+
+    #     # Add course name/code filter if provided
+    #     if course_term:
+    #         name_spec = CourseNameSpecification(course_term, partial=True)
+    #         code_spec = CourseCodeSpecification(course_term, partial=True)
+    #         course_spec = name_spec | code_spec
+    #         filters.append(course_spec.to_sql_filter())
+
+    #     # Apply all filters with AND logic
+    #     if filters:
+    #         from sqlalchemy import and_
+    #         query = query.filter(and_(*filters))
+
+    #     # Execute query and get assignments
+    #     assignments = query.distinct().all()
+
+    #     # Additional deduplication by assignment ID to ensure uniqueness
+    #     seen_ids = set()
+    #     unique_assignments = []
+    #     for assignment in assignments:
+    #         if assignment.id not in seen_ids:
+    #             seen_ids.add(assignment.id)
+    #             unique_assignments.append(assignment)
+
+    #     return {
+    #         "assignments": unique_assignments,
+    #         "total": len(unique_assignments)
+    #     }
+    def advanced_search(self, search_term: str):
         """
-        # Start with base query for assignments with eager loading
-        query = self.db.query(ProfessorCourse).options(
-            joinedload(ProfessorCourse.professor),
-            joinedload(ProfessorCourse.course)
+        Unified search by professor name or course name/code.
+        Returns full professor–course assignments.
+        """
+
+        # Base query with eager loading
+        query = (
+            self.db.query(ProfessorCourse)
+            .join(Professor, ProfessorCourse.professor_id == Professor.id)
+            .join(Course, ProfessorCourse.course_id == Course.id)
+            .options(
+                joinedload(ProfessorCourse.professor),
+                joinedload(ProfessorCourse.course),
+            )
         )
 
-        # Always join the necessary tables for filtering
-        query = query.join(Professor, ProfessorCourse.professor_id == Professor.id)
+        # Build filters: professor name OR course name OR course code
+        from sqlalchemy import or_
 
-        # Join Course table (needed if course_term is provided)
-        query = query.join(Course, ProfessorCourse.course_id == Course.id)
+        term = f"%{search_term}%"  # LIKE search
 
-        # Build filters based on provided search terms
-        filters = []
+        filters = or_(
+            Professor.name.ilike(term),
+            Course.name.ilike(term),
+            Course.code.ilike(term),
+        )
 
-        # Add professor name filter if provided
-        if professor_term:
-            professor_spec = ProfessorNameSpecification(professor_term, partial=True)
-            filters.append(professor_spec.to_sql_filter())
+        query = query.filter(filters)
 
-        # Add course name/code filter if provided
-        if course_term:
-            name_spec = CourseNameSpecification(course_term, partial=True)
-            code_spec = CourseCodeSpecification(course_term, partial=True)
-            course_spec = name_spec | code_spec
-            filters.append(course_spec.to_sql_filter())
-
-        # Apply all filters with AND logic
-        if filters:
-            from sqlalchemy import and_
-            query = query.filter(and_(*filters))
-
-        # Execute query and get assignments
+        # Fetch unique assignments
         assignments = query.distinct().all()
 
-        # Additional deduplication by assignment ID to ensure uniqueness
-        seen_ids = set()
-        unique_assignments = []
-        for assignment in assignments:
-            if assignment.id not in seen_ids:
-                seen_ids.add(assignment.id)
-                unique_assignments.append(assignment)
-
         return {
-            "assignments": unique_assignments,
-            "total": len(unique_assignments)
+            "assignments": assignments,
+            "total": len(assignments),
         }
 
 
