@@ -138,6 +138,7 @@ export const AssignmentsTab = () => {
             <AssignmentCard
               key={assignment.id}
               assignment={assignment}
+              showActions
               onDelete={() => handleDeleteClick(assignment)}
             />
           ))

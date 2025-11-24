@@ -3,10 +3,11 @@ import type { Assignment } from "../../models/Assignment"
 
 type AssignmentCardProps = {
     assignment: Assignment;
+    showActions?: boolean;
     onDelete?: (assignment_id: number) => void;
 }
 
-export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) => {
+export const AssignmentCard = ({ assignment, showActions, onDelete }: AssignmentCardProps) => {
 
     return (
         <Box sx={{
@@ -29,7 +30,7 @@ export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) =>
                     alignItems: "center",
                     justifyContent: "center",
                     minWidth: "120px",
-                                    flexGrow: 1,
+                    flexGrow: 1,
 
                 }}
             >
@@ -52,25 +53,29 @@ export const AssignmentCard = ({ assignment, onDelete }: AssignmentCardProps) =>
                 <Typography>{assignment.course.schedule}</Typography>
             </Box>
 
-            <Divider orientation="vertical" flexItem />
-            <Box
-                sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    justifyContent: "flex-end",
-                    gap: "10px",
-                    minWidth: "110px",
-                }}
-            >
-                <Button
-                    variant="contained"
-                    color="error"
-                    onClick={() => onDelete?.(assignment.id)}
-                >
-                    Delete
-                </Button>
+            {showActions && (
+                <>
+                    <Divider orientation="vertical" flexItem />
+                    <Box
+                        sx={{
+                            display: "flex",
+                            flexDirection: "row",
+                            justifyContent: "flex-end",
+                            gap: "10px",
+                            minWidth: "110px",
+                        }}
+                    >
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={() => onDelete?.(assignment.id)}
+                        >
+                            Delete
+                        </Button>
 
-            </Box>
+                    </Box>
+                </>
+            )}
 
         </Box>
     )

@@ -1,14 +1,9 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
 import { CourseCard } from "./CourseCard";
 import { ProfessorCard } from "./ProfessorCard";
-import type { Course } from "../../models/Course";
-import type { Professor } from "../../models/Professor";
-
-interface Assignment {
-  professor: Professor;
-  course: Course;
-}
-
+import { AssignmentCard } from "../dashboard/AssignmentCard";
+import type { Assignment } from "../../models/Assignment";
+import { useEffect } from "react";
 interface SearchResultsProps {
   assignments: Assignment[];
   loading: boolean;
@@ -22,14 +17,12 @@ export const SearchResults = ({
 }: SearchResultsProps) => {
   const hasResults = assignments && assignments.length > 0;
 
-  // separa profesores únicos y cursos únicos
-  const uniqueProfessors = Array.from(
-    new Map(assignments.map((a) => [a.professor.id, a.professor])).values()
-  );
-
-  const uniqueCourses = Array.from(
-    new Map(assignments.map((a) => [a.course.id, a.course])).values()
-  );
+  useEffect(() => {
+    console.log(assignments);
+    assignments.map((a) => {
+      console.log(a);
+    })
+  }, [assignments]);
 
   return (
     <Box
@@ -57,24 +50,15 @@ export const SearchResults = ({
             </Typography>
           ) : (
             <>
-              {uniqueCourses.length > 0 && (
+              {assignments.length > 0 && (
                 <>
                   <Typography variant="h6" sx={{ mt: 2 }}>
-                    Courses
+                    Assignments
                   </Typography>
-                  {uniqueCourses.map((course) => (
-                    <CourseCard key={course.id} course={course} />
-                  ))}
-                </>
-              )}
-
-              {uniqueProfessors.length > 0 && (
-                <>
-                  <Typography variant="h6" sx={{ mt: 3 }}>
-                    Professors
-                  </Typography>
-                  {uniqueProfessors.map((prof) => (
-                    <ProfessorCard key={prof.id} professor={prof} />
+                  {assignments.map((a) => (
+                    <>
+                      <AssignmentCard key={a.id} assignment={a}></AssignmentCard>
+                    </>
                   ))}
                 </>
               )}
