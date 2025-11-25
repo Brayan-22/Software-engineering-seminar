@@ -5,10 +5,18 @@ This module serves as the central registry for all API routers.
 Import this module to access all configured routers.
 """
 from fastapi import APIRouter
-from src.api.routes import professor, course, assignment, search, dashboard
+from src.api.routes import professor, course, assignment, search, dashboard, health
 
 # Create main API router
 api_router = APIRouter()
+
+
+# Health check endpoint
+api_router.include_router(
+    health.router,
+    prefix="/health",
+    tags=["Health"],
+)
 
 # Include all sub-routers with their prefixes and tags
 api_router.include_router(

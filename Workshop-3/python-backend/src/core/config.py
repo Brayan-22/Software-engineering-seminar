@@ -12,7 +12,12 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     API_PREFIX: str = "/api/v1"
 
-    DATABASE_URL: str
+    # Database individual components
+    DATABASE_USER: str
+    DATABASE_PASSWORD: str
+    DATABASE_HOST: str
+    DATABASE_PORT: int = 5432
+    DATABASE_NAME: str
 
     CORS_ORIGINS: List[str] = ["http://localhost:3000"]
 
@@ -25,6 +30,11 @@ class Settings(BaseSettings):
         case_sensitive=True,
         extra="ignore",
     )
+
+    @property
+    def DATABASE_URL(self) -> str:
+        """Construct database URL from individual components."""
+        return f"postgresql://{self.DATABASE_USER}:{self.DATABASE_PASSWORD}@{self.DATABASE_HOST}:{self.DATABASE_PORT}/{self.DATABASE_NAME}"
 
 
 settings = Settings()
