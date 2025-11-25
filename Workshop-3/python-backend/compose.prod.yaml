@@ -1,0 +1,28 @@
+version: '3.8'
+
+# Production override for docker-compose
+# Usage: docker compose -f compose.yaml -f compose.prod.yaml up -d
+
+services:
+  python-backend:
+    # Production environment variables
+    environment:
+      DEBUG: "False"
+      PYTHONUNBUFFERED: "1"
+      PYTHONDONTWRITEBYTECODE: "1"
+
+    # Remove volume mounts (use code baked into image)
+    volumes:
+      # Only mount keys and .env, not source code
+      - ./keys:/app/keys:ro
+      - ./.env:/app/.env:ro
+
+    # Production command with multiple workers
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000 --workers 4 --no-access-log
+
+    # Production restart policy
+    restart: always
+
+  python-backend-db:
+    # Production restart policy
+    restart: always
