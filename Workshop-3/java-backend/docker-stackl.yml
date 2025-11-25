@@ -1,0 +1,51 @@
+version: '3.8'
+services:
+  auth_app:
+    image: auth_back:latest
+    env_file:
+      - .env
+    depends_on:
+      - auth_db
+    networks:
+      - auth_network
+      - reverse_proxy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.auth_app.entrypoints=websecure"
+        - "traefik.http.routers.auth_app.tls.certresolver=production"
+        - "traefik.http.routers.auth_app.tls=true"
+        - "traefik.http.routers.auth_app.rule=Host(`authbackbs.glud.org`)"
+        - "traefik.http.routers.auth_app.service=auth_app"
+        - "traefik.http.services.auth_app.loadbalancer.server.port=8080"
+  auth_db:
+    image: mysql:8.0
+    env_file:
+      - .env
+    volumes:
+      - ./init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - auth_network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+volumes:
+  db_data:
+networks:
+  auth_network:
+    driver: overlay
+  reverse_proxy:
+    external: true
