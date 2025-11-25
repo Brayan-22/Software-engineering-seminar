@@ -3,7 +3,6 @@ version: '3.8'
 services:
   python-backend:
     image: python-backend:latest
-    restart: unless-stopped
     env_file:
       - .env
     depends_on:
@@ -30,7 +29,6 @@ services:
         - "traefik.http.services.python-backend.loadbalancer.server.port=8000"
   python-backend-db:
     image: postgres:15-alpine
-    restart: unless-stopped
     env_file:
       - .env
     networks:
