@@ -1,13 +1,13 @@
 version: '3.8'
 services:
-  auth_app:
-    image: auth_back:latest
+  java-backend:
+    image: java-backend:latest
     env_file:
       - .env
     depends_on:
-      - auth_db
+      - java-backend-db
     networks:
-      - auth_network
+      - java-backend-network
       - reverse_proxy
     deploy:
       replicas: 1
@@ -21,13 +21,13 @@ services:
       labels:
         - "traefik.enable=true"
         - "traefik.docker.network=reverse_proxy"
-        - "traefik.http.routers.auth_app.entrypoints=websecure"
-        - "traefik.http.routers.auth_app.tls.certresolver=production"
-        - "traefik.http.routers.auth_app.tls=true"
-        - "traefik.http.routers.auth_app.rule=Host(`authbackbs.glud.org`)"
-        - "traefik.http.routers.auth_app.service=auth_app"
-        - "traefik.http.services.auth_app.loadbalancer.server.port=8080"
-  auth_db:
+        - "traefik.http.routers.java-backend.entrypoints=websecure"
+        - "traefik.http.routers.java-backend.tls.certresolver=production"
+        - "traefik.http.routers.java-backend.tls=true"
+        - "traefik.http.routers.java-backend.rule=Host(`authbackbs.glud.org`)"
+        - "traefik.http.routers.java-backend.service=java-backend"
+        - "traefik.http.services.java-backend.loadbalancer.server.port=8080"
+  java-backend-db:
     image: mysql:8.0
     env_file:
       - .env
@@ -40,7 +40,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - auth_network
+      - java-backend-network
     deploy:
       replicas: 1
       restart_policy:
@@ -48,7 +48,7 @@ services:
 volumes:
   db_data:
 networks:
-  auth_network:
+  java-backend-network:
     driver: overlay
   reverse_proxy:
     external: true

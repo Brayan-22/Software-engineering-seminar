@@ -1,19 +1,21 @@
 services:
-  auth_app:
-    image: auth_back:latest
+  java-backend:
+    image: java-backend:latest
     build:
       context: .
       dockerfile: Dockerfile
+    container_name: java-backend
     ports:
       - "8080:8080"
     env_file:
       - .env
     depends_on:
-      - auth_db
+      - java-backend-db
     networks:
-      - auth_network
-  auth_db:
+      - java-backend-network
+  java-backend-db:
     image: mysql:8.0
+    container_name: java-backend-db
     env_file:
       - .env
     volumes:
@@ -25,10 +27,10 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - auth_network
+      - java-backend-network
 
 volumes:
   db_data:
 networks:
-  auth_network:
+  java-backend-network:
     driver: bridge

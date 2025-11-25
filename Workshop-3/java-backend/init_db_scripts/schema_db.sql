@@ -1,11 +1,8 @@
 -- Database initialization script for auth-back
--- Database: auth_db_course
+-- Database: java-backend-db
 
--- Create the database if it does not exist
-CREATE DATABASE IF NOT EXISTS auth_db_course CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-
--- Use the database
-USE auth_db_course;
+-- Use the database (it's already created by MYSQL_DATABASE env var)
+USE java-backend-db;
 
 -- Drop table if it exists (useful for development or testing)
 DROP TABLE IF EXISTS admins;
