@@ -110,6 +110,7 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
             showAlert("Course created successfully!", "success");
         } catch (err) {
             handleApiError(err, setError, "Error creating course.");
+            showAlert(error || "Uknown error.");
         }
     };
 

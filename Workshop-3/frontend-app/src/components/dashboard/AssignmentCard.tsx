@@ -27,7 +27,7 @@ export const AssignmentCard = ({ assignment, showActions, onDelete }: Assignment
                 sx={{
                     display: "flex",
                     flexDirection: "column",
-                    alignItems: "center",
+                    alignItems: "flex-start",
                     justifyContent: "center",
                     minWidth: "120px",
                     flexGrow: 1,

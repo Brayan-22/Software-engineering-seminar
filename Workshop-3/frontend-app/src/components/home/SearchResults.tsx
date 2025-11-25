@@ -1,6 +1,4 @@
 import { Box, Typography, CircularProgress } from "@mui/material";
-import { CourseCard } from "./CourseCard";
-import { ProfessorCard } from "./ProfessorCard";
 import { AssignmentCard } from "../dashboard/AssignmentCard";
 import type { Assignment } from "../../models/Assignment";
 import { useEffect } from "react";
