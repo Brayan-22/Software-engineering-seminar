@@ -45,6 +45,9 @@ services:
       replicas: 1
       restart_policy:
         condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
 volumes:
   db_data:
 networks:
