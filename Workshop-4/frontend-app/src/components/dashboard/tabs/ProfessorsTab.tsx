@@ -76,7 +76,7 @@ export const ProfessorsTab = () => {
         };
 
         fetchProfessors();
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     const handleChange = (
         e: FormEvent

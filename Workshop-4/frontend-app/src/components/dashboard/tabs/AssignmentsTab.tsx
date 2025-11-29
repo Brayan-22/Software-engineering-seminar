@@ -62,7 +62,7 @@ export const AssignmentsTab = () => {
     };
     fetchAssignments();
     fetchData();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Delete logic
   const handleDeleteClick = (assignment: Assignment) => {

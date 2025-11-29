@@ -68,7 +68,7 @@ export const CoursesTab = () => {
         };
 
         fetchCourses();
-    }, []);
+    }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading courses...</Typography>;
