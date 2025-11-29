@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend:latest
+    networks:
+      - reverse_proxy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.frontend.tls.certresolver=production"
+        - "traefik.http.routers.frontend.tls=true"
+        - "traefik.http.routers.frontend.rule=Host(`courfinder.glud.org`)"
+        - "traefik.http.routers.frontend.service=frontend"
+        - "traefik.http.services.frontend.loadbalancer.server.port=80"
+networks:
+  reverse_proxy:
+    external: true

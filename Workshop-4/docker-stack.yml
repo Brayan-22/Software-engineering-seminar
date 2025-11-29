@@ -1,0 +1,146 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: frontend:latest
+    networks:
+      - reverse_proxy
+      - frontend-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.frontend.entrypoints=websecure"
+        - "traefik.http.routers.frontend.tls.certresolver=production"
+        - "traefik.http.routers.frontend.tls=true"
+        - "traefik.http.routers.frontend.rule=Host(`courfinder.glud.org`)"
+        - "traefik.http.routers.frontend.service=frontend"
+        - "traefik.http.services.frontend.loadbalancer.server.port=80"
+  java-backend:
+    image: java-backend:latest
+    env_file:
+      - java-backend/.env
+    depends_on:
+      - java-backend-db
+    networks:
+      - java-backend-network
+      - reverse_proxy
+      - frontend-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.java-backend.entrypoints=websecure"
+        - "traefik.http.routers.java-backend.tls.certresolver=production"
+        - "traefik.http.routers.java-backend.tls=true"
+        - "traefik.http.routers.java-backend.rule=Host(`authbackbs.glud.org`)"
+        - "traefik.http.routers.java-backend.service=java-backend"
+        - "traefik.http.services.java-backend.loadbalancer.server.port=8080"
+
+  java-backend-db:
+    image: mysql:8.0
+    env_file:
+      - java-backend/.env
+    volumes:
+      - ./java-backend/init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql
+      - mysql_data:/var/lib/mysql
+    networks:
+      - java-backend-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  python-backend:
+    image: python-backend:latest
+    env_file:
+      - python-backend/.env
+    depends_on:
+      - python-backend-db
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    volumes:
+      - ./python-backend/keys:/app/keys:ro
+    networks:
+      - python-backend-network
+      - reverse_proxy
+      - frontend-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.python-backend.entrypoints=websecure"
+        - "traefik.http.routers.python-backend.tls.certresolver=production"
+        - "traefik.http.routers.python-backend.tls=true"
+        - "traefik.http.routers.python-backend.rule=Host(`coursefinderbs.glud.org`)"
+        - "traefik.http.routers.python-backend.service=python-backend"
+        - "traefik.http.services.python-backend.loadbalancer.server.port=8000"
+
+  python-backend-db:
+    image: postgres:15-alpine
+    env_file:
+      - python-backend/.env
+    volumes:
+      - ./python-backend/init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql:ro
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - python-backend-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  mysql_data:
+    driver: local
+  postgres_data:
+    driver: local
+
+networks:
+  reverse_proxy:
+    external: true
+  frontend-network:
+    driver: overlay
+    attachable: true
+  java-backend-network:
+    driver: overlay
+  python-backend-network:
+    driver: overlay
