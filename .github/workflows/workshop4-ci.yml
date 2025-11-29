@@ -127,8 +127,8 @@ jobs:
       - name: Install dependencies
         run: poetry install
 
-      - name: Lint (Flake8)
-        run: poetry run flake8 src
+      - name: Lint (Pylint)
+        run: poetry run pylint src
         continue-on-error: true
 
       - name: Create test keys
