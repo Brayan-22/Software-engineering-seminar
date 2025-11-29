@@ -1,18 +1,19 @@
-name: Java Backend CI
+name: Workshop 4 - Java Backend CI
 
 on:
   push:
     branches: [main, master, develop]
     paths:
-      - 'java-backend/**'
+      - 'Workshop-4/java-backend/**'
   pull_request:
     branches: [main, master, develop]
     paths:
-      - 'java-backend/**'
+      - 'Workshop-4/java-backend/**'
+  workflow_dispatch:
 
 defaults:
   run:
-    working-directory: java-backend
+    working-directory: Workshop-4/java-backend
 
 jobs:
   test:
