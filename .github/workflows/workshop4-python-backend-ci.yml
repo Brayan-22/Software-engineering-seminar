@@ -9,6 +9,7 @@ on:
     branches: [main, master, develop]
     paths:
       - 'Workshop-4/python-backend/**'
+  workflow_dispatch:
 
 defaults:
   run:
