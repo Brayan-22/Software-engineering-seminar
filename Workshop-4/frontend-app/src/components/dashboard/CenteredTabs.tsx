@@ -20,9 +20,10 @@ export const CenteredTabs = () => {
             borderRadius: "16px"
         }}>
             <Tabs value={value} onChange={handleChange} centered>
-                <Tab label="Show Courses" />
-                <Tab label="Show Professors" />
-                <Tab label="Assignments" />
+                <Tab label="Show Courses" data-testid="tab-courses" />
+                <Tab label="Show Professors" data-testid="tab-professors" />
+                <Tab label="Assignments" data-testid="tab-assignments" />
+
             </Tabs>
 
             {/* Contenido dinámico según tab */}

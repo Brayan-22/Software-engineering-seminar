@@ -1,0 +1,20 @@
+{
+  "name": "frontend-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js --require \"./steps/**/*.js\" --require \"./support/**/*.js\" ../features",
+    "test:headed": "HEADLESS=false npx cucumber-js --require \"./steps/**/*.js\" --require \"./support/**/*.js\" ../features",
+    "report": "node ./support/generateReport.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@cucumber/cucumber": "^12.2.0",
+    "@playwright/test": "^1.57.0",
+    "playwright": "^1.57.0"
+  }
+}

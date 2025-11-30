@@ -204,7 +204,7 @@ export const ProfessorsTab = () => {
         <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex", justifyContent: "left", gap: "40px" }}>
                 <Typography variant="h4">Professors 📚</Typography>
-                <Button variant="contained" onClick={() => setOpen(true)}>
+                <Button data-testid="add-professor" variant="contained" onClick={() => setOpen(true)}>
                     Add +
                 </Button>
             </Box>
@@ -213,6 +213,7 @@ export const ProfessorsTab = () => {
                 {professors.length > 0 ? (
                     professors.map((professor) => (
                         <ProfessorCard
+                            data-testid={`professor-${professor.id}`}
                             key={professor.id}
                             professor={professor}
                             showActions
@@ -226,13 +227,13 @@ export const ProfessorsTab = () => {
             </Box>
 
             {/* Modal Create */}
-            <Dialog open={open} onClose={() => setOpen(false)}>
+            <Dialog data-testid="create-professor-modal" open={open} onClose={() => setOpen(false)}>
                 <DialogTitle>Create Professor</DialogTitle>
                 <DialogContent
                     sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
                 >
                     <TextField
-                        sx={{ mt: "5px" }}
+                        inputProps={{ 'data-testid': 'input-name' }}
                         label="Name"
                         name="name"
                         value={formData.name}
@@ -241,7 +242,9 @@ export const ProfessorsTab = () => {
                         error={!!formErrors.name}
                         helperText={formErrors.name}
                     />
+
                     <TextField
+                        inputProps={{ 'data-testid': 'input-email' }}
                         label="Email"
                         name="email"
                         value={formData.email}
@@ -252,6 +255,7 @@ export const ProfessorsTab = () => {
                     />
                     <FormControl fullWidth error={!!formErrors.specialty}>
                         <Select
+                            data-testid="select-specialty"
                             displayEmpty
                             name="specialty"
                             value={formData.specialty}
@@ -261,7 +265,7 @@ export const ProfessorsTab = () => {
                                 Select Specialty
                             </MenuItem>
                             {specialties.map((spec) => (
-                                <MenuItem key={spec} value={spec}>
+                                <MenuItem data-testid={`specialty-${spec}`} key={spec} value={spec}>
                                     {spec}
                                 </MenuItem>
                             ))}
@@ -271,7 +275,10 @@ export const ProfessorsTab = () => {
                 </DialogContent>
                 <DialogActions>
                     <Button onClick={() => setOpen(false)}>Cancel</Button>
-                    <Button variant="contained" onClick={handleCreateProfessor}>
+                    <Button
+                        data-testid="submit-professor"
+                        variant="contained"
+                        onClick={handleCreateProfessor}>
                         Save
                     </Button>
                 </DialogActions>
