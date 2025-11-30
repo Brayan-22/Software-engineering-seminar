@@ -1,568 +1,382 @@
-# Auth-Back – Java Spring Boot Authentication Backend
+# Workshop No. 4 - Containerization, Acceptance, and CI/CD
 
-This project is the authentication backend for the **Course Finder System**, developed using **Java Spring Boot**.  
-It handles administrator login using **JWT (JSON Web Token)** and connects to a **MySQL** database for user management.
-
----
-
-## Features
-
-- Admin login using **username** and **password**.
-- Token-based authentication with **JWT**.
-- Password encryption using **Spring Security**.
-- Integration with **MySQL** database.
-- Unit tests implemented with **JUnit 5** and **Mockito**.
-
----
-
-## Technologies Used
-
-| Layer             | Technology            |
-|-------------------|-----------------------|
-| Backend Framework | Spring Boot 3.5.7     |
-| Database          | MySQL 8               |
-| ORM               | Spring Data JPA       |
-| Security          | JWT (io.jsonwebtoken) |
-| Testing           | JUnit 5 + Mockito     |
-| Build Tool        | Maven                 |
-| Language          | Java 21               |
-
----
-
-## Project Structure
-
-```
-auth-back/
-├── init_db_scripts/                     # SQL scripts for database initialization
-│    ├── schema_db.sql
-│    └── data_db.sql
-├── src/
-│   ├── main/
-│   │   ├── java/com/udistrital/authback/
-│   │   │   ├── config/                  # Security configuration
-│   │   │   ├── controller/              # REST controllers
-│   │   │   ├── dto/                     # Data Transfer Objects
-│   │   │   ├── entity/                  # JPA entities
-│   │   │   ├── repository/              # JPA repositories
-│   │   │   ├── security/                # JWT utilities and token management
-│   │   │   ├── service/                 # Business logic
-│   │   │   └── AuthBackApplication.java # Spring Boot main class
-│   │   └── resources/                   # Application configuration and assets
-│   └── test/
-│       └── java/com/udistrital/authback/
-│           ├── security/
-│           │   └── JwtUtilTest.java     # Unit tests for JwtUtil
-│           ├── service/                 
-│           │   └── AuthServiceTest.java # Unit tests for AuthService   
-│           └── AuthBackApplicationTests.java  # Spring Boot context test
-```
-
+**Software Engineering Seminar**
+**Universidad Distrital Francisco José de Caldas**
+**Systems Engineering**
 
 
 ---
 
-## Database Configuration (MySQL)
+## Table of Contents
 
-### Database Script
+1. [Containerization](#1-containerization)
+   - [Dockerfiles](#11-dockerfiles)
+   - [Docker Compose Configuration](#12-docker-compose-configuration)
+   - [Makefile Usage](#13-makefile-usage)
+   - [Running Tests](#14-running-tests)
+   - [Summary](#15-summary)
+2. [Frontend Acceptance Tests with Cucumber](#2-frontend-acceptance-tests-with-cucumber)
+3. [GitHub Actions Workflow](#3-github-actions-workflow)
+4. [Conclusion](#4-conclusion)
+5. [Team Members](#team-members)
 
-Create the database and table using the following script (already included in `/init_db_scripts/schema_db.sql`):
+---
 
-```sql
--- Script:schema_db.sql
--- Database: auth_db_course
+## 1. Containerization
 
-CREATE DATABASE IF NOT EXISTS auth_db_course CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE auth_db_course;
+### 1.1 Dockerfiles
 
-DROP TABLE IF EXISTS admins;
+For this project, each backend includes a custom Dockerfile. The goal of these Dockerfiles is to produce lightweight and efficient container images ready for deployment in local and production environments.
 
-CREATE TABLE admins (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    username VARCHAR(255) NOT NULL UNIQUE,
-    password_hash VARCHAR(255) NOT NULL,
-    email VARCHAR(255) NOT NULL UNIQUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    INDEX idx_username (username),
-    INDEX idx_email (email)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-```
-### Connection Settings
+#### 1.1.1 Java Backend
 
-Add your MySQL credentials in the file:
-```
-src/main/resources/application.properties
-```
+The Java backend Dockerfile uses a **multi-stage build**. In the first stage, Maven downloads all dependencies and creates the application JAR file. In the second stage, a smaller Amazon Corretto runtime image is used to run the final application. This approach reduces the final image size and improves performance. The container exposes port 8080 and runs the service using a simple `java -jar` command.
 
-Example configuration:
-```
-DATABASE CONNECTION
+```dockerfile
+# === Build Stage ===
+FROM maven:3.9.11-amazoncorretto-25-alpine AS build
+WORKDIR /app
 
-spring.datasource.url=jdbc:mysql://localhost:3306/auth_db_course?useSSL=false&serverTimezone=UTC
-spring.datasource.username=root
-spring.datasource.password=YOUR_PASSWORD
-spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+# Copy and prepare dependency configuration
+COPY pom.xml .
 
-JPA / HIBERNATE
+# Download and cache dependencies
+RUN mvn dependency:go-offline -B
 
-spring.jpa.hibernate.ddl-auto=update
-spring.jpa.show-sql=true
-spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL8Dialect
+# Copy source code
+COPY src ./src
 
-SERVER
+# Build project while skipping tests
+RUN mvn clean package -DskipTests
 
-server.port=8080
-```
+# === Runtime Stage ===
+FROM amazoncorretto:25-alpine AS runtime
+WORKDIR /app
 
-Replace **YOUR_PASSWORD** with your actual MySQL root password.
+# Copy the packaged JAR file
+COPY --from=build /app/target/*.jar app.jar
 
-### Testing the Connection
+# Expose service port
+EXPOSE 8080
 
-Run the following command to start the backend:
-```
-mvn spring-boot:run
+# Start the application
+ENTRYPOINT ["java", "-jar", "app.jar"]
 ```
 
-If successful, you should see output similar to:
-```
-Tomcat initialized with port 8080 (http)
-Started AuthBackApplication in 3.2 seconds
+#### 1.1.2 Python Backend
+
+The Python backend Dockerfile also uses a **multi-stage build**. The first stage installs dependencies using Poetry and creates a virtual environment inside the project folder. The second stage copies the virtual environment and application code into a clean Python 3.11 image. A non-root user is created for security, and the service is started using Uvicorn on port 8000. A health check is also included to verify that the API is running correctly.
+
+#### 1.1.3 Frontend
+
+The Frontend Dockerfile uses a multi-stage build with Node.js for building and Nginx for serving. The build stage installs dependencies and generates a production build using Vite. The production stage copies the build output to an Nginx container and applies a custom configuration for proper routing and API proxying.
+
+These Dockerfiles allow all services to run consistently across different environments and ensure that all dependencies and runtime configurations are properly isolated inside each container.
+
+---
+
+### 1.2 Docker Compose Configuration
+
+To orchestrate the application components, we created multiple `docker-compose.yml` and `docker-stack.yml` files for development and deployment. These files define how each container interacts with its database and with the reverse proxy when needed.
+
+#### 1.2.1 Local Deployment
+
+For local development, Docker Compose builds the images directly from the Dockerfiles and maps the service ports to the host machine.
+
+**For the Java backend**, the compose file includes a MySQL database initialized with SQL scripts:
+
+```yaml
+version: '3.8'
+services:
+  java-backend:
+    image: java-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - java-backend-db
+    networks:
+      - java-backend-network
+
+  java-backend-db:
+    image: mysql:8.0
+    container_name: java-backend-db
+    env_file:
+      - .env
+    volumes:
+      - ./init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - java-backend-network
+
+volumes:
+  db_data:
+
+networks:
+  java-backend-network:
+    driver: bridge
 ```
 
-## Running Unit Tests
-This project includes unit tests for authentication logic.
+**For the Python backend**, the compose file includes a PostgreSQL database with its initialization scripts and health checks.
 
-Run all tests using:
-```
+Both services load environment variables from `.env` files and wait for the databases to become healthy before starting.
+
+#### 1.2.2 Production Deployment
+
+For production, the `docker-stack.yml` files define the same services but include additional configuration such as replicas, restart policies, placement constraints, and **Traefik labels**. These labels allow each backend to be published through HTTPS using different hostnames and connected to a shared reverse proxy network.
+
+Using Docker Compose and Docker Swarm makes it possible to run the system as a group of independent services while keeping the configuration simple, repeatable, and easy to deploy.
+
+---
+
+### 1.3 Makefile Usage
+
+The backends also include a **Makefile** to simplify common tasks. This file includes commands for installing dependencies, running tests, linting the code, cleaning temporary files, building Docker images, and deploying the stack in Docker Swarm. These Makefiles help maintain a clean and consistent workflow for all team members.
+
+**Example targets for Java Backend:**
+- `make install` - Install dependencies
+- `make dev` - Run in development mode
+- `make build` - Build Docker image
+- `make compose-up` - Start with Docker Compose
+- `make stack-deploy` - Deploy to Docker Swarm
+
+**Example targets for Python Backend:**
+- `make install` - Install dependencies with Poetry
+- `make test` - Run tests
+- `make lint` - Check code quality
+- `make build` - Build Docker image
+- `make stack-deploy` - Deploy to Docker Swarm
+
+---
+
+### 1.4 Running Tests
+
+Both backend services include comprehensive test suites to ensure code quality and functionality. Each service can be tested independently using its respective testing framework.
+
+#### 1.4.1 Java Backend - Unit Tests
+
+The Java backend uses **JUnit 5** and **Mockito** for unit testing. The test suite includes tests for authentication logic, JWT utilities, and service layers.
+
+**Running tests:**
+
+```bash
+# Navigate to the Java backend directory
+cd backend-auth
+
+# Run all tests
 mvn test
+
+# Run tests with detailed output
+mvn test -X
+
+# Run a specific test class
+mvn test -Dtest=AuthServiceTest
+
+# Run tests and generate coverage report
+mvn test jacoco:report
 ```
 
-Expected output:
+**Test Structure:**
+- `src/test/java/com/udistrital/authback/security/JwtUtilTest.java` - JWT token generation and validation
+- `src/test/java/com/udistrital/authback/service/AuthServiceTest.java` - Authentication service logic
+- `src/test/java/com/udistrital/authback/AuthBackApplicationTests.java` - Spring Boot context tests
+
+**Expected Output:**
 ```
 Tests run: 3, Failures: 0, Errors: 0, Skipped: 0
 BUILD SUCCESS
 ```
-#### Unit Test Results
 
-![AuthServiceTest](https://i.imgur.com/ftaVBUZ.png)
+#### 1.4.2 Python Backend - Unit Tests
 
-This screenshot shows the successful execution of the unit tests for the AuthService class.
-These tests validate the authentication logic, including:
+The Python backend uses **pytest** for unit testing. The test suite covers service layers, repository patterns, and API endpoint validations.
 
-- Successful login: verifies that a valid username and password produce a JWT token.
-
-
-- Invalid password: ensures that incorrect credentials trigger an exception.
-
-
-- User not found: confirms that the service correctly handles missing users in the repository.
-
-All test cases passed, confirming that the authentication flow behaves as expected and interacts properly with mocked dependencies (AdminRepository, PasswordEncoder, and JwtUtil).
-
-![JwtUtilTest](https://i.imgur.com/Q8KZxDu.png)
-
-This screenshot displays the successful execution of the unit tests for the JwtUtil class.
-These tests verify the correct generation and validation of JWT tokens, ensuring that:
-
-- Tokens are generated with a valid signature (RS256) using the configured private key.
-
-
-- The generated token contains the expected claims (username, issued date, expiration).
-
-
-- Token expiration logic functions correctly within the defined time window.
-
-All tests passed, confirming that the JWT generation and signing process works reliably.
-
-## REST API Documentation
-
-This backend provides a simple **authentication service using JWT tokens**.  
-All endpoints are documented and available through **Swagger UI**.
-
-### 🔹 Accessing Swagger UI
-
-Once the backend is running (for example, at `http://localhost:8080`),  
-you can open the API documentation in your browser at:
-
-**http://localhost:8080/swagger-ui/index.html**
-
-![Swagger](https://i.imgur.com/bBPolrC.png)
-
-Swagger UI provides an interactive interface where you can:
-- Explore all available REST endpoints.
-- Test requests directly from the browser.
-- View response formats and status codes.
-
-### API Endpoint
-| Method | Endpoint          | Description                                     |
-|--------|-------------------|-------------------------------------------------|
-| `POST` | `/api/auth/login` | Authenticates an admin and returns a JWT token. |
-
-
-#### Example request (JSON)
-```
-{
-  "username": "admin",
-  "password": "admin123"
-}
-```
-![Login Endpoint](https://i.imgur.com/6Y8zh2n.png)
-#### Example response
-```
-{
-  "token": "eyJhbGciOiJIUzI1NiIsInR5..."
-}
-```
-![Login Endpoint](https://i.imgur.com/cp18UZg.png)
-
-
-Pille el de python si quiere cambielo: 
-# Python Backend
-
-A FastAPI-based REST API for managing professors, courses, and professor–course assignments.
-
-## ✅ Requirements
-
-- Python 3.11+
-- [uv](https://docs.astral.sh/uv/) (fast, modern Python package manager)
-- PostgreSQL 13+ (installed locally)
-
-## 🚀 Quick Start
-
-### 1) Install `uv`
-
-If you don't have `uv`:
+**Running tests:**
 
 ```bash
-# Linux / macOS
-curl -LsSf https://astral.sh/uv/install.sh | sh
+# Navigate to the Python backend directory
+cd backend-course
 
-# Windows (PowerShell)
-powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-### 2) Install dependencies
-
-```bash
-# Sync dependencies (creates a virtualenv automatically)
-uv sync
-
-# Include dev extras too (linters, test deps, etc.)
-uv sync --all-extras
-```
-
-### 3) Configure environment
-
-Create a `.env` file at the project root (or edit the existing one):
-
-```bash
-# Database connection (local PostgreSQL)
-DATABASE_URL=postgresql://postgres:password@localhost:5432/course_finder_db
-
-# JWT configuration (see Security section)
-JWT_PUBLIC_KEY_PATH=keys/public_key.pem
-JWT_ALGORITHM=RS256
-JWT_AUDIENCE=course-finder-api
-JWT_ISSUER=auth-service
-```
-
-> Make sure your local PostgreSQL server is running and the database exists. Example:
->
-> ```bash
-> psql -U postgres -h localhost -p 5432 -c "CREATE DATABASE course_finder_db;"
-> # Optionally configure a dedicated user/role and grant privileges.
-> ```
-
-### 4) Initialize the database schema
-
-```bash
-uv run python -m src.core.init_db
-```
-
-### 5) Run the application
-
-**Option A — FastAPI CLI (recommended for development)**
-```bash
-uv run fastapi dev src/main.py
-```
-
-**Option B — Uvicorn directly**
-```bash
-uv run uvicorn src.main:app --reload
-```
-
-### 6) Explore the API
-
-- **Swagger UI**: http://localhost:8000/api/v1/docs
-- **ReDoc**: http://localhost:8000/api/v1/redoc
-- **Health Check**: http://localhost:8000/health
-
----
-
-## 📁 Project Structure
-
-```
-src/
-├── api/
-│   ├── __init__.py
-│   ├── dependencies/
-│   │   ├── __init__.py
-│   │   └── auth_dependency.py
-│   └── routes/
-│       ├── __init__.py
-│       ├── assignment.py
-│       ├── course.py
-│       ├── dashboard.py
-│       ├── professor.py
-│       └── search.py
-├── core/
-│   ├── __init__.py
-│   ├── config.py
-│   ├── database.py
-│   └── init_db.py
-├── models/
-│   ├── __init__.py
-│   ├── course.py
-│   ├── professor.py
-│   └── professor_course.py
-├── repositories/
-│   ├── __init__.py
-│   ├── base.py
-│   ├── course_repository.py
-│   ├── professor_course_repository.py
-│   └── professor_repository.py
-├── schemas/
-│   ├── __init__.py
-│   ├── course_schema.py
-│   ├── dashboard_schema.py
-│   ├── professor_course_schema.py
-│   ├── professor_schema.py
-│   └── search_schema.py
-├── services/
-│   ├── __init__.py
-│   ├── course_service.py
-│   ├── dashboard_service.py
-│   ├── professor_course_manager.py
-│   ├── professor_service.py
-│   └── search_service.py
-├── specifications/
-│   ├── __init__.py
-│   ├── base.py
-│   ├── composite_specifications.py
-│   ├── course_specifications.py
-│   └── professor_specifications.py
-├── main.py
-└── tests/
-    ├── __init__.py
-    ├── conftest.py
-    ├── test_course_service.py
-    └── test_professor_service.py
-```
-
----
-
-## 🔌 Core Endpoints (CRUD)
-
-### Professors
-- `POST /api/v1/professors` — Create professor
-- `GET /api/v1/professors` — List professors (paginated)
-- `GET /api/v1/professors/{id}` — Get professor by ID
-- `PUT /api/v1/professors/{id}` — Update professor
-- `DELETE /api/v1/professors/{id}` — Delete professor
-
-### Courses
-- `POST /api/v1/courses` — Create course
-- `GET /api/v1/courses` — List courses (paginated)
-- `GET /api/v1/courses/{id}` — Get course by ID
-- `PUT /api/v1/courses/{id}` — Update course
-- `DELETE /api/v1/courses/{id}` — Delete course
-
-### Assignments (Professor ⟷ Course)
-- `POST /api/v1/assignments` — Create assignment
-- `GET /api/v1/assignments` — List assignments
-- `GET /api/v1/assignments/{id}` — Get assignment by ID
-- `PUT /api/v1/assignments/{id}` — Update assignment status
-- `DELETE /api/v1/assignments/{id}` — Remove assignment
-
----
-
-## 🧪 Testing
-
-```bash
 # Run all tests
-uv run pytest
+poetry run pytest
 
-# With coverage report
-uv run pytest --cov=src --cov-report=html
+# Run tests with verbose output
+poetry run pytest -v
 
-# Run a specific file
-uv run pytest tests/test_course_service.py -q
+# Run tests with coverage report
+poetry run pytest --cov=src --cov-report=html --cov-report=term
+
+# Run a specific test file
+poetry run pytest tests/test_professor_service.py
+
+# Run tests in parallel (faster execution)
+poetry run pytest -n auto
+```
+
+**Alternative using Make:**
+```bash
+# Run tests
+make test
+
+# Run tests with coverage
+make test-cov
+```
+
+**Test Structure:**
+- `tests/test_professor_service.py` - Professor service unit tests
+- `tests/test_course_service.py` - Course service unit tests
+- `tests/conftest.py` - Test fixtures and configuration
+
+**Expected Output:**
+```
+============================= test session starts ==============================
+collected 15 items
+
+tests/test_course_service.py ........                                    [ 53%]
+tests/test_professor_service.py .......                                  [100%]
+
+============================== 15 passed in 2.34s ==============================
 ```
 
 ---
 
-## 🗃️ Database Models (overview)
+### 1.5 Summary
 
-**Professor**
-- `id`, `name`, `email` (unique), `specialty`
+In summary, the containerization process provides a complete and isolated environment for all services. The Dockerfiles create optimized and lightweight images, while the Compose and Stack files configure the services, databases, networks, and the reverse proxy for different environments.
 
-**Course**
-- `id`, `name`, `code` (unique), `category`, `schedule`
+In addition to this, both backends include:
+- **Makefiles** that automate common tasks such as installing dependencies, running the application in development mode, building Docker images, and deploying the services with Docker Swarm
+- **Comprehensive test suites** using JUnit 5/Mockito for Java and pytest for Python, ensuring code quality and reliability
+- **Simple commands** for running tests with coverage reports and detailed output
 
-**ProfessorCourse** (many‑to‑many link)
-- `id`, `professor_id`, `course_id`, `assigned_at`, `status`
-
----
-
-## 🔐 Security & Authentication (JWT / RSA)
-
-The API validates JWT tokens signed by an external auth service (RSA).
-
-1. Place your public RSA key at `keys/public_key.pem` (create the `keys/` folder if needed).
-2. Ensure the following variables exist in your `.env`:
-   ```bash
-   JWT_PUBLIC_KEY_PATH=keys/public_key.pem
-   JWT_ALGORITHM=RS256
-   JWT_AUDIENCE=course-finder-api
-   JWT_ISSUER=auth-service
-   ```
-
-To protect an endpoint, use the provided dependency:
-
-```python
-from fastapi import APIRouter, Depends
-from src.api.dependencies.auth_dependency import get_current_user
-
-router = APIRouter()
-
-@router.get("/protected")
-async def protected_route(current_user: dict = Depends(get_current_user)):
-    return {"message": "This is protected", "user": current_user}
-```
-
-**Available dependencies**
-- `get_current_user` — Requires authentication (401 if token is missing/invalid).
-- `get_current_user_optional` — Optional authentication (returns `None` if no token).
-- `verify_jwt_token` — Only verifies the token (returns full payload).
-
-Send the token using the `Authorization` header:
-```
-Authorization: Bearer <token>
-```
+These Makefiles and testing tools help maintain a consistent workflow and make the development, testing, and deployment process faster and easier. Overall, these containers and testing infrastructure make the project simple to run, validate, and deploy in both development and production environments.
 
 ---
 
-## 🛠️ Handy `uv` Commands
+## 2. Frontend Acceptance Tests with Cucumber
 
-```bash
-# Add a dependency
-uv add <package>
+Frontend acceptance tests were implemented using **Cucumber** to validate critical user stories from the perspective of the final user. These tests ensure that the user interface responds correctly to user actions such as form submissions, navigation, and data validation.
 
-# Add a dev dependency
-uv add --dev <package>
+For detailed information about the acceptance tests, including test scenarios, step definitions, and execution results, please refer to:
 
-# Upgrade locked deps
-uv sync --upgrade
+**📄 [TEST-ACCEPTANCE.md](./TEST-ACCEPTANCE.md)**
 
-# Run inside the project venv
-uv run <command>
+### Key Highlights
 
-# Examples
-uv run fastapi dev src/main.py
-uv run uvicorn src.main:app --reload
-uv run pytest
-uv pip list
-```
+- **Feature Tested:** Create Professor
+- **Test Framework:** Cucumber with Gherkin syntax
+- **Scenarios Covered:**
+  - Access the professor registration form
+  - Register a teacher with valid data
+  - Validate required fields
+  - Prevent duplicate teacher registration
+
+The acceptance tests provide living documentation of expected system behavior and establish a baseline for future frontend validations.
 
 ---
 
-## 💡 Notes
+## 3. GitHub Actions Workflow
 
-- `.env` is ignored by Git. Do not commit secrets.
-- Keep the public RSA key in sync with the external auth service.
-- `aud` and `iss` claims are validated; expired tokens are rejected.
+### 3.1 Overview
 
+For this project, we created a GitHub Actions workflow to automate important tasks such as running tests and building Docker images. The goal of this workflow is to support **continuous integration and continuous delivery (CI/CD)**. Each time we push new code to the repository, the workflow runs automatically and checks that the system continues to work correctly.
 
-# Frontend Setup
+Using a **multi-workflow CI architecture** allows each service to be tested in isolation using the runtime and database it requires. The Java backend runs against MySQL, the Python backend against PostgreSQL, and the frontend uses Node.js tooling—each with its own optimized environment.
 
-This guide explains how to set up and run the frontend application for Workshop 3. The frontend interacts with two backend APIs: the authentication backend and the course management backend.
+### 3.2 Workflow Structure
 
-## Directory Structure
+The repository contains four workflow files:
 
-The repository is organized as follows:
+- **`workshop4-ci.yaml`** - Unified pipeline that validates the full system
+- **`frontend-ci.yaml`** - CI pipeline for the frontend service
+- **`java-backend.yaml`** - CI pipeline for the Java backend
+- **`python-backend.yaml`** - CI pipeline for the Python backend
 
-```
-Workshop/
-├─ Workshop 1/
-├─ Workshop 2/
-├─ Workshop 3/
-│  ├─ backend-auth/
-│  ├─ backend-course/
-│  └─ frontend-app/
-```
+This structure makes the CI process modular, scalable, and aligned with real-world production pipelines.
 
-All setup instructions should be executed from the `frontend-app` directory.
+#### 3.2.1 Frontend Workflow
 
-## Prerequisites
+The frontend workflow focuses on the Node.js environment:
+1. Install Node.js dependencies via npm
+2. Run linting and static analysis tools
+3. Build the production-ready Vite bundle
 
-Make sure you have the following installed:
+#### 3.2.2 Java Backend Workflow
 
-- [Node.js](https://nodejs.org/) (version 18 or higher recommended)
-- [npm](https://www.npmjs.com/) (comes with Node.js)
-- A running instance of both backend APIs
+The Java backend workflow uses Maven and runs against a MySQL service:
+1. Configure the Java 21 (Corretto) environment
+2. Restore Maven dependencies to speed up builds
+3. Run unit and integration tests
+4. Package the application into a JAR file
+5. Build the Docker image
 
-## Setup Instructions
+#### 3.2.3 Python Backend Workflow
 
-1. Open a terminal and navigate to the frontend directory:
+The Python backend workflow creates an isolated Python environment:
+1. Set up Python 3.11 and install dependencies via Poetry
+2. Run unit tests and API-level tests
+3. Validate the FastAPI application
+4. Build the Docker image
 
-```bash
-cd Workshop-3/frontend-app
-```
+### 3.3 Automatic Testing
 
-2. Install dependencies:
+A key part of the CI pipeline is the execution of automated tests. Whenever a workflow runs:
+- All unit and integration tests are executed
+- Any failure immediately stops the workflow
+- Clear logs and error messages are reported in GitHub Actions
 
-```bash
-npm install
-```
+### 3.4 Docker Image Build
 
-3. Configure API endpoints (if necessary):
+Each backend workflow builds its corresponding Docker image:
+- Ensuring Dockerfiles remain functional
+- Verifying that the services can be containerized at any time
+- Guaranteeing consistency between development and production environments
 
-By default, the frontend uses the following base URLs configured via proxy:
+### 3.5 Summary
 
-- Course API: `/course-api`
-- Auth API: `/auth-api`
+The GitHub Actions setup provides a robust, automated pipeline for validating the entire system. By combining a unified workflow with service-specific pipelines, the project benefits from fast feedback, cleaner code, and reliable CI/CD practices. This design reduces manual intervention, improves code quality, and ensures that every commit is thoroughly tested.
 
-Update `src/api/` files if your backend URLs differ.
+---
 
-4. Start the development server:
+## 4. Conclusion
 
-```bash
-npm run dev
-```
+This workshop demonstrated the implementation of modern software engineering practices through **containerization**, **frontend acceptance testing**, and **continuous integration**. Each of the objectives set for this project was addressed systematically:
 
-5. Open your browser and visit:
+### Docker Containerization
+All components of the system—including the Java backend, Python backend, and frontend—were successfully containerized. The use of multi-stage Dockerfiles ensured lightweight and optimized images, while Docker Compose and Docker Swarm orchestrations allowed seamless deployment in both development and production environments. The containers guarantee environment consistency, reduce dependency conflicts, and simplify setup for developers and testers.
 
-```
-http://localhost:5173
-```
+### Acceptance Testing with Cucumber
+Frontend acceptance tests were implemented using Cucumber to validate critical user stories. The **Create Professor** feature illustrated how administrators interact with the system, covering scenarios such as form access, valid teacher registration, required field validation, and duplicate prevention. Although some steps failed, the test provided valuable feedback on UI behavior and set a foundation for future automated frontend validations.
 
-You should see the frontend running and ready to interact with the backends.
+### CI/CD Pipeline
+A modular CI/CD pipeline using GitHub Actions was created for the entire project. Each service—frontend, Java backend, and Python backend—has dedicated workflows for installing dependencies, running tests, and building Docker images. A unified workflow was also implemented to ensure system-wide integrity. This setup enforces consistent quality, detects regressions early, and streamlines deployment processes.
 
-## Notes
+### Overall Impact
+By combining these practices, the project achieved reproducible deployments, reliable validation of user-facing features, and automated system verification. The outcomes highlight the importance of these methodologies in maintaining code quality, reducing manual effort, and ensuring smooth collaboration across development teams.
 
-- Ensure that both backend servers are running before launching the frontend.
-- Tokens will be stored in `localStorage` for API authentication.
-- For production builds, use:
+---
 
-```bash
-npm run build
-npm run preview
-```
+## Team Members
 
-This will generate optimized assets in the `dist/` folder and serve them locally.
+**Presented by:**
 
-## References
+- **Brayan Alejandro Riveros Rodríguez** - 20201020084
+- **Carlos Andrés Pescador Castro** - 20182020139
+- **Cristian Santiago Ríos Vásquez** - 20201020107
 
-- [Vite Documentation](https://vite.dev/)
-- [Axios Documentation](https://axios-http.com/)
-- [MUI Documentation](https://mui.com/material-ui/all-components/)
+---
+
+*Universidad Distrital Francisco José de Caldas*
+*Systems Engineering Program*
+*Software Engineering Seminar*
+*Bogotá D.C., Colombia - November 29, 2025*
