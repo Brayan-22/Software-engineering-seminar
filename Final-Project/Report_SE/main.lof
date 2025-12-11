@@ -6,5 +6,5 @@
 \contentsline {figure}{\numberline {5}{\ignorespaces Web User Interface (v1.0)}}{18}{figure.5}%
 \contentsline {figure}{\numberline {6}{\ignorespaces Web User Interface (v1.0)}}{19}{figure.6}%
 \contentsline {figure}{\numberline {7}{\ignorespaces Architecture Diagram (v1.0).}}{21}{figure.caption.10}%
-\contentsline {figure}{\numberline {8}{\ignorespaces Class diagram (v1.0).}}{23}{figure.caption.11}%
-\contentsline {figure}{\numberline {9}{\ignorespaces Deployment diagram (v1.0).}}{24}{figure.caption.12}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}}{25}{figure.caption.13}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Deployment diagram (v1.0).}}{27}{figure.caption.14}%

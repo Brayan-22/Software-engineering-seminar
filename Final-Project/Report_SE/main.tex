@@ -289,25 +289,88 @@ Figure~\ref{fig:arch} illustrates the high-level architecture, showing the relat
 
 \subsection{Data Model and Database Schema}
 
-The data model defines four primary entities that capture the essential academic domain: Professor, Course, Admin, and ProfessorCourse. This structure was designed to support the core user requirements identified during the analysis phase, particularly the need to search courses by multiple criteria and maintain clear associations between professors and their teaching assignments.\newline
+The data model defines four primary entities that capture the essential academic domain: Professor, Course, Admin, and ProfessorCourse. This structure was designed to support the core user requirements identified during the analysis phase, particularly the need to search courses by multiple criteria and maintain clear associations between professors and their teaching assignments.
 
-The Professor entity contains identification attributes (id, username, name) and a specialty field that categorizes the instructor's academic area. This information enables filtering and grouping operations in search queries. The Course entity includes structural attributes (id, code, name) along with academic metadata (credits, category) that support both discovery and academic planning. The unique course code constraint ensures data integrity and prevents duplicate registrations.\newline
+\subsubsection{Domain Entities and Relationships}
 
-The relationship between professors and courses implements a many-to-many association through the ProfessorCourse junction entity. This design decision reflects the reality of academic scheduling where one professor may teach multiple courses and one course may be taught by multiple professors across different groups or semesters. The ProfessorCourse entity includes additional context such as groupId (to distinguish sections), assignedAt (for temporal tracking), and status (to manage active versus historical assignments). This rich association model provides the flexibility required for complex academic scenarios while maintaining referential integrity.\newline
+The Professor entity contains identification attributes (id, name) and academic metadata (email, specialty) that categorizes the instructor's area of expertise. This information enables filtering and grouping operations in search queries. The email field is enforced as unique to prevent duplicate professor registrations and serves as a natural key for external integrations.\newline
 
-The Admin entity remains separate from the academic domain, containing only authentication-relevant attributes (id, username, passwordHash, email). This separation ensures that administrative access control does not interfere with the core domain logic and allows for independent security policy management.\newline
+The Course entity includes structural attributes (id, code, name) along with scheduling information (schedule) that supports both course discovery and academic planning. The unique course code constraint ensures data integrity and prevents duplicate registrations. The schedule field stores time and day information in a flexible text format, allowing representation of various scheduling patterns without imposing rigid structural constraints.\newline
 
-Design decisions prioritized query performance for the primary use case: searching courses by professor or course attributes and retrieving all related information in minimal database operations. The normalized structure prevents data redundancy while the junction entity enables efficient joins. Repository interfaces abstract database operations, providing a clean separation between domain logic and persistence mechanisms that facilitates future database migration or optimization.\newline
+The relationship between professors and courses implements a many-to-many association through the ProfessorCourse junction entity. This design decision reflects the reality of academic scheduling where one professor may teach multiple courses and one course may be taught by multiple professors across different groups or semesters. The ProfessorCourse entity includes additional context such as assigned\_at (timestamp of assignment creation) and status (to manage active, inactive, pending, or completed assignments). This rich association model provides the flexibility required for complex academic scenarios while maintaining referential integrity through foreign key constraints with cascade delete behavior.\newline
 
+The Admin entity remains architecturally separate from the academic domain, containing only authentication-relevant attributes (id, username, password\_hash, email). This separation ensures that administrative access control does not interfere with the core domain logic and allows for independent security policy management. The Admin entity resides in a separate database dedicated to the authentication service, while the academic entities (Professor, Course, ProfessorCourse) reside in a database managed by the business logic service.\newline
+
+Design decisions prioritized query performance for the primary use case: searching courses by professor or course attributes and retrieving all related information in minimal database operations. The normalized structure prevents data redundancy while the junction entity enables efficient joins. Repository interfaces abstract database operations, providing a clean separation between domain logic and persistence mechanisms that facilitates future database migration or optimization.
+
+\subsubsection{Business Logic Database}
+
+The business logic database implements the academic domain model. Table~\ref{tab:postgres_schema} summarizes the three main tables with their key attributes and constraints.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{Schema - Academic Domain Tables}
+	\label{tab:postgres_schema}
+	\small
+	\begin{tabular}{@{}lp{5cm}p{3.5cm}@{}}
+		\toprule
+		\textbf{Table} & \textbf{Key Attributes} & \textbf{Constraints} \\ 
+		\midrule
+		\texttt{professors} & id (SERIAL), name, email, specialty, created\_at, updated\_at & UNIQUE(email), Indexes on email, name, specialty \\
+		\texttt{courses} & id (SERIAL), name, code, schedule, created\_at, updated\_at & UNIQUE(code), Indexes on code, name, schedule \\
+		\texttt{professor\_courses} & id (SERIAL), professor\_id, course\_id, assigned\_at, status & FK to professors/courses, UNIQUE(professor\_id, course\_id), CHECK status IN ('active', 'inactive', 'pending', 'completed') \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The \texttt{professors} table stores instructor information with automatic timestamp tracking. Indexes on email, name, and specialty optimize common query patterns including professor search by name and filtering by academic area. The email uniqueness constraint prevents duplicate registrations and supports using email as a natural identifier in external systems.\newline
+
+The \texttt{courses} table maintains course catalog information with indexed fields supporting fast lookup by course code or name. The schedule field stores time and location information in a flexible VARCHAR format, allowing various representations ("Mon/Wed 10:00-12:00", "Tue/Thu 14:00-15:30") without rigid parsing requirements. The unique code constraint ensures each course has a distinct identifier within the institution.\newline
+
+The \texttt{professor\_courses} junction table implements the many-to-many relationship with additional assignment metadata. Foreign key constraints with CASCADE DELETE ensure referential integrity—deleting a professor or course automatically removes associated assignments, preventing orphaned records. The composite unique constraint on (professor\_id, course\_id) prevents duplicate assignments of the same professor to the same course. The status field uses a CHECK constraint limiting values to predefined states, supporting assignment lifecycle management. Multiple indexes optimize queries retrieving courses by professor, professors by course, and filtering by assignment status. A composite index on (professor\_id, course\_id, status) accelerates the most common query pattern: finding active courses for a specific professor.\newline
+
+Database triggers automatically update the \texttt{updated\_at} timestamp on all tables whenever records are modified, providing audit trail capabilities without application-level logic. This pattern ensures consistent timestamp management across all domain entities.
+
+\subsubsection{Authentication Database}
+
+The authentication service uses a separate database (\texttt{auth\_db\_course}) to isolate security-critical data from business logic. Table~\ref{tab:mysql_schema} describes the authentication schema structure.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{Schema - Authentication Table}
+	\label{tab:mysql_schema}
+	\small
+	\begin{tabular}{@{}lp{6cm}p{3cm}@{}}
+		\toprule
+		\textbf{Table} & \textbf{Key Attributes} & \textbf{Constraints} \\ 
+		\midrule
+		\texttt{admins} & id (INT AUTO\_INCREMENT), username, password\_hash, email, created\_at, updated\_at & UNIQUE(username), UNIQUE(email), Indexes on username and email \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The \texttt{admins} table stores administrative user credentials with bcrypt-hashed passwords in the \texttt{password\_hash} field. Both username and email are enforced as unique, providing multiple authentication options. Indexes on both fields optimize login queries, which typically search by username.\newline
+
+The deliberate separation of authentication and business databases supports the microservices architecture by allowing independent scaling, backup strategies, and security policies. The authentication database requires higher security measures while the business database optimizes for read-heavy query patterns typical of search operations.\newline
+
+\subsubsection{Schema Design Rationale}
+
+Several design decisions warrant explicit justification. First, the choice of different database systems (PostgreSQL for business logic, MySQL for authentication) was mandated by project requirements but offers strategic advantages. PostgreSQL's advanced JSON support, full-text search capabilities, and complex query optimization make it well-suited for the search-intensive academic domain. MySQL's simpler deployment and mature authentication integrations align with the lightweight requirements of the authentication service.\newline
+
+Second, the denormalized storage of schedule information as text rather than structured time slots prioritizes implementation simplicity and flexibility over query complexity. While this approach limits schedule-based filtering capabilities, it satisfies current requirements and can be refactored if advanced schedule analysis becomes necessary.\newline
+
+Third, the status field in \texttt{professor\_courses} supports future features like temporary assignments, historical tracking, and workflow management without schema changes. The CHECK constraint ensures data quality while allowing extension through configuration rather than migration.\newline
+
+Finally, comprehensive indexing strategies reflect analysis of expected query patterns: searches by professor name, searches by course code/name, and retrieval of professor-course relationships. Composite indexes optimize multi-condition queries while single-column indexes support individual lookups. This indexing approach balances query performance against write overhead and storage costs.\newline
 
 \begin{figure}[H]
 	\centering
 	\includegraphics[width=0.9\linewidth]{diagramaClases.jpg}
-	\caption{Class diagram (v1.0).}
+	\caption{Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}
 	\label{fig:classdiagram}
 \end{figure}
 
-Figure~\ref{fig:classdiagram} presents the complete class diagram including entities, repositories, services, and controllers across all architectural layers. This diagram demonstrates how the data model integrates with business logic components and exposes functionality through controller endpoints. The layered structure visible in the diagram reinforces the architectural principles of separation of concerns and dependency management established in the system design.
+Figure~\ref{fig:classdiagram} presents the complete class diagram including entities, repositories, services, and controllers across all architectural layers. This diagram demonstrates how the data model integrates with business logic components and exposes functionality through controller endpoints. The layered structure visible in the diagram reinforces the architectural principles of separation of concerns and dependency management established in the system design. The repository interfaces shown in the diagram directly correspond to the database tables documented in this section, providing the abstraction layer that enables database-agnostic business logic implementation.
 
 
 \subsection{API Endpoints and Contracts}  % NUEVA
