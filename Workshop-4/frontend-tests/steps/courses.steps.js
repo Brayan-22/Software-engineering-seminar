@@ -4,6 +4,7 @@ import { expect } from '@playwright/test';
 /* ==================== HELPERS ==================== */
 
 async function loginAsAdmin(page) {
+  // Navigates to login page and logs in as administrator
   await page.goto('http://localhost:5173/login');
   await page.fill('input[name="username"]', 'admin');
   await page.fill('input[name="password"]', 'admin123');
@@ -13,11 +14,13 @@ async function loginAsAdmin(page) {
 }
 
 async function openCoursesTab(page) {
+  // Open the Courses tab in the dashboard
   await page.click('[data-testid="tab-courses"]');
   await page.waitForSelector('text=Courses 📘', { timeout: 5000 });
 }
 
 async function openCourseModal(page) {
+  // Open modal to create a new course
   await openCoursesTab(page);
   await page.waitForSelector('[data-testid="add-course"]', { timeout: 5000 });
   await page.click('[data-testid="add-course"]');
@@ -25,21 +28,22 @@ async function openCourseModal(page) {
 }
 
 async function fillCourseForm(page, courseData) {
+  // Fill the course form fields
   await page.fill('[data-testid="input-code"]', courseData.code);
   await page.fill('[data-testid="input-name"]', courseData.name);
   
-  // Seleccionar día (MUI Select)
+  // Select day from MUI Select
   await page.click('[data-testid="select-day"]');
   await page.waitForTimeout(500);
   await page.click(`[data-testid="day-${courseData.day}"]`);
   
-  // Seleccionar hora (MUI Select)
+  // Select time from MUI Select
   await page.click('[data-testid="select-time"]');
   await page.waitForTimeout(500);
   await page.click(`[data-testid="time-${courseData.time}"]`);
 }
 
-/* ==================== GIVENS ESPECÍFICOS DE CURSOS ==================== */
+/* ==================== COURSE-SPECIFIC GIVENS ==================== */
 
 Given('the administrator is on the subject registration form', async function () {
   await loginAsAdmin(this.page);
@@ -60,22 +64,25 @@ Given('a subject with the same name already exists', async function () {
   await fillCourseForm(this.page, existingCourse);
   await this.page.click('[data-testid="submit-course"]');
 
-  // Esperar a que aparezca el mensaje de éxito (indica que se creó correctamente)
-  const successVisible = await this.page.locator('[data-testid="success-message"]').isVisible({ timeout: 3000 }).catch(() => false);
+  // Wait for success message, which confirms successful creation
+  const successVisible = await this.page
+    .locator('[data-testid="success-message"]')
+    .isVisible({ timeout: 3000 })
+    .catch(() => false);
   
   if (successVisible) {
-    // Si hay mensaje de éxito, esperar a que el modal se cierre
+    // If success message exists, wait for modal to close completely
     await this.page.waitForSelector('[data-testid="create-course-modal"]', { 
       state: 'hidden',
       timeout: 5000 
     });
   } else {
-    // Si no hay mensaje de éxito, puede que el modal no se cierre (por error en el backend)
-    console.log('⚠️ No se detectó mensaje de éxito al crear el curso inicial');
+    // If no success message appears, backend may have failed
+    console.log('⚠️ Success message not detected during initial course creation');
   }
 
   this.existingCourse = existingCourse;
-  await this.page.waitForTimeout(1000);
+  await this.page.waitForTimeout(1000); // Prevents timing issues
 });
 
 Given('an existing teacher is available in the system', async function () {
@@ -83,10 +90,12 @@ Given('an existing teacher is available in the system', async function () {
   
   await this.page.click('[data-testid="tab-professors"]');
   await this.page.waitForTimeout(500);
-  
+
+  // Check if there are already professors
   const professorsExist = await this.page.locator('text=No professors found').count() === 0;
   
   if (!professorsExist) {
+    // Create a professor if none exists
     await this.page.click('[data-testid="add-professor"]');
     await this.page.waitForSelector('[data-testid="create-professor-modal"]', { timeout: 5000 });
     
@@ -107,7 +116,7 @@ Given('an existing teacher is available in the system', async function () {
   this.professorExists = true;
 });
 
-/* ==================== WHENS ESPECÍFICOS DE CURSOS ==================== */
+/* ==================== COURSE-SPECIFIC WHENS ==================== */
 
 When('all required fields are filled with valid information for course', async function () {
   const courseData = {
@@ -122,6 +131,7 @@ When('all required fields are filled with valid information for course', async f
 });
 
 When('required fields are left empty for course', async function () {
+  // Intentionally clear required fields
   await this.page.fill('[data-testid="input-code"]', '');
   await this.page.fill('[data-testid="input-name"]', '');
 });
@@ -130,7 +140,8 @@ When('the administrator attempts to register the same subject again', async func
   const modalVisible = await this.page.locator('[data-testid="create-course-modal"]').isVisible();
   
   if (modalVisible) {
-    console.log('⚠️ Modal del registro anterior todavía visible, cerrándolo...');
+    // Close previous modal if still open
+    console.log('⚠️ Previous modal still visible, closing...');
     await this.page.click('button:has-text("Cancel")');
     await this.page.waitForSelector('[data-testid="create-course-modal"]', { 
       state: 'hidden',
@@ -138,6 +149,7 @@ When('the administrator attempts to register the same subject again', async func
     });
   }
 
+  // Reopen modal and try to submit duplicate course
   await this.page.click('[data-testid="add-course"]');
   await this.page.waitForSelector('[data-testid="create-course-modal"]', { 
     state: 'visible',
@@ -151,33 +163,30 @@ When('the administrator attempts to register the same subject again', async func
 });
 
 When('the administrator assigns this teacher to the new subject', async function () {
-  // Ir al tab de Assignments
+  // Opens assignments tab
   await this.page.click('[data-testid="tab-assignments"]');
   await this.page.waitForSelector('text=Assignments 📚', { timeout: 5000 });
   
-  // Abrir el modal de crear assignment
+  // Opens assignment creation modal
   await this.page.click('[data-testid="add-assignment"]');
   await this.page.waitForSelector('[data-testid="create-assignment-modal"]', { timeout: 5000 });
   
-  // Seleccionar un curso existente (el primero disponible)
+  // Select the first available course
   await this.page.click('[data-testid="select-course"]');
   await this.page.waitForTimeout(500);
-  
-  // Obtener el primer curso disponible
+
   const firstCourse = await this.page.locator('[data-testid^="course-"]').first();
-  const courseId = await firstCourse.getAttribute('data-testid');
   await firstCourse.click();
   
-  // Seleccionar el profesor creado anteriormente
+  // Select the professor (preferably our test professor)
   await this.page.click('[data-testid="select-professor"]');
   await this.page.waitForTimeout(500);
   
-  // Buscar el profesor "Dr. Test Professor"
   const professorOption = this.page.locator('text=Dr. Test Professor');
   if (await professorOption.count() > 0) {
     await professorOption.first().click();
   } else {
-    // Si no existe, seleccionar el primero disponible
+    // Fallback: select the first available professor
     await this.page.locator('[data-testid^="professor-"]').first().click();
   }
   
@@ -186,10 +195,10 @@ When('the administrator assigns this teacher to the new subject', async function
 
 When('submits the form', async function () {
   await this.page.click('[data-testid="submit-assignment"]');
-  await this.page.waitForTimeout(1500);
+  await this.page.waitForTimeout(1500); // Prevents premature queries
 });
 
-/* ==================== THENS ESPECÍFICOS DE CURSOS ==================== */
+/* ==================== COURSE-SPECIFIC THENS ==================== */
 
 Then('the system must display the {string} form option for courses', async function (formName) {
   await openCoursesTab(this.page);
@@ -198,6 +207,7 @@ Then('the system must display the {string} form option for courses', async funct
 
 Then('the new subject must appear in the general list without reloading the page', async function () {
   if (this.courseData) {
+    // Ensure the new subject appears dynamically without page reload
     await expect(
       this.page.locator(`text=${this.courseData.name}`).first()
     ).toBeVisible({ timeout: 5000 });
@@ -205,6 +215,7 @@ Then('the new subject must appear in the general list without reloading the page
 });
 
 Then('the relationship must be correctly stored in the database', async function () {
+  // Check for any success message that indicates assignment creation
   const successSelectors = [
     'text=Assignment created successfully',
     'text=created successfully',
@@ -216,7 +227,7 @@ Then('the relationship must be correctly stored in the database', async function
     try {
       await expect(this.page.locator(selector).first()).toBeVisible({ timeout: 3000 });
       found = true;
-      console.log(`✅ Assignment creado exitosamente`);
+      console.log(`✅ Assignment created successfully`);
       break;
     } catch (error) {
       continue;
@@ -224,28 +235,27 @@ Then('the relationship must be correctly stored in the database', async function
   }
 
   if (!found) {
-    // Debug: mostrar alertas presentes
+    // Debug: print existing alert messages
     const alerts = await this.page.locator('[role="alert"]').count();
-    console.log(`🔍 Número de alertas encontradas: ${alerts}`);
+    console.log(`🔍 Number of alerts found: ${alerts}`);
     
     if (alerts > 0) {
       for (let i = 0; i < alerts; i++) {
         const alertText = await this.page.locator('[role="alert"]').nth(i).textContent();
-        console.log(`   Alerta ${i}: "${alertText}"`);
+        console.log(`   Alert ${i}: "${alertText}"`);
       }
     }
     
-    throw new Error('No se confirmó la creación del assignment');
+    throw new Error('Assignment creation could not be confirmed');
   }
 
-  // Verificar que el assignment aparece en la lista
-  // Buscar que aparezca la tarjeta con el profesor y curso asignados
+  // Verify assignment card is displayed
   const assignmentCards = await this.page.locator('[class*="AssignmentCard"], [class*="assignment"]').count();
-  console.log(`📋 Se encontraron ${assignmentCards} tarjetas de assignment`);
-  
+  console.log(`📋 Found ${assignmentCards} assignment cards`);
+
   if (assignmentCards > 0) {
-    console.log('✅ Assignment aparece en la lista');
+    console.log('✅ Assignment appears in the list');
   } else {
-    console.log('⚠️ No se encontraron tarjetas de assignment visibles');
+    console.log('⚠️ No assignment cards visible');
   }
 });

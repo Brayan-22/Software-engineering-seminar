@@ -56,6 +56,7 @@ export const SearchBar = ({ onSearch, loading }: SearchBarProps) => {
     >
       <TextField
         fullWidth
+        inputProps={{ 'data-testid': 'search-input' }}
         placeholder="Search by professor or course..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
@@ -68,6 +69,7 @@ export const SearchBar = ({ onSearch, loading }: SearchBarProps) => {
       />
 
       <Button
+        data-testid="search-button"
         variant="contained"
         sx={buttonStyles}
         onClick={handleSearchClick}

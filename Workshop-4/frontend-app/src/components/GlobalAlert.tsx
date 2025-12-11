@@ -14,8 +14,13 @@ export default function GlobalAlert() {
       <Alert
         severity={alert.severity}
         onClose={closeAlert}
-        data-testid={alert.severity === "success" ? "success-message" : undefined}
-        sx={{
+        data-testid={
+          alert.severity === "success"
+            ? "success-message"
+            : alert.severity === "error"
+              ? "error-message"
+              : undefined
+        } sx={{
           backgroundColor:
             alert.severity === "warning"
               ? "#FFBE02"

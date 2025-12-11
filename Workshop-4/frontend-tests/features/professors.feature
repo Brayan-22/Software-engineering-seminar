@@ -24,4 +24,4 @@ Feature: Registration of new teachers
   Scenario: Prevent duplicate teacher registration
     Given a teacher with the same email or ID already exists
     When the administrator attempts to register the same teacher again
-    Then the system must prevent the registration and show an error message
+    Then the system must prevent the creation and show an error message

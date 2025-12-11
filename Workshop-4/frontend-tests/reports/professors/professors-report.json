@@ -1,0 +1,316 @@
+[
+  {
+    "description": "  As a system administrator\n  I want to add new teachers including name, email, and specialty\n  So that the system maintains an updated list of available teachers",
+    "elements": [
+      {
+        "description": "",
+        "id": "registration-of-new-teachers;access-the-professor-registration-form",
+        "keyword": "Scenario",
+        "line": 6,
+        "name": "Access the professor registration form",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 743515900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1042984400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "the administrator accesses the main panel",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:24"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 22885400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "the system must display the \"Register Professor\" form option for professors",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:110"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 246179400
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 113346300
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-teachers;register-a-teacher-with-valid-data",
+        "keyword": "Scenario",
+        "line": 11,
+        "name": "Register a teacher with valid data",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 667416800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "the administrator is on the professor registration form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1339154800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "all required fields are filled with valid information for professor",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:59"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 896526700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the administrator submits the form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 965431000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "the system must display a success confirmation message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:54"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 8411299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the new teacher must appear in the general list without reloading the page",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:116"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4928399
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 101379300
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-teachers;validate-required-fields",
+        "keyword": "Scenario",
+        "line": 18,
+        "name": "Validate required fields",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 673174200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 19,
+            "name": "the administrator is on the professor registration form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:26"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1296569799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "required fields are left empty for professor",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:70"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 41832899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 21,
+            "name": "the administrator submits the form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 651189000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "the system must display validation messages for missing fields",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:76"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16072899
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 500018399
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-teachers;prevent-duplicate-teacher-registration",
+        "keyword": "Scenario",
+        "line": 24,
+        "name": "Prevent duplicate teacher registration",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 706710799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 25,
+            "name": "a teacher with the same email or ID already exists",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:31"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3925548500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 26,
+            "name": "the administrator attempts to register the same teacher again",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\professors.steps.js:75"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3657679700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "the system must prevent the creation and show an error message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:100"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35056099
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 484456100
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "registration-of-new-teachers",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Registration of new teachers",
+    "tags": [],
+    "uri": "features\\professors.feature"
+  }
+]

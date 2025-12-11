@@ -10,18 +10,20 @@ type AssignmentCardProps = {
 export const AssignmentCard = ({ assignment, showActions, onDelete }: AssignmentCardProps) => {
 
     return (
-        <Box sx={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            flexGrow: "revert-layer",
-            backgroundColor: "#EBF1F4",
-            borderRadius: "16px",
-            py: "10px",
-            px: "30px",
-            mt: "15px"
-        }}>
+        <Box
+            data-testid={`assignment-card-${assignment.id}`}
+            sx={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexGrow: "revert-layer",
+                backgroundColor: "#EBF1F4",
+                borderRadius: "16px",
+                py: "10px",
+                px: "30px",
+                mt: "15px"
+            }}>
             {/* Left box: professor info*/}
             <Box
                 sx={{
@@ -66,6 +68,7 @@ export const AssignmentCard = ({ assignment, showActions, onDelete }: Assignment
                         }}
                     >
                         <Button
+                            data-testid={`delete-assignment-${assignment.id}`}
                             variant="contained"
                             color="error"
                             onClick={() => onDelete?.(assignment.id)}

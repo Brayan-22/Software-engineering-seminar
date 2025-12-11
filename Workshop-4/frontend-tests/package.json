@@ -4,8 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js --require support/world.js --require support/hooks.js --require steps",
-    "test:courses": "cucumber-js --require support/world.js --require support/hooks.js --require steps/createCourses.steps.js features/createSubject.feature",
+    "test": "cucumber-js --config cucumber.cjs",
+    "test:courses": "cucumber-js -c cucumber.cjs -p courses",
+    "test:professors": "cucumber-js -c cucumber.cjs -p professors",
+    "test:assignments": "cucumber-js -c cucumber.cjs -p assignments",
+    "test:search": "cucumber-js -c cucumber.cjs -p search",
     "test:headed": "HEADLESS=false npx cucumber-js --require \"./steps/**/*.js\" --require \"./support/**/*.js\" ../features",
     "report": "node ./support/generateReport.js"
   },

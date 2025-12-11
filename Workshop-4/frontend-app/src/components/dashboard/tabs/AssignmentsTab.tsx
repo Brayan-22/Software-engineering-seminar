@@ -110,12 +110,12 @@ export const AssignmentsTab = () => {
       console.log("📦 Sending new assignment:", newAssignment);
 
       const res = await createAssignment(newAssignment);
+      showAlert("Assignment created successfully", "success");
 
       setAssignments((prev) => [...prev, res]);
       setOpenAddModal(false);
       setSelectedCourse("");
       setSelectedProfessor("");
-      showAlert("Assignment created successfully", "success");
     } catch (err) {
       handleApiError(err, setError, "Error creating assignment.");
     }
@@ -141,6 +141,7 @@ export const AssignmentsTab = () => {
         {assignments.length > 0 ? (
           assignments.map((assignment) => (
             <AssignmentCard
+              data-testid={`assignment-card-${assignment.id}`}
               key={assignment.id}
               assignment={assignment}
               showActions
@@ -260,7 +261,10 @@ export const AssignmentsTab = () => {
           </Typography>
 
           <Box sx={{ display: "flex", justifyContent: "flex-end", gap: 2 }}>
-            <Button variant="outlined" onClick={() => setOpenDeleteModal(false)}>
+            <Button
+              data-testid="cancel-delete-assignment"
+              variant="outlined"
+              onClick={() => setOpenDeleteModal(false)}>
               Cancel
             </Button>
             <Button

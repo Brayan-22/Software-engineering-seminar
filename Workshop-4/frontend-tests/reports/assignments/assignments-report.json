@@ -1,0 +1,683 @@
+[
+  {
+    "description": "  As a system administrator\n  I want to create assignments linking professors with courses\n  So that the system accurately reflects which professors teach which courses",
+    "elements": [
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;access-the-assignments-management-interface",
+        "keyword": "Scenario",
+        "line": 9,
+        "name": "Access the assignments management interface",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 848701300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1007860400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 10,
+            "name": "the administrator opens the assignments tab",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:196"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 550330399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 11,
+            "name": "the system must display a list of existing assignments",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:307"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 82498499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 12,
+            "name": "the system must display an \"Add Assignment\" button",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:312"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7619300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 125649400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;create-a-new-assignment-with-valid-data",
+        "keyword": "Scenario",
+        "line": 14,
+        "name": "Create a new assignment with valid data",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 682174500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 738521499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 15,
+            "name": "the administrator is on the assignments tab",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:76"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1658393999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 16,
+            "name": "the administrator clicks on \"Add Assignment\"",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:200"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 664224200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 17,
+            "name": "selects a professor from the list",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:207"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 737732299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 18,
+            "name": "selects a course from the list",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:211"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1076405099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 19,
+            "name": "confirms the assignment creation",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:215"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 418997699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 20,
+            "name": "the system must display a success confirmation message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:54"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 383551999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 21,
+            "name": "the new assignment must appear in the assignments list",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:319"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5603900
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 103392700
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;validate-required-fields-when-creating-an-assignment",
+        "keyword": "Scenario",
+        "line": 23,
+        "name": "Validate required fields when creating an assignment",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 653922499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1122225200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 24,
+            "name": "the administrator is on the assignment creation form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:84"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2699720500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 25,
+            "name": "the administrator attempts to create an assignment without selecting a professor",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:219"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2270598300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 26,
+            "name": "the system must display validation messages for missing fields",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:66"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 9489900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 27,
+            "name": "the assignment must not be created",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:325"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4637299
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 483852699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;allow-a-professor-to-be-assigned-to-multiple-courses",
+        "keyword": "Scenario",
+        "line": 29,
+        "name": "Allow a professor to be assigned to multiple courses",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 659647799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 956295799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 30,
+            "name": "a professor already has one course assignment",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:90"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1064013200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 31,
+            "name": "the administrator creates a new assignment for the same professor",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:225"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 253919900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 32,
+            "name": "the system must allow the creation",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:331"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5423000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 33,
+            "name": "both assignments must appear in the list",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:338"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1013937599
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 490279499
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;allow-a-course-to-have-multiple-professors-assigned",
+        "keyword": "Scenario",
+        "line": 35,
+        "name": "Allow a course to have multiple professors assigned",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 652438200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 811388500
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 36,
+            "name": "a course already has one professor assigned",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:126"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1172405600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 37,
+            "name": "the administrator creates a new assignment for the same course",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:246"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 186440099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 38,
+            "name": "the system must allow the creation",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:331"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6018699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 39,
+            "name": "both assignments must appear in the list",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:338"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1014002799
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 476485300
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;prevent-duplicate-assignments",
+        "keyword": "Scenario",
+        "line": 41,
+        "name": "Prevent duplicate assignments",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 649089400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1064191200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 42,
+            "name": "an assignment already exists for a specific professor and course",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:159"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4144275000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 43,
+            "name": "the administrator attempts to create the same assignment again",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:267"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 3147105299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 44,
+            "name": "the system must prevent the creation and show an error message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:76"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35510499
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 490767400
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "assignment-of-professors-to-courses;delete-an-existing-assignment",
+        "keyword": "Scenario",
+        "line": 46,
+        "name": "Delete an existing assignment",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 669409399
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 911807099
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 47,
+            "name": "an assignment exists in the system",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:180"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1225018499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 48,
+            "name": "the administrator clicks on delete for that assignment",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:283"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 147876900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 49,
+            "name": "confirms the deletion",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:295"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 858467499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 50,
+            "name": "the system must remove the assignment",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:346"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4417999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 51,
+            "name": "the assignment must no longer appear in the list",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\assignments.steps.js:353"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1015332300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 103892799
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "assignment-of-professors-to-courses",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Assignment of professors to courses",
+    "tags": [],
+    "uri": "features\\assignments.feature"
+  }
+]

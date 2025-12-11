@@ -3,6 +3,7 @@ import { expect } from '@playwright/test';
 
 /* ==================== HELPERS ==================== */
 
+// Logs in as admin and waits until the dashboard is fully loaded
 async function loginAsAdmin(page) {
   await page.goto('http://localhost:5173/login');
   await page.fill('input[name="username"]', 'admin');
@@ -12,6 +13,7 @@ async function loginAsAdmin(page) {
   await page.waitForSelector('#dashboard', { timeout: 10000 });
 }
 
+// Opens the professor creation modal from the dashboard
 async function openProfessorModal(page) {
   await page.click('[data-testid="tab-professors"]');
   await page.waitForSelector('[data-testid="add-professor"]', { timeout: 10000 });
@@ -19,7 +21,7 @@ async function openProfessorModal(page) {
   await page.waitForSelector('[data-testid="create-professor-modal"]', { timeout: 10000 });
 }
 
-/* ==================== GIVENS ESPECÍFICOS DE PROFESORES ==================== */
+/* ==================== PROFESSOR-SPECIFIC GIVENS ==================== */
 
 Given('the administrator is on the professor registration form', async function () {
   await loginAsAdmin(this.page);
@@ -30,10 +32,11 @@ Given('a teacher with the same email or ID already exists', async function () {
   await loginAsAdmin(this.page);
   await openProfessorModal(this.page);
 
-  // Crear profesor "existente"
+  // Create an existing professor to later trigger validation
   await this.page.fill('[data-testid="input-name"]', 'Dr. John Smith');
   await this.page.fill('[data-testid="input-email"]', 'john.smith@university.edu');
 
+  // Selects a specialty — required for submission
   const specialtySelector = '[data-testid="select-specialty"]';
   await this.page.click(specialtySelector);
   await this.page.waitForTimeout(500);
@@ -41,21 +44,23 @@ Given('a teacher with the same email or ID already exists', async function () {
 
   await this.page.click('[data-testid="submit-professor"]');
 
-  // CRÍTICO: Esperar a que el modal se cierre completamente
+  // Critical: Ensures the modal remains visible while waiting for validation UI to update
   await this.page.waitForSelector('[data-testid="create-professor-modal"]', { 
     state: 'visible',
     timeout: 5000 
   });
 
+  // Soft wait to allow backend response and DOM stabilization
   await this.page.waitForTimeout(1000);
 });
 
-/* ==================== WHENS ESPECÍFICOS DE PROFESORES ==================== */
+/* ==================== PROFESSOR-SPECIFIC WHENS ==================== */
 
 When('all required fields are filled with valid information for professor', async function () {
   await this.page.fill('[data-testid="input-name"]', 'John Doe');
   await this.page.fill('[data-testid="input-email"]', 'john.doe@example.com');
 
+  // Selects a specialty before submitting
   const specialtySelector = '[data-testid="select-specialty"]';
   await this.page.click(specialtySelector);
   await this.page.waitForTimeout(500);
@@ -70,8 +75,9 @@ When('required fields are left empty for professor', async function () {
 When('the administrator attempts to register the same teacher again', async function () {
   const modalVisible = await this.page.locator('[data-testid="create-professor-modal"]').isVisible();
   
+  // Ensures previous modal is not blocking the flow
   if (modalVisible) {
-    console.log('⚠️ Modal del registro anterior todavía visible, cerrándolo...');
+    console.log('⚠️ Previous registration modal still visible, closing it...');
     await this.page.click('button:has-text("Cancel")');
     await this.page.waitForSelector('[data-testid="create-professor-modal"]', { 
       state: 'hidden',
@@ -79,12 +85,14 @@ When('the administrator attempts to register the same teacher again', async func
     });
   }
 
+  // Opens a new registration modal
   await this.page.click('[data-testid="add-professor"]');
   await this.page.waitForSelector('[data-testid="create-professor-modal"]', { 
     state: 'visible',
     timeout: 10000 
   });
 
+  // Attempts to register the same teacher again
   await this.page.fill('[data-testid="input-name"]', 'Dr. John Smith');
   await this.page.fill('[data-testid="input-email"]', 'john.smith@university.edu');
 
@@ -94,17 +102,19 @@ When('the administrator attempts to register the same teacher again', async func
   await this.page.click('[data-testid="specialty-Computer Science"]');
 
   await this.page.click('[data-testid="submit-professor"]');
-  await this.page.waitForTimeout(2000);
+  await this.page.waitForTimeout(2000); // Gives time for validation message to show
 });
 
-/* ==================== THENS ESPECÍFICOS DE PROFESORES ==================== */
+/* ==================== PROFESSOR-SPECIFIC THENS ==================== */
 
 Then('the system must display the {string} form option for professors', async function (formName) {
+  // Ensures the tab is active and the button appears
   await this.page.click('[data-testid="tab-professors"]');
   await expect(this.page.locator('[data-testid="add-professor"]')).toBeVisible();
 });
 
 Then('the new teacher must appear in the general list without reloading the page', async function () {
+  // Confirms immediate UI update after successful creation
   await expect(
     this.page.locator('text=John Doe').first()
   ).toBeVisible({ timeout: 5000 });

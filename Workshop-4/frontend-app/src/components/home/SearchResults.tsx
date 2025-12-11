@@ -36,14 +36,14 @@ export const SearchResults = ({
         py: 2,
       }}
     >
-      <Typography variant="h5">Search results</Typography>
+      <Typography data-testid="search-results-title" variant="h5">Search results</Typography>
 
       {loading && <CircularProgress sx={{ mt: 2, alignSelf: "center" }} />}
 
       {!loading && searched && (
         <>
           {!hasResults ? (
-            <Typography variant="body1" color="text.secondary" sx={{ mt: 2 }}>
+            <Typography data-testid="no-results" variant="body1" color="text.secondary" sx={{ mt: 2 }}>
               No results found.
             </Typography>
           ) : (
@@ -55,7 +55,7 @@ export const SearchResults = ({
                   </Typography>
                   {assignments.map((a) => (
                     <>
-                      <AssignmentCard key={a.id} assignment={a}></AssignmentCard>
+                      <AssignmentCard data-testid={`assignment-result-${a.id}`} key={a.id} assignment={a}></AssignmentCard>
                     </>
                   ))}
                 </>

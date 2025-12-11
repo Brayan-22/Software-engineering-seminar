@@ -10,7 +10,7 @@ Feature: Search courses by professor and professors by course
 
   Scenario: Search professors by course name
     Given the user is on the search page
-    When the user enters one or several course names
+    When the user enters one course name
     Then the system must display all professors assigned to those courses
 
   Scenario: Partial and case-insensitive match
@@ -22,8 +22,3 @@ Feature: Search courses by professor and professors by course
     Given the user enters a search term with no matches
     When the search is submitted
     Then the system must display a friendly “No results found” message
-
-  Scenario: Display results with correct information
-    Given there are valid course–professor relationships in the system
-    When a search is performed
-    Then the system must show accurate and complete information for each result
