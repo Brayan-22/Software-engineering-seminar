@@ -52,22 +52,46 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.4.4}Schema Design Rationale}{25}{subsubsection.4.4.4}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}}{25}{figure.caption.13}\protected@file@percent }
 \newlabel{fig:classdiagram}{{8}{25}{Class diagram showing domain entities, repositories, services, and controllers across all architectural layers}{figure.caption.13}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}API Endpoints and Contracts}{27}{subsection.4.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Deployment View}{27}{subsection.4.6}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Deployment diagram (v1.0).}}{27}{figure.caption.14}\protected@file@percent }
-\newlabel{fig:deploy}{{9}{27}{Deployment diagram (v1.0)}{figure.caption.14}{}}
-\@writefile{toc}{\contentsline {section}{\numberline {5}Implementation and Quality Assurance}{28}{section.5}\protected@file@percent }
-\newlabel{sec:implementation}{{5}{28}{Implementation and Quality Assurance}{section.5}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Development Environment and Tools}{28}{subsection.5.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Testing Strategy}{28}{subsection.5.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}CI/CD Pipeline}{28}{subsection.5.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Code Quality and Standards}{28}{subsection.5.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}Results and Discussion}{28}{section.6}\protected@file@percent }
-\newlabel{sec:results}{{6}{28}{Results and Discussion}{section.6}{}}
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Testing Results}{28}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}System Performance Evaluation}{28}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Achievement of Objectives}{28}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Limitations and Lessons Learned}{28}{subsection.6.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions}{28}{section.7}\protected@file@percent }
-\newlabel{sec:conclusions}{{7}{28}{Conclusions}{section.7}{}}
-\gdef \@abspage@last{28}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.5}API Endpoints and Contracts}{26}{subsection.4.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.1}Authentication Service API}{26}{subsubsection.4.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Login Endpoint}{26}{section*.14}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas.}}{27}{figure.caption.15}\protected@file@percent }
+\newlabel{fig:auth_swagger_main}{{9}{27}{Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas}{figure.caption.15}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces Login endpoint request example showing the JSON payload structure with username and password fields.}}{27}{figure.caption.16}\protected@file@percent }
+\newlabel{fig:auth_login_request}{{10}{27}{Login endpoint request example showing the JSON payload structure with username and password fields}{figure.caption.16}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Successful login response showing the generated JWT token that must be used for authenticated requests.}}{28}{figure.caption.17}\protected@file@percent }
+\newlabel{fig:auth_login_response}{{11}{28}{Successful login response showing the generated JWT token that must be used for authenticated requests}{figure.caption.17}{}}
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.2}Business Logic Service API}{28}{subsubsection.4.5.2}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments).}}{29}{figure.caption.18}\protected@file@percent }
+\newlabel{fig:business_swagger_overview}{{12}{29}{Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments)}{figure.caption.18}{}}
+\@writefile{toc}{\contentsline {paragraph}{Professor Endpoints}{29}{section*.19}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format.}}{30}{figure.caption.20}\protected@file@percent }
+\newlabel{fig:professor_create}{{13}{30}{Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format}{figure.caption.20}{}}
+\@writefile{toc}{\contentsline {paragraph}{Course Endpoints}{30}{section*.21}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {14}{\ignorespaces Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements.}}{31}{figure.caption.22}\protected@file@percent }
+\newlabel{fig:course_endpoints}{{14}{31}{Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements}{figure.caption.22}{}}
+\@writefile{toc}{\contentsline {paragraph}{Assignment Endpoints}{31}{section*.23}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {15}{\ignorespaces Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details.}}{32}{figure.caption.24}\protected@file@percent }
+\newlabel{fig:assignment_create}{{15}{32}{Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details}{figure.caption.24}{}}
+\@writefile{toc}{\contentsline {paragraph}{Search Endpoints}{32}{section*.25}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.5.3}API Design Principles and Error Handling}{33}{subsubsection.4.5.3}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces API Endpoints Summary}}{34}{table.caption.26}\protected@file@percent }
+\newlabel{tab:api_summary}{{4}{34}{API Endpoints Summary}{table.caption.26}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {4.6}Deployment View}{35}{subsection.4.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {16}{\ignorespaces Deployment diagram (v1.0).}}{35}{figure.caption.27}\protected@file@percent }
+\newlabel{fig:deploy}{{16}{35}{Deployment diagram (v1.0)}{figure.caption.27}{}}
+\@writefile{toc}{\contentsline {section}{\numberline {5}Implementation and Quality Assurance}{36}{section.5}\protected@file@percent }
+\newlabel{sec:implementation}{{5}{36}{Implementation and Quality Assurance}{section.5}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Development Environment and Tools}{36}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Testing Strategy}{36}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.3}CI/CD Pipeline}{36}{subsection.5.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Code Quality and Standards}{36}{subsection.5.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Results and Discussion}{36}{section.6}\protected@file@percent }
+\newlabel{sec:results}{{6}{36}{Results and Discussion}{section.6}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Testing Results}{36}{subsection.6.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}System Performance Evaluation}{36}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Achievement of Objectives}{36}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}Limitations and Lessons Learned}{36}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Conclusions}{36}{section.7}\protected@file@percent }
+\newlabel{sec:conclusions}{{7}{36}{Conclusions}{section.7}{}}
+\gdef \@abspage@last{36}

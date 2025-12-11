@@ -373,9 +373,184 @@ Finally, comprehensive indexing strategies reflect analysis of expected query pa
 Figure~\ref{fig:classdiagram} presents the complete class diagram including entities, repositories, services, and controllers across all architectural layers. This diagram demonstrates how the data model integrates with business logic components and exposes functionality through controller endpoints. The layered structure visible in the diagram reinforces the architectural principles of separation of concerns and dependency management established in the system design. The repository interfaces shown in the diagram directly correspond to the database tables documented in this section, providing the abstraction layer that enables database-agnostic business logic implementation.
 
 
-\subsection{API Endpoints and Contracts}  % NUEVA
-% Documentación de endpoints REST, request/response examples,
-% authentication flow
+\subsection{API Endpoints and Contracts}
+
+The system exposes its functionality through two RESTful API services that communicate using JSON payloads over HTTP/HTTPS protocols. Each service provides a well-defined set of endpoints documented through OpenAPI specifications and accessible via Swagger UI for interactive exploration and testing. This section describes the API contracts, request/response formats, and authentication mechanisms that enable communication between the frontend and backend services.
+
+\subsubsection{Authentication Service API}
+
+The authentication service, built with Java Spring Boot and running on port 8080, provides JWT-based authentication for administrative users. The API documentation is accessible through Swagger UI at \texttt{http://localhost:8080/swagger-ui/index.html} during development, offering an interactive interface to explore endpoints, test requests, and view response formats.
+
+\paragraph{Login Endpoint}
+
+The primary authentication endpoint validates administrator credentials and issues JWT tokens for subsequent authorized requests.\newline
+
+\textbf{Endpoint:} \texttt{POST /api/auth/login}
+
+\textbf{Description:} Authenticates an administrator by validating username and password against stored credentials in the MySQL database. Upon successful authentication, the service generates a JWT token containing the admin's identity and role claims.\newline
+
+Figure~\ref{fig:auth_swagger_main} shows the Swagger UI documentation for the authentication service, illustrating the login endpoint specification with its request schema and expected responses. The interactive interface allows developers to test authentication directly from the browser by providing sample credentials and observing the token generation process.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{auth_swagger_main.png}
+	\caption{Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas.}
+	\label{fig:auth_swagger_main}
+\end{figure}
+
+Figure~\ref{fig:auth_login_request} demonstrates the request format for the login endpoint. The request body requires two fields: username and password, both as string values. The Swagger interface validates the request schema before submission, ensuring that required fields are present and properly formatted.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.75\textwidth]{auth_login_request.png}
+	\caption{Login endpoint request example showing the JSON payload structure with username and password fields.}
+	\label{fig:auth_login_request}
+\end{figure}
+
+Figure~\ref{fig:auth_login_response} shows the successful response format. Upon valid credentials, the service returns a JSON object containing a JWT token string. This token must be included in the Authorization header of subsequent requests to protected endpoints in both services. The token format follows the Bearer authentication scheme: \texttt{Authorization: Bearer <token>}. Tokens expire after a configured period (typically 24 hours) and must be refreshed through re-authentication.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.75\textwidth]{auth_login_response.png}
+	\caption{Successful login response showing the generated JWT token that must be used for authenticated requests.}
+	\label{fig:auth_login_response}
+\end{figure}
+
+Error responses return appropriate HTTP status codes with descriptive messages. A 401 Unauthorized status indicates invalid credentials, while 400 Bad Request indicates malformed request payloads missing required fields.\newline
+
+\subsubsection{Business Logic Service API}
+
+The business logic service, built with Python FastAPI and running on port 8000, provides comprehensive CRUD operations for professors, courses, and their assignments. All administrative endpoints require valid JWT tokens obtained from the authentication service. The API documentation is accessible at \texttt{http://localhost:8000/docs} during development.\newline
+
+The API follows RESTful conventions with consistent HTTP method semantics: POST for creation, GET for retrieval, PUT for updates, and DELETE for removal. All endpoints return JSON responses with appropriate HTTP status codes (200 for success, 201 for creation, 400 for validation errors, 401 for authentication failures, 404 for not found, 500 for server errors).\newline
+
+Figure~\ref{fig:business_swagger_overview} presents the comprehensive Swagger UI documentation for the business logic service, showing all available endpoints organized by resource type (professors, courses, assignments). The interface provides expandable sections for each endpoint with detailed parameter descriptions, request schemas, and response models.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{business_swagger_overview.jpeg}
+	\caption{Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments).}
+	\label{fig:business_swagger_overview}
+\end{figure}
+
+\paragraph{Professor Endpoints}
+
+The professor endpoints manage instructor data and support the administrative user stories related to professor registration and management.
+
+\begin{itemize}[leftmargin=1.2em]
+	\item \texttt{POST /api/v1/professors} — Create a new professor. Requires authentication. Validates email uniqueness and required fields (name, email, specialty). Returns 201 Created with the created professor object including the assigned ID.
+	
+	\item \texttt{GET /api/v1/professors} — List all professors with pagination support. Accepts query parameters: \texttt{page} (default: 1), \texttt{limit} (default: 10), \texttt{search} (optional text filter). Returns paginated results with total count and page metadata.
+	
+	\item \texttt{GET /api/v1/professors/\{id\}} — Retrieve a specific professor by ID. Returns 404 if professor not found. Response includes all professor attributes and a list of assigned courses.
+	
+	\item \texttt{PUT /api/v1/professors/\{id\}} — Update professor information. Requires authentication. Validates email uniqueness excluding the current professor. Returns updated professor object.
+	
+	\item \texttt{DELETE /api/v1/professors/\{id\}} — Delete professor. Requires authentication. Cascade deletes all professor-course assignments due to foreign key constraints. Returns 204 No Content on success.
+\end{itemize}
+
+Figure~\ref{fig:professor_create} shows the Swagger documentation for the professor creation endpoint. The interface displays the required request body schema with field descriptions, data types, and validation constraints. The example section provides a sample payload that developers can modify and submit directly through the Swagger UI for testing purposes.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{professor_create.jpeg}
+	\caption{Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format.}
+	\label{fig:professor_create}
+\end{figure}
+
+\paragraph{Course Endpoints}
+
+The course endpoints manage academic course catalog data, supporting course registration and discovery functionality.
+
+\begin{itemize}[leftmargin=1.2em]
+	\item \texttt{POST /api/v1/courses} — Create a new course. Requires authentication. Validates code uniqueness and required fields (name, code). Schedule is optional. Returns 201 Created with the created course object.
+	
+	\item \texttt{GET /api/v1/courses} — List all courses with pagination and search capabilities. Accepts query parameters: \texttt{page}, \texttt{limit}, \texttt{search} (filters by course name or code). Returns paginated results.
+	
+	\item \texttt{GET /api/v1/courses/\{id\}} — Retrieve specific course by ID. Returns course details including all assigned professors with their assignment status.
+	
+	\item \texttt{PUT /api/v1/courses/\{id\}} — Update course information. Requires authentication. Validates code uniqueness excluding the current course. Returns updated course object.
+	
+	\item \texttt{DELETE /api/v1/courses/\{id\}} — Delete course. Requires authentication. Cascade deletes all professor-course assignments. Returns 204 No Content on success.
+\end{itemize}
+
+Figure~\ref{fig:course_endpoints} illustrates the complete set of course endpoints available in the Swagger documentation. Each endpoint section can be expanded to reveal detailed parameter information, authentication requirements, and example request/response payloads.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{course_endpoints.jpeg}
+	\caption{Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements.}
+	\label{fig:course_endpoints}
+\end{figure}
+
+\paragraph{Assignment Endpoints}
+
+The assignment endpoints manage the many-to-many relationships between professors and courses, implementing the core linking functionality described in user story US\_CF\_03.
+
+\begin{itemize}[leftmargin=1.2em]
+	\item \texttt{POST /api/v1/assignments} — Create a professor-course assignment. Requires authentication. Validates that both professor and course exist. Enforces unique constraint preventing duplicate assignments. Returns 201 Created with assignment details.
+	
+	\item \texttt{GET /api/v1/assignments} — List all assignments with optional filtering by professor ID or course ID. Supports pagination. Returns assignments with embedded professor and course information.
+	
+	\item \texttt{GET /api/v1/assignments/\{id\}} — Retrieve specific assignment by ID. Returns assignment details including full professor and course objects.
+	
+	\item \texttt{PUT /api/v1/assignments/\{id\}} — Update assignment status. Requires authentication. Allows changing status between active, inactive, pending, and completed. Returns updated assignment.
+	
+	\item \texttt{DELETE /api/v1/assignments/\{id\}} — Remove professor-course assignment. Requires authentication. Returns 204 No Content on success.
+\end{itemize}
+
+Figure~\ref{fig:assignment_create} displays the assignment creation endpoint documentation. The request schema shows the required fields (professor\_id, course\_id, status) and their data types. The response schema includes the complete assignment object with embedded professor and course details, demonstrating the API's approach to reducing client-side requests by returning related data in a single response.
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.8\textwidth]{assignment_create.jpeg}
+	\caption{Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details.}
+	\label{fig:assignment_create}
+\end{figure}
+
+\paragraph{Search Endpoints}
+While not explicitly listed in the core CRUD operations, the business logic service implements specialized search endpoints that support user story US\_CF\_04. These endpoints optimize query performance through database indexes and implement the bidirectional search functionality.
+
+\begin{itemize}[leftmargin=1.2em]
+	\item \texttt{GET /api/v1/search/courses-by-professor?name=<professor\_name>} — Search courses taught by a specific professor. Supports partial name matching and case-insensitive search. Returns list of courses with professor details.
+	
+	\item \texttt{GET /api/v1/search/professors-by-course?name=<course\_name>} — Search professors teaching a specific course. Supports partial course name or code matching. Returns list of professors assigned to matching courses.
+\end{itemize}
+
+\subsubsection{API Design Principles and Error Handling}
+
+Both services follow consistent design principles that enhance usability and maintainability. All endpoints return structured JSON responses with predictable formats. Error responses include human-readable messages, error codes, and timestamps to facilitate debugging. Validation errors return 400 Bad Request with detailed field-level error descriptions specifying which fields failed validation and why.\newline
+
+Authentication failures return 401 Unauthorized with clear indication that credentials are invalid or tokens have expired. Authorization failures (attempting to access admin endpoints without proper tokens) return 403 Forbidden. Resource not found scenarios return 404 Not Found with the resource type and ID that could not be located.\newline
+
+Pagination follows cursor-based patterns with consistent query parameters across all list endpoints. Responses include metadata about total items, current page, and page size, enabling frontend components to implement efficient pagination controls. Search endpoints support partial matching and case-insensitive queries to improve user experience and reduce friction during course discovery.\newline
+
+The API versioning strategy uses URL path prefixes (\texttt{/api/v1/}) to enable future backward-compatible changes without breaking existing integrations. This approach allows the introduction of new API versions while maintaining support for legacy clients during transition periods.\newline
+
+CORS (Cross-Origin Resource Sharing) configuration allows the React frontend to communicate with both backend services during development and production. The authentication service validates JWT tokens issued by itself, while the business logic service validates tokens by verifying signatures using the shared secret key configured during deployment.\newline
+
+Table~\ref{tab:api_summary} summarizes the complete API surface across both services, providing a reference for the total number of endpoints and their authentication requirements.
+
+\begin{table}[htbp]
+	\centering
+	\caption{API Endpoints Summary}
+	\label{tab:api_summary}
+	\begin{tabular}{@{}lccl@{}}
+		\toprule
+		\textbf{Service} & \textbf{Endpoints} & \textbf{Auth Required} & \textbf{Primary Purpose} \\ 
+		\midrule
+		Authentication & 1 & No & JWT token generation \\
+		Professors & 5 & Yes (except GET list/single) & Professor CRUD \\
+		Courses & 5 & Yes (except GET list/single) & Course CRUD \\
+		Assignments & 5 & Yes (except GET list) & Assignment management \\
+		Search & 2 & No & Bidirectional search \\
+		\midrule
+		\textbf{Total} & \textbf{18} & & \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The API design supports the implementation of all user stories documented in Section~\ref{sec:design} while providing the flexibility needed for future feature additions. The consistent patterns across endpoints reduce frontend development complexity and enable code reuse through shared API client libraries.
 
 \subsection{Deployment View}
 \begin{figure}[H]
