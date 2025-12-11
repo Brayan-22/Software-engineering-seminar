@@ -5,23 +5,22 @@ export const useApiErrorHandler = () => {
 
     const handleApiError = (
         err: unknown,
-        setError: (msg: string) => void,
-        customError : string
+        customError: string
     ) => {
-
+        let error = "";
         if (err instanceof Error) {
-            setError(err.message);
+            error = err.message;
         } else if (
             typeof err === "object" &&
             err !== null &&
             "message" in err &&
             typeof (err as Error).message === "string"
         ) {
-            setError((err as Error).message);
+            error = (err as Error).message;
         } else {
-            setError("Unexpected error.");
+            error = "Unexpected error.";
         }
-        showAlert(customError, "error");
+        showAlert(customError || error, "error");
     };
 
     return { handleApiError };

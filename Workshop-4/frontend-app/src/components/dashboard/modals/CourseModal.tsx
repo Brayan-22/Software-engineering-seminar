@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import {
-    Box,
     Button,
     Dialog,
     DialogTitle,
@@ -43,8 +42,6 @@ export const CourseModal = ({
     onCourseUpdated,
     onCourseDeleted
 }: CourseModalProps) => {
-
-    const [error, setError] = useState<string | null>(null);
 
     const { showAlert } = useGlobalAlert();
     const { handleApiError } = useApiErrorHandler();
@@ -115,7 +112,7 @@ export const CourseModal = ({
             setFormErrors({ code: "", name: "", day: "", time: "" });
             showAlert("Course created successfully!", "success");
         } catch (err) {
-            handleApiError(err, setError, "Error creating course.");
+            handleApiError(err, "Error creating course.");
         }
     };
 
@@ -134,7 +131,7 @@ export const CourseModal = ({
             onClose();
             showAlert("Course updated successfully!", "success");
         } catch (err) {
-            handleApiError(err, setError, "Error updating course.");
+            handleApiError(err, "Error updating course.");
         }
     };
 
@@ -146,7 +143,7 @@ export const CourseModal = ({
             onCourseDeleted?.(selectedCourse);
             showAlert(`Deleted course "${selectedCourse.name}"`, "success");
         } catch (err) {
-            handleApiError(err, setError, "Error deleting course");
+            handleApiError(err, "Error deleting course");
         } finally {
             onClose();
         }

@@ -24,7 +24,6 @@ import { useGlobalAlert } from "../../../context/AlertContext";
 export const AssignmentsTab = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
 
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [assignmentToDelete, setAssignmentToDelete] =
@@ -45,7 +44,7 @@ export const AssignmentsTab = () => {
         const data = await getAssignments();
         setAssignments(data.assignments);
       } catch (err) {
-        handleApiError(err, setError, "Error fetching Assignments.");
+        handleApiError(err, "Error fetching Assignments.");
       }
     };
 
@@ -58,7 +57,7 @@ export const AssignmentsTab = () => {
         setCourses(courseData.courses);
         setProfessors(professorData.professors);
       } catch (err) {
-        handleApiError(err, setError, "Error fetching data.");
+        handleApiError(err, "Error fetching data.");
       } finally {
         setLoading(false);
       }
@@ -85,7 +84,7 @@ export const AssignmentsTab = () => {
       setAssignmentToDelete(null);
       showAlert("Assignment deleted successfully", "success");
     } catch (err) {
-      handleApiError(err, setError, "Error deleting assignment.");
+      handleApiError(err, "Error deleting assignment.");
     }
   };
 
@@ -117,7 +116,7 @@ export const AssignmentsTab = () => {
       setSelectedCourse("");
       setSelectedProfessor("");
     } catch (err) {
-      handleApiError(err, setError, "Error creating assignment.");
+      handleApiError(err, "Error creating assignment.");
     }
   };
 

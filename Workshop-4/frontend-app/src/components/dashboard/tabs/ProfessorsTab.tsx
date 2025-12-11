@@ -28,7 +28,6 @@ import { type FormEvent } from "../../../util/FormEvent";
 export const ProfessorsTab = () => {
     const [professors, setProfessors] = useState<Professor[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const { showAlert } = useGlobalAlert();
     const { handleApiError } = useApiErrorHandler();
     // Modal create
@@ -69,7 +68,7 @@ export const ProfessorsTab = () => {
                 const data = await getProfessors();
                 setProfessors(data.professors);
             } catch (err) {
-                handleApiError(err, setError, "Error fetching professors.");
+                handleApiError(err, "Error fetching professors.");
             } finally {
                 setLoading(false);
             }
@@ -131,7 +130,7 @@ export const ProfessorsTab = () => {
             setFormErrors({ name: "", email: "", specialty: "" });
             showAlert("Professor created successfully", "success");
         } catch (err) {
-            handleApiError(err, setError, "Error creating professor.");
+            handleApiError(err, "Error creating professor.");
         }
     };
 
@@ -147,7 +146,7 @@ export const ProfessorsTab = () => {
             setProfessors((prev) => prev.filter(p => p.id !== selectedProfessorId));
             showAlert("Professor deleted successfully", "success");
         } catch (err) {
-            handleApiError(err, setError, "Error deleting professor.");
+            handleApiError(err, "Error deleting professor.");
         } finally {
             setDeleteOpen(false);
             setSelectedProfessorId(null);
@@ -186,7 +185,7 @@ export const ProfessorsTab = () => {
             setFormData({ name: "", email: "", specialty: "" });
             showAlert("Professor updated successfully", "success");
         } catch (err) {
-            handleApiError(err, setError, "Error updating professor.");
+            handleApiError(err, "Error updating professor.");
         }
     };
 

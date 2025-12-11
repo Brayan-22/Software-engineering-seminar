@@ -9,7 +9,6 @@ import { CourseModal } from "../modals/CourseModal";
 export const CoursesTab = () => {
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
     const { handleApiError } = useApiErrorHandler();
 
     const [openModal, setOpenModal] = useState(false);
@@ -60,7 +59,7 @@ export const CoursesTab = () => {
                 const data = await getCourses();
                 setCourses(data.courses);
             } catch (err) {
-                handleApiError(err, setError, "Error fetching courses.");
+                handleApiError(err, "Error fetching courses.");
             } finally {
                 setLoading(false);
             }
@@ -71,13 +70,6 @@ export const CoursesTab = () => {
 
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading courses...</Typography>;
-
-    if (error)
-        return (
-            <Typography sx={{ mt: 2, color: "red" }} variant="body1">
-                {error}
-            </Typography>
-        );
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>
