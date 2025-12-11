@@ -1,17 +1,17 @@
 \babel@toc {english}{}\relax 
-\contentsline {figure}{\numberline {1}{\ignorespaces Web User Interface (v1.0)}}{14}{figure.1}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Web User Interface (v1.0)}}{15}{figure.2}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Web User Interface (v1.0)}}{16}{figure.3}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Web User Interface (v1.0)}}{17}{figure.4}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Web User Interface (v1.0)}}{18}{figure.5}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Web User Interface (v1.0)}}{19}{figure.6}%
-\contentsline {figure}{\numberline {7}{\ignorespaces Architecture Diagram (v1.0).}}{21}{figure.caption.10}%
-\contentsline {figure}{\numberline {8}{\ignorespaces Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}}{25}{figure.caption.13}%
-\contentsline {figure}{\numberline {9}{\ignorespaces Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas.}}{27}{figure.caption.15}%
-\contentsline {figure}{\numberline {10}{\ignorespaces Login endpoint request example showing the JSON payload structure with username and password fields.}}{27}{figure.caption.16}%
-\contentsline {figure}{\numberline {11}{\ignorespaces Successful login response showing the generated JWT token that must be used for authenticated requests.}}{28}{figure.caption.17}%
-\contentsline {figure}{\numberline {12}{\ignorespaces Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments).}}{29}{figure.caption.18}%
-\contentsline {figure}{\numberline {13}{\ignorespaces Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format.}}{30}{figure.caption.20}%
-\contentsline {figure}{\numberline {14}{\ignorespaces Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements.}}{31}{figure.caption.22}%
-\contentsline {figure}{\numberline {15}{\ignorespaces Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details.}}{32}{figure.caption.24}%
-\contentsline {figure}{\numberline {16}{\ignorespaces Deployment diagram (v1.0).}}{35}{figure.caption.27}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Web User Interface (v1.0)}}{15}{figure.1}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Web User Interface (v1.0)}}{16}{figure.2}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Web User Interface (v1.0)}}{17}{figure.3}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Web User Interface (v1.0)}}{18}{figure.4}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Web User Interface (v1.0)}}{19}{figure.5}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Web User Interface (v1.0)}}{20}{figure.6}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Architecture Diagram (v1.0).}}{22}{figure.caption.10}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}}{26}{figure.caption.13}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas.}}{28}{figure.caption.15}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Login endpoint request example showing the JSON payload structure with username and password fields.}}{28}{figure.caption.16}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Successful login response showing the generated JWT token that must be used for authenticated requests.}}{29}{figure.caption.17}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments).}}{30}{figure.caption.18}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format.}}{31}{figure.caption.20}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements.}}{32}{figure.caption.22}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details.}}{33}{figure.caption.24}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Deployment diagram (v1.0).}}{36}{figure.caption.27}%

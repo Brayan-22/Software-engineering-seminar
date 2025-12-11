@@ -115,7 +115,7 @@ Scrum ceremonies are conducted at a scaled frequency appropriate brief stand-up 
 Version control and collaboration are managed through a shared Git repository, following a feature-branch workflow. 
 
 
-\subsection{Scrum Implementation and Project Management}  % NUEVA
+\subsection{Scrum Implementation and Project Management} 
 % Sprints ejecutados, backlog management, burndown charts, 
 % uso de Taiga, artifacts generadosa
 a
@@ -561,17 +561,124 @@ The API design supports the implementation of all user stories documented in Sec
 \end{figure}
 
 
-\section{Implementation and Quality Assurance}  % NUEVA SECCIÓN
+\section{Implementation and Quality Assurance} 
 \label{sec:implementation}
 
-\subsection{Development Environment and Tools}
-% Tecnologías: React, Spring Boot, FastAPI, Docker, Git
+\subsection{Testing Strategy}
 
-\subsection{Testing Strategy}  % NUEVA
-% Filosofía de testing, tipos de pruebas (unit, integration, acceptance, stress)
-% Herramientas: JUnit, pytest, Cucumber, JMeter
+The testing strategy for the Course Finder platform follows a multi-layered approach designed to validate functionality at different levels of the system architecture. Tests were implemented after completing the initial development phase, focusing on critical business logic components, API endpoints, user story acceptance criteria, and system performance under load. The overall philosophy prioritizes thorough coverage of core functionality and user-facing features while ensuring that the system meets the quality expectations defined in the acceptance criteria of each user story.\newline
 
-\subsection{CI/CD Pipeline}  % NUEVA
+The testing approach focused on meaningful validation of critical paths: unit tests for business logic components related to API endpoints, acceptance tests mapping directly to user stories, and stress tests evaluating system performance and scalability. This pragmatic strategy ensures that tests provide real value in detecting defects and validating requirements.
+
+\subsubsection{Unit Testing}
+
+Unit tests validate individual components in isolation, ensuring that business logic functions correctly independent of external dependencies such as databases or network services. Mock objects simulate repository and service interactions, allowing precise control over test scenarios and enabling rapid test execution without infrastructure dependencies.
+
+\paragraph{Python Backend - Business Logic Service}
+
+The business logic service implemented includes comprehensive unit tests using pytest. Tests cover the core service layer components responsible for CRUD operations on professors, courses, and assignments. The test suite uses fixtures to provide consistent test data and mock repository objects that simulate database operations without requiring actual PostgreSQL connections.\newline
+
+Table~\ref{tab:pytest_unit_tests} summarizes the unit test coverage for the Python backend services. Each service class includes dedicated test classes organized by operation type (Create, Read, Update, Delete), following the Arrange-Act-Assert pattern for clarity and maintainability.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{Python Backend Unit Tests Summary}
+	\label{tab:pytest_unit_tests}
+	\begin{tabular}{@{}lcp{5.5cm}@{}}
+		\toprule
+		\textbf{Service} & \textbf{Tests} & \textbf{Scenarios Covered} \\ 
+		\midrule
+		ProfessorService & 13 & Create (success, duplicate email), Read (by ID, all, paginated, not found), Update (success, not found, duplicate email), Delete (success, not found) \\
+		CourseService & 14 & Create (success, duplicate code), Read (by ID, all, paginated, empty list, not found), Update (success, not found, duplicate code), Delete (success, not found) \\
+		\midrule
+		\textbf{Total} & \textbf{27} & \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The ProfessorService tests validate critical scenarios including successful professor creation with unique email addresses, prevention of duplicate email registration through HTTPException with 409 Conflict status, retrieval of individual professors and paginated lists, handling of non-existent professor queries with 404 Not Found responses, successful updates with field modifications, and cascade deletion behavior. Each test uses mock repository objects that return predefined data, allowing precise verification of service layer logic without database dependencies.\newline
+
+Similarly, the CourseService tests cover analogous scenarios for course entities, with particular emphasis on course code uniqueness validation and schedule information handling. Tests verify that the service correctly enforces business rules such as preventing duplicate course codes, returning appropriate error responses for invalid operations, and properly transforming domain models into response schemas.\newline
+
+Mock fixtures defined in \texttt{conftest.py} provide reusable test data including sample professor and course objects with realistic attributes, schema instances for create and update operations, and pre-configured mock repository objects with all necessary methods. This fixture-based approach reduces test code duplication and ensures consistency across test cases.
+
+\paragraph{Java Backend - Authentication Service}
+
+The authentication service implemented includes unit tests using JUnit 5 to validate authentication logic and JWT token generation. Tests focus on two critical components: the authentication service responsible for credential validation and the JWT utility class responsible for token generation and validation.\newline
+
+The AuthService tests cover three primary scenarios using mocked dependencies. First, successful login tests verify that valid username and password combinations result in JWT token generation, with the AdminRepository mock returning a valid admin entity and the PasswordEncoder mock confirming password match. Second, failed login due to incorrect password tests verify that the service throws appropriate authentication exceptions when the password encoder indicates a mismatch, even when the user exists in the repository. Third, failed login due to non-existent user tests validate that queries for unknown usernames result in authentication failures with appropriate error messages.\newline
+
+The JwtUtil tests verify token generation correctness by creating tokens with test data and validating the resulting JWT structure. Tests confirm that generated tokens are non-null, contain the expected username as the subject claim, and include valid expiration timestamps set according to the configured token lifetime. These tests use temporary RSA key pairs instead of production keys, ensuring security while maintaining test validity.\newline
+
+Both test suites use extensive mocking to isolate the components under test from external dependencies. The AdminRepository is mocked to return predefined admin entities without database queries. The PasswordEncoder is mocked to control password matching behavior deterministically. The JwtUtil mock (when testing AuthService) provides predictable token values. This isolation ensures that tests execute quickly and reliably regardless of external system state.
+
+\subsubsection{Acceptance Testing with Cucumber}
+
+Acceptance tests validate that the implemented system satisfies the user stories and acceptance criteria defined during requirements analysis. These tests use Cucumber to express scenarios in Gherkin syntax, providing readable specifications that map directly to user story acceptance criteria and can be executed as automated tests.\newline
+
+Four feature files cover the core user stories documented in Section~\ref{sec:design}. Each feature includes multiple scenarios that validate both successful operations and error handling for edge cases.
+
+\paragraph{Feature: Registration of New Teachers (US\_CF\_01)}
+
+This feature validates professor registration functionality through four scenarios. The first scenario verifies that administrators can access the registration form from the main panel. The second scenario validates successful professor creation when all required fields (name, email, specialty) are provided with valid data, confirming that the system displays success messages and updates the professor list without page reload. The third scenario tests validation behavior when required fields are left empty, ensuring appropriate error messages guide administrators to correct the input. The fourth scenario verifies duplicate prevention by attempting to register a professor with an email or ID that already exists, confirming that the system prevents creation and displays clear error messages.\newline
+
+\paragraph{Feature: Registration of New Subjects (US\_CF\_02)}
+
+This feature validates course registration through five scenarios covering similar patterns to professor registration. Scenarios test form access, successful registration with valid data, required field validation, duplicate course prevention based on course code, and optional teacher assignment during course creation. The teacher assignment scenario specifically validates that when an administrator assigns an existing teacher during course creation, the relationship is correctly stored in the database and visible in both professor and course views.\newline
+
+\paragraph{Feature: Assignment of Professors to Courses (US\_CF\_03)}
+
+This feature addresses the core relationship management functionality through seven scenarios. Initial scenarios validate interface access and successful assignment creation with valid professor and course selections. Validation scenarios ensure that missing required fields prevent assignment creation with appropriate error messages. Two scenarios specifically test the many-to-many relationship behavior: one verifying that a single professor can be assigned to multiple courses, and another confirming that a single course can have multiple professors assigned. A duplicate prevention scenario validates that the system enforces the unique constraint on professor-course pairs, preventing redundant assignments. Finally, a deletion scenario confirms that administrators can remove assignments and that the system correctly updates the interface.\newline
+
+\paragraph{Feature: Search Courses by Professor and Professors by Course (US\_CF\_04)}
+
+This feature validates the primary end-user search functionality through four scenarios. The first scenario tests searching courses by professor name, verifying that all courses taught by the specified professor appear in results. The second scenario validates the inverse operation: searching professors by course name. The third scenario specifically tests partial matching and case-insensitive search behavior, ensuring that users can find results even with incomplete or lowercase search terms. The fourth scenario validates graceful handling of searches with no matches, confirming that the system displays friendly "No results found" messages rather than errors or empty pages.\newline
+
+Table~\ref{tab:cucumber_scenarios} summarizes the acceptance test coverage across all features, showing the direct mapping from user stories to automated test scenarios.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{Cucumber Acceptance Test Scenarios Summary}
+	\label{tab:cucumber_scenarios}
+	\begin{tabular}{@{}lcc@{}}
+		\toprule
+		\textbf{Feature / User Story} & \textbf{Scenarios} & \textbf{Status} \\ 
+		\midrule
+		US\_CF\_01: Registration of Teachers & 4 & Passing \\
+		US\_CF\_02: Registration of Subjects & 5 & Passing \\
+		US\_CF\_03: Assignment Management & 7 & Passing \\
+		US\_CF\_04: Bidirectional Search & 4 & Passing \\
+		\midrule
+		\textbf{Total} & \textbf{20} & \textbf{All Passing} \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+All 20 acceptance test scenarios pass successfully, confirming that the implemented system satisfies the requirements documented in the user stories. The Gherkin scenarios serve dual purposes: they provide executable specifications that validate system behavior automatically, and they function as living documentation that stakeholders can read to understand system capabilities without technical expertise.\newline
+
+The acceptance tests execute against the full application stack including frontend, both backend services, and test databases populated with seed data. This end-to-end validation ensures that component integration functions correctly and that the user experience matches specifications. Test execution occurs both during local development and as part of the CI/CD pipeline, providing continuous validation that new changes do not break existing functionality.
+
+\subsubsection{Stress Testing with JMeter}
+
+Stress testing evaluates system performance and scalability under realistic and peak load conditions. These tests identify performance bottlenecks, validate response time requirements specified in user stories, and ensure that the system remains stable and responsive when serving multiple concurrent users. Stress tests using Apache JMeter are currently under active development and will be completed in the next project phase.\newline
+
+The planned stress testing strategy will focus on critical endpoints identified through user story analysis. Primary targets include the authentication endpoint (login), search endpoints (courses by professor, professors by course), and administrative CRUD operations (professor creation, course creation, assignment management). Test scenarios will simulate realistic usage patterns with varying levels of concurrency to identify system behavior under normal load, peak load, and stress conditions.\newline
+
+Initial test plans specify scenarios with 50, 100, and 500 concurrent users executing typical workflows over sustained periods (5-10 minutes). Metrics to be collected include average response time, 95th percentile response time, throughput (requests per second), error rate, and resource utilization (CPU, memory, database connections). These metrics will validate whether the system meets the performance requirement specified in US\_CF\_04 and US\_CF\_05 (response times under two seconds for average query loads).\newline
+
+Results from stress testing will inform infrastructure sizing decisions for production deployment, identify optimization opportunities in database queries or API implementations, and validate that the system architecture can scale to support the anticipated user base. Performance baselines established through these tests will guide future capacity planning and serve as regression benchmarks for subsequent releases.
+
+\subsubsection{Testing Infrastructure and Automation}
+
+The testing infrastructure integrates with the CI/CD pipeline implemented through GitHub Actions. Unit tests execute automatically on every commit and pull request, providing immediate feedback to developers about test failures or regressions.\newline
+
+Acceptance tests execute as part of the integration testing phase after successful unit test completion. These tests require more setup time as they spin up Docker containers for both backend services and test databases, populate seed data, and initialize the frontend application. The complete acceptance test suite executes in approximately 5-10 minutes, providing thorough validation before deployment to staging environments.\newline
+
+Test results are reported through the GitHub Actions interface, with detailed logs available for investigation when failures occur. Failed tests block pull request merges, ensuring that defects are identified and resolved before integration into the main codebase. This continuous validation approach maintains code quality and prevents regression of previously working functionality.\newline
+
+Local development environments support test execution through simple commands (\texttt{pytest} for Python unit tests, \texttt{mvn test} for Java unit tests, \texttt{npm run test:cucumber} for acceptance tests), enabling developers to validate changes before committing. Mock-based unit tests execute extremely quickly in local environments, supporting test-driven development workflows even for components with complex dependencies.
+
+\subsection{CI/CD Pipeline}  
 % GitHub Actions workflow, Docker containerization,
 % automated testing, deployment process
 
@@ -584,11 +691,11 @@ The API design supports the implementation of all user stories documented in Sec
 The outcomes of Workshops~1 and~2 have established a solid analytical foundation for the project. The main deliverables include the problem definition, user stories with acceptance criteria, CRC cards, architectural and deployment diagrams, and early Web UI mockups. These artifacts provide a coherent view of the system’s objectives and structure, enabling the team to validate the feasibility of the proposed solution before implementation.
 
 
-\subsection{Testing Results}  % NUEVA
+\subsection{Testing Results} 
 % Unit test results, integration test results,
 % acceptance test scenarios, stress test metrics
 
-\subsection{System Performance Evaluation}  % NUEVA
+\subsection{System Performance Evaluation} 
 % Response times, throughput, scalability analysis
 
 \subsection{Achievement of Objectives}
