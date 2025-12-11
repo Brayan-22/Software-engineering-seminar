@@ -19,6 +19,7 @@ import {
 import { getCourses } from "../../../api/businessApi/CourseService";
 import { getProfessors } from "../../../api/businessApi/ProfessorService";
 import { useApiErrorHandler } from "../../../util/ApiErrorHandler";
+import { useGlobalAlert } from "../../../context/AlertContext";
 
 export const AssignmentsTab = () => {
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -35,7 +36,9 @@ export const AssignmentsTab = () => {
   const [selectedCourse, setSelectedCourse] = useState<number | "">("");
   const [selectedProfessor, setSelectedProfessor] = useState<number | "">("");
 
-  const { handleApiError} = useApiErrorHandler();
+  const { handleApiError } = useApiErrorHandler();
+  const { showAlert } = useGlobalAlert();
+
   useEffect(() => {
     const fetchAssignments = async () => {
       try {
@@ -80,14 +83,18 @@ export const AssignmentsTab = () => {
       );
       setOpenDeleteModal(false);
       setAssignmentToDelete(null);
+      showAlert("Assignment deleted successfully", "success");
     } catch (err) {
-      console.error("Error deleting assignment:", err);
+      handleApiError(err, setError, "Error deleting assignment.");
     }
   };
 
   // Add logic
   const handleAddAssignment = async () => {
-    if (!selectedCourse || !selectedProfessor) return;
+    if (!selectedCourse || !selectedProfessor) {
+      showAlert("Please select both a course and a professor", "error");
+      return;
+    }
 
     try {
       const newAssignment: Assignment = {
@@ -108,26 +115,24 @@ export const AssignmentsTab = () => {
       setOpenAddModal(false);
       setSelectedCourse("");
       setSelectedProfessor("");
+      showAlert("Assignment created successfully", "success");
     } catch (err) {
-      console.error("Error creating assignment:", err);
+      handleApiError(err, setError, "Error creating assignment.");
     }
   };
 
   if (loading)
     return <Typography sx={{ mt: 2 }}>Loading assignments...</Typography>;
 
-  if (error)
-    return (
-      <Typography sx={{ mt: 2, color: "red" }} variant="body1">
-        {error}
-      </Typography>
-    );
-
   return (
     <Box>
       <Box sx={{ display: "flex", justifyContent: "space-between", mb: 2 }}>
         <Typography variant="h4">Assignments 📚</Typography>
-        <Button variant="contained" onClick={() => setOpenAddModal(true)}>
+        <Button
+          data-testid="add-assignment"
+          variant="contained"
+          onClick={() => setOpenAddModal(true)}
+        >
           Add Assignment
         </Button>
       </Box>
@@ -148,7 +153,11 @@ export const AssignmentsTab = () => {
       </Box>
 
       {/* Add Assignment Modal */}
-      <Modal open={openAddModal} onClose={() => setOpenAddModal(false)}>
+      <Modal
+        data-testid="create-assignment-modal"
+        open={openAddModal}
+        onClose={() => setOpenAddModal(false)}
+      >
         <Box
           sx={{
             position: "absolute",
@@ -168,6 +177,7 @@ export const AssignmentsTab = () => {
           <Typography variant="h6">Add New Assignment</Typography>
 
           <TextField
+            data-testid="select-course"
             select
             label="Select Course"
             value={selectedCourse}
@@ -175,13 +185,18 @@ export const AssignmentsTab = () => {
             fullWidth
           >
             {courses.map((c) => (
-              <MenuItem key={c.id} value={c.id}>
+              <MenuItem
+                key={c.id}
+                value={c.id}
+                data-testid={`course-${c.id}`}
+              >
                 {c.name}
               </MenuItem>
             ))}
           </TextField>
 
           <TextField
+            data-testid="select-professor"
             select
             label="Select Professor"
             value={selectedProfessor}
@@ -189,7 +204,11 @@ export const AssignmentsTab = () => {
             fullWidth
           >
             {professors.map((p) => (
-              <MenuItem key={p.id} value={p.id}>
+              <MenuItem
+                key={p.id}
+                value={p.id}
+                data-testid={`professor-${p.id}`}
+              >
                 {p.name}
               </MenuItem>
             ))}
@@ -199,7 +218,11 @@ export const AssignmentsTab = () => {
             <Button variant="outlined" onClick={() => setOpenAddModal(false)}>
               Cancel
             </Button>
-            <Button variant="contained" onClick={handleAddAssignment}>
+            <Button
+              data-testid="submit-assignment"
+              variant="contained"
+              onClick={handleAddAssignment}
+            >
               Add
             </Button>
           </Box>
@@ -208,6 +231,7 @@ export const AssignmentsTab = () => {
 
       {/* Delete Confirmation Modal */}
       <Modal
+        data-testid="delete-assignment-modal"
         open={openDeleteModal}
         onClose={() => setOpenDeleteModal(false)}
         aria-labelledby="delete-assignment-modal"
@@ -240,6 +264,7 @@ export const AssignmentsTab = () => {
               Cancel
             </Button>
             <Button
+              data-testid="confirm-delete-assignment"
               variant="contained"
               color="error"
               onClick={handleConfirmDelete}

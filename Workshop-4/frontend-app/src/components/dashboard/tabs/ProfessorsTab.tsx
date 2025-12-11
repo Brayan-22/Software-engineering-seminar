@@ -193,12 +193,12 @@ export const ProfessorsTab = () => {
     if (loading)
         return <Typography sx={{ mt: 2 }}>Loading professors...</Typography>;
 
-    if (error)
-        return (
-            <Typography sx={{ mt: 2, color: "red" }} variant="body1">
-                {error}
-            </Typography>
-        );
+    // if (error)
+    //     return (
+    //         <Typography sx={{ mt: 2, color: "red" }} variant="body1">
+    //             {error}
+    //         </Typography>
+    //     );
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column" }}>

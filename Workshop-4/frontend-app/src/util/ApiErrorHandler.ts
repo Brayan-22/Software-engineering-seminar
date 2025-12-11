@@ -1,4 +1,3 @@
-// utils/handleApiError.ts
 import { useGlobalAlert } from "../context/AlertContext";
 
 export const useApiErrorHandler = () => {

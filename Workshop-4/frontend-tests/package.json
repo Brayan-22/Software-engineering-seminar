@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js --require \"./steps/**/*.js\" --require \"./support/**/*.js\" ../features",
+    "test": "cucumber-js --require support/world.js --require support/hooks.js --require steps",
+    "test:courses": "cucumber-js --require support/world.js --require support/hooks.js --require steps/createCourses.steps.js features/createSubject.feature",
     "test:headed": "HEADLESS=false npx cucumber-js --require \"./steps/**/*.js\" --require \"./support/**/*.js\" ../features",
     "report": "node ./support/generateReport.js"
   },

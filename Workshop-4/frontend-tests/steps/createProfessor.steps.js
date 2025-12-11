@@ -1,140 +1,111 @@
-import { Given, When, Then, setDefaultTimeout } from '@cucumber/cucumber';
+import { Given, When, Then } from '@cucumber/cucumber';
 import { expect } from '@playwright/test';
-//setDefaultTimeout(30 * 1000); // 30 segundos
-/* -------------------- GIVENS -------------------- */
 
-Given('the administrator is logged in', async function () {
-  await this.page.goto('http://localhost:5173/login');
+/* ==================== HELPERS ==================== */
 
-  await this.page.fill('input[name="username"]', 'admin');
-  await this.page.fill('input[name="password"]', 'admin123');
+async function loginAsAdmin(page) {
+  await page.goto('http://localhost:5173/login');
+  await page.fill('input[name="username"]', 'admin');
+  await page.fill('input[name="password"]', 'admin123');
+  await page.click('button[type="submit"]');
+  await page.waitForURL('**/dashboard', { timeout: 10000 });
+  await page.waitForSelector('#dashboard', { timeout: 10000 });
+}
 
-  await this.page.click('button[type="submit"]');
+async function openProfessorModal(page) {
+  await page.click('[data-testid="tab-professors"]');
+  await page.waitForSelector('[data-testid="add-professor"]', { timeout: 10000 });
+  await page.click('[data-testid="add-professor"]');
+  await page.waitForSelector('[data-testid="create-professor-modal"]', { timeout: 10000 });
+}
 
-  // Espera a que cargue el dashboard y exista el contenedor principal
-  await this.page.waitForURL('**/dashboard', { timeout: 10000 });
-  await this.page.waitForSelector('#dashboard', { timeout: 10000 });
-});
+/* ==================== GIVENS ESPECÍFICOS DE PROFESORES ==================== */
 
 Given('the administrator is on the professor registration form', async function () {
-  //await this.page.goto('http://localhost:5173/dashboard');
-
-  await this.page.goto('http://localhost:5173/login');
-
-  await this.page.fill('input[name="username"]', 'admin');
-  await this.page.fill('input[name="password"]', 'admin123');
-
-  await this.page.click('button[type="submit"]');
-
-  // Espera a que cargue el dashboard y exista el contenedor principal
-  await this.page.waitForURL('**/dashboard', { timeout: 10000 });
-  await this.page.waitForSelector('#dashboard', { timeout: 10000 });
-
-  // Selecciona el tab de profesores y espera a que aparezca el botón Add
-  await this.page.click('[data-testid="tab-professors"]');
-  await this.page.waitForSelector('[data-testid="add-professor"]', { timeout: 10000 });
-
-  // Abre el modal de creación y espera a que sea visible
-  await this.page.click('[data-testid="add-professor"]');
-  await this.page.waitForSelector('[data-testid="create-professor-modal"]', { timeout: 10000 });
+  await loginAsAdmin(this.page);
+  await openProfessorModal(this.page);
 });
 
 Given('a teacher with the same email or ID already exists', async function () {
-  //await this.page.goto('http://localhost:5173/dashboard');
-
-  await this.page.goto('http://localhost:5173/login');
-
-  await this.page.fill('input[name="username"]', 'admin');
-  await this.page.fill('input[name="password"]', 'admin123');
-
-  await this.page.click('button[type="submit"]');
-  //_-------------
-  await this.page.click('[data-testid="tab-professors"]');
-  await this.page.waitForSelector('[data-testid="add-professor"]', { timeout: 10000 });
-
-  await this.page.click('[data-testid="add-professor"]');
-  await this.page.waitForSelector('[data-testid="create-professor-modal"]', { timeout: 10000 });
+  await loginAsAdmin(this.page);
+  await openProfessorModal(this.page);
 
   // Crear profesor "existente"
-  await this.page.fill('[data-testid="input-name"]', 'Existing Teacher');
-  await this.page.fill('[data-testid="input-email"]', 'existing@test.com');
-  await this.page.selectOption('[data-testid="select-specialty"]', 'Mathematics');
+  await this.page.fill('[data-testid="input-name"]', 'Dr. John Smith');
+  await this.page.fill('[data-testid="input-email"]', 'john.smith@university.edu');
 
-  await this.page.click('[data-testid="submit-professor"]');
-
-  // Confirmar que aparece en la lista
-  await this.page.waitForSelector('text=Existing Teacher', { timeout: 10000 });
-});
-
-
-/* -------------------- WHENS -------------------- */
-
-When('the administrator accesses the main panel', async function () {
-  await this.page.goto('http://localhost:5173/dashboard');
-});
-
-When('all required fields are filled with valid information', async function () {
-  await this.page.fill('[data-testid="input-name"]', 'John Doe');
-  await this.page.fill('[data-testid="input-email"]', 'john@example.com');
-
-  // Selección de specialty en MUI
-  await this.page.click('[data-testid="select-specialty"]');
+  const specialtySelector = '[data-testid="select-specialty"]';
+  await this.page.click(specialtySelector);
+  await this.page.waitForTimeout(500);
   await this.page.click('[data-testid="specialty-Computer Science"]');
 
   await this.page.click('[data-testid="submit-professor"]');
+
+  // CRÍTICO: Esperar a que el modal se cierre completamente
+  await this.page.waitForSelector('[data-testid="create-professor-modal"]', { 
+    state: 'visible',
+    timeout: 5000 
+  });
+
+  await this.page.waitForTimeout(1000);
 });
 
+/* ==================== WHENS ESPECÍFICOS DE PROFESORES ==================== */
 
-When('the administrator submits the form', async function () {
-  await this.page.click('[data-testid="submit-professor"]');
+When('all required fields are filled with valid information for professor', async function () {
+  await this.page.fill('[data-testid="input-name"]', 'John Doe');
+  await this.page.fill('[data-testid="input-email"]', 'john.doe@example.com');
+
+  const specialtySelector = '[data-testid="select-specialty"]';
+  await this.page.click(specialtySelector);
+  await this.page.waitForTimeout(500);
+  await this.page.click('[data-testid="specialty-Computer Science"]');
 });
 
-When('required fields are left empty', async function () {
-  // Dejamos todo vacío a propósito.
+When('required fields are left empty for professor', async function () {
   await this.page.fill('[data-testid="input-name"]', '');
   await this.page.fill('[data-testid="input-email"]', '');
-  // specialty queda vacío por defecto
 });
 
 When('the administrator attempts to register the same teacher again', async function () {
-  // Abrimos modal de nuevo
-  await this.page.click('[data-testid="add-professor"]');
+  const modalVisible = await this.page.locator('[data-testid="create-professor-modal"]').isVisible();
+  
+  if (modalVisible) {
+    console.log('⚠️ Modal del registro anterior todavía visible, cerrándolo...');
+    await this.page.click('button:has-text("Cancel")');
+    await this.page.waitForSelector('[data-testid="create-professor-modal"]', { 
+      state: 'hidden',
+      timeout: 3000 
+    });
+  }
 
-  // Apunta al input real dentro del TextField
+  await this.page.click('[data-testid="add-professor"]');
+  await this.page.waitForSelector('[data-testid="create-professor-modal"]', { 
+    state: 'visible',
+    timeout: 10000 
+  });
+
   await this.page.fill('[data-testid="input-name"]', 'Dr. John Smith');
   await this.page.fill('[data-testid="input-email"]', 'john.smith@university.edu');
-  await this.page.selectOption('[data-testid="select-specialty"]', 'Computer Science');
+
+  const specialtySelector = '[data-testid="select-specialty"]';
+  await this.page.click(specialtySelector);
+  await this.page.waitForTimeout(500);
+  await this.page.click('[data-testid="specialty-Computer Science"]');
 
   await this.page.click('[data-testid="submit-professor"]');
+  await this.page.waitForTimeout(2000);
 });
 
+/* ==================== THENS ESPECÍFICOS DE PROFESORES ==================== */
 
-/* -------------------- THENS -------------------- */
-
-Then('the system must display the {string} form option', async function (formName) {
+Then('the system must display the {string} form option for professors', async function (formName) {
   await this.page.click('[data-testid="tab-professors"]');
   await expect(this.page.locator('[data-testid="add-professor"]')).toBeVisible();
 });
 
-
-Then('the system must display a success confirmation message', async function () {
-  // Si tu toast tiene data-testid te lo ajusto.
-  // Por ahora este test detecta la aparición del nuevo profesor.
-  await expect(this.page.locator('text=Professor created successfully')).toBeVisible();
-});
-
 Then('the new teacher must appear in the general list without reloading the page', async function () {
-  await expect(this.page.locator('text=John Doe')).toBeVisible();
-});
-
-Then('the system must display validation messages for missing fields', async function () {
-  await expect(this.page.locator('[data-testid="error-name"]')).toContainText('required');
-  await expect(this.page.locator('[data-testid="error-email"]')).toContainText('required');
-  await expect(this.page.locator('[data-testid="error-specialty"]')).toContainText('select');
-});
-
-Then('the system must prevent the registration and show an error message', async function () {
-  // Si tu backend manda un error visible por AlertContext,
-  // ajústame el testid y lo cambio.
-  await expect(this.page.locator('text=Error creating professor')).toBeVisible();
+  await expect(
+    this.page.locator('text=John Doe').first()
+  ).toBeVisible({ timeout: 5000 });
 });

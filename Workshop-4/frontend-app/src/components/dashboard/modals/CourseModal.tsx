@@ -12,7 +12,6 @@ import {
     FormControl,
     FormHelperText,
     Typography,
-
 } from "@mui/material";
 import type { Course } from "../../../models/Course"
 import {
@@ -35,8 +34,15 @@ type CourseModalProps = {
     onCourseDeleted?: (Course: Course) => void;
 };
 
-
-export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCreated, onCourseUpdated, onCourseDeleted }: CourseModalProps) => {
+export const CourseModal = ({
+    selectedCourse,
+    isOpen,
+    onClose,
+    mode,
+    onCourseCreated,
+    onCourseUpdated,
+    onCourseDeleted
+}: CourseModalProps) => {
 
     const [error, setError] = useState<string | null>(null);
 
@@ -110,12 +116,11 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
             showAlert("Course created successfully!", "success");
         } catch (err) {
             handleApiError(err, setError, "Error creating course.");
-            showAlert(error || "Uknown error.");
         }
     };
 
     const handleUpdateCourse = async () => {
-        if (!selectedCourse) return;
+        if (!selectedCourse || !validateForm()) return;
 
         try {
             const updatedCourse = {
@@ -138,7 +143,6 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
 
         try {
             await deleteCourse(selectedCourse.id);
-            //setCourses((prev) => prev.filter((c) => c.id !== selectedCourse.id));
             onCourseDeleted?.(selectedCourse);
             showAlert(`Deleted course "${selectedCourse.name}"`, "success");
         } catch (err) {
@@ -151,7 +155,7 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
     useEffect(() => {
         if (mode === "edit" && selectedCourse) {
             const [day, ...timeParts] = selectedCourse.schedule.split(" ");
-            const time = timeParts.join(" "); // por si tu horario tiene espacios
+            const time = timeParts.join(" ");
             setFormData({
                 code: selectedCourse.code,
                 name: selectedCourse.name,
@@ -167,85 +171,106 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
         }
     }, [mode, selectedCourse]);
 
-
     switch (mode) {
         case "create":
             return (
-                <Box>
-                    <Dialog open={isOpen} onClose={onClose}>
-                        <DialogTitle>Create Course</DialogTitle>
-                        <DialogContent
-                            sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
+                <Dialog
+                    data-testid="create-course-modal"
+                    open={isOpen}
+                    onClose={onClose}
+                >
+                    <DialogTitle>Create Course</DialogTitle>
+                    <DialogContent
+                        sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}
+                    >
+                        <TextField
+                            inputProps={{ 'data-testid': 'input-code' }}
+                            sx={{ mt: "5px" }}
+                            label="Code"
+                            name="code"
+                            value={formData.code}
+                            onChange={handleChange}
+                            fullWidth
+                            error={!!formErrors.code}
+                            helperText={formErrors.code}
+                        />
+                        <TextField
+                            inputProps={{ 'data-testid': 'input-name' }}
+                            label="Name"
+                            name="name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            fullWidth
+                            error={!!formErrors.name}
+                            helperText={formErrors.name}
+                        />
+                        <FormControl fullWidth error={!!formErrors.day}>
+                            <Select
+                                data-testid="select-day"
+                                displayEmpty
+                                name="day"
+                                value={formData.day}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="" disabled>
+                                    Select Day
+                                </MenuItem>
+                                {days.map((day) => (
+                                    <MenuItem
+                                        key={day}
+                                        value={day}
+                                        data-testid={`day-${day}`}
+                                    >
+                                        {day}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <FormHelperText>{formErrors.day}</FormHelperText>
+                        </FormControl>
+                        <FormControl fullWidth error={!!formErrors.time}>
+                            <Select
+                                data-testid="select-time"
+                                displayEmpty
+                                name="time"
+                                value={formData.time}
+                                onChange={handleChange}
+                            >
+                                <MenuItem value="" disabled>
+                                    Select Time Slot
+                                </MenuItem>
+                                {timeSlots.map((slot) => (
+                                    <MenuItem
+                                        key={slot}
+                                        value={slot}
+                                        data-testid={`time-${slot}`}
+                                    >
+                                        {slot}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                            <FormHelperText>{formErrors.time}</FormHelperText>
+                        </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button onClick={onClose}>Cancel</Button>
+                        <Button
+                            data-testid="submit-course"
+                            variant="contained"
+                            onClick={handleCreateCourse}
                         >
-                            <TextField
-                                sx={{ mt: "5px" }}
-                                label="Code"
-                                name="code"
-                                value={formData.code}
-                                onChange={handleChange}
-                                fullWidth
-                                error={!!formErrors.code}
-                                helperText={formErrors.code}
-                            />
-                            <TextField
-                                label="Name"
-                                name="name"
-                                value={formData.name}
-                                onChange={handleChange}
-                                fullWidth
-                                error={!!formErrors.name}
-                                helperText={formErrors.name}
-                            />
-                            <FormControl fullWidth error={!!formErrors.day}>
-                                <Select
-                                    displayEmpty
-                                    name="day"
-                                    value={formData.day}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="" disabled>
-                                        Select Day
-                                    </MenuItem>
-                                    {days.map((day) => (
-                                        <MenuItem key={day} value={day}>
-                                            {day}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <FormHelperText>{formErrors.day}</FormHelperText>
-                            </FormControl>
-                            <FormControl fullWidth error={!!formErrors.time}>
-                                <Select
-                                    displayEmpty
-                                    name="time"
-                                    value={formData.time}
-                                    onChange={handleChange}
-                                >
-                                    <MenuItem value="" disabled>
-                                        Select Time Slot
-                                    </MenuItem>
-                                    {timeSlots.map((slot) => (
-                                        <MenuItem key={slot} value={slot}>
-                                            {slot}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                                <FormHelperText>{formErrors.time}</FormHelperText>
-                            </FormControl>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick={onClose}>Cancel</Button>
-                            <Button variant="contained" onClick={handleCreateCourse}>
-                                Save
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-                </Box>
-            )
-            break;
+                            Save
+                        </Button>
+                    </DialogActions>
+                </Dialog>
+            );
+
         case "edit":
             return (
-                <Dialog open={isOpen} onClose={onClose}>
+                <Dialog
+                    data-testid="edit-course-modal"
+                    open={isOpen}
+                    onClose={onClose}
+                >
                     <DialogTitle>Edit Course</DialogTitle>
                     <DialogContent sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
                         <TextField
@@ -268,7 +293,12 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
                             helperText={formErrors.name}
                         />
                         <FormControl fullWidth error={!!formErrors.day}>
-                            <Select displayEmpty name="day" value={formData.day} onChange={handleChange}>
+                            <Select
+                                displayEmpty
+                                name="day"
+                                value={formData.day}
+                                onChange={handleChange}
+                            >
                                 <MenuItem value="" disabled>Select Day</MenuItem>
                                 {days.map((day) => (
                                     <MenuItem key={day} value={day}>{day}</MenuItem>
@@ -277,7 +307,12 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
                             <FormHelperText>{formErrors.day}</FormHelperText>
                         </FormControl>
                         <FormControl fullWidth error={!!formErrors.time}>
-                            <Select displayEmpty name="time" value={formData.time} onChange={handleChange}>
+                            <Select
+                                displayEmpty
+                                name="time"
+                                value={formData.time}
+                                onChange={handleChange}
+                            >
                                 <MenuItem value="" disabled>Select Time Slot</MenuItem>
                                 {timeSlots.map((slot) => (
                                     <MenuItem key={slot} value={slot}>{slot}</MenuItem>
@@ -288,13 +323,20 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={onClose}>Cancel</Button>
-                        <Button variant="contained" onClick={handleUpdateCourse}>Save Changes</Button>
+                        <Button variant="contained" onClick={handleUpdateCourse}>
+                            Save Changes
+                        </Button>
                     </DialogActions>
                 </Dialog>
-            )
+            );
+
         case "delete":
             return (
-                <Dialog open={isOpen} onClose={onClose}>
+                <Dialog
+                    data-testid="delete-course-modal"
+                    open={isOpen}
+                    onClose={onClose}
+                >
                     <DialogTitle>Confirm Delete</DialogTitle>
                     <DialogContent>
                         <Typography>
@@ -304,15 +346,18 @@ export const CourseModal = ({ selectedCourse, isOpen, onClose, mode, onCourseCre
                     </DialogContent>
                     <DialogActions>
                         <Button onClick={onClose}>Cancel</Button>
-                        <Button variant="contained" color="error" onClick={handleConfirmDelete}>
+                        <Button
+                            variant="contained"
+                            color="error"
+                            onClick={handleConfirmDelete}
+                        >
                             Delete
                         </Button>
                     </DialogActions>
                 </Dialog>
-            )
-            break;
+            );
 
         default:
-
+            return null;
     }
 }

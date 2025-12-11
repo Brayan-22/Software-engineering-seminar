@@ -1,0 +1,10 @@
+{
+  "default": {
+    "paths": ["features"],
+    "require": ["steps/*.steps.js"]
+  },
+  "courses": {
+    "paths": ["features/createSubject.feature"],
+    "require": ["steps/createCourses.steps.js"]
+  }
+}

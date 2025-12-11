@@ -49,7 +49,6 @@ export const CoursesTab = () => {
         setOpenModal(true);
     };
 
-
     const handleCloseModal = () => {
         setSelectedCourse(null);
         setOpenModal(false);
@@ -84,7 +83,11 @@ export const CoursesTab = () => {
         <Box sx={{ display: "flex", flexDirection: "column" }}>
             <Box sx={{ display: "flex", justifyContent: "left", gap: "40px" }}>
                 <Typography variant="h4">Courses 📘</Typography>
-                <Button variant="contained" onClick={handleOpenCreate}>
+                <Button
+                    data-testid="add-course"
+                    variant="contained"
+                    onClick={handleOpenCreate}
+                >
                     Add +
                 </Button>
             </Box>
@@ -113,7 +116,7 @@ export const CoursesTab = () => {
                 onCourseCreated={onCourseCreated}
                 onCourseUpdated={onCourseUpdated}
                 onCourseDeleted={onCourseDeleted}
-            ></CourseModal>
+            />
         </Box>
     );
 };
