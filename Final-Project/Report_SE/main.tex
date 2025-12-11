@@ -115,8 +115,13 @@ Scrum ceremonies are conducted at a scaled frequency appropriate brief stand-up 
 Version control and collaboration are managed through a shared Git repository, following a feature-branch workflow. 
 
 
+\subsection{Scrum Implementation and Project Management}  % NUEVA
+% Sprints ejecutados, backlog management, burndown charts, 
+% uso de Taiga, artifacts generadosa
+a
+
 \subsection{System Analysis and Design}
-Following the completion of Workshops~1 and~2, the system analysis and design phase guide the transition from requirements specification to technical implementation. The main goal will be to ensure that the proposed architecture, domain entities, and component responsibilities are consistent with the user stories, acceptance criteria, and stakeholder needs identified during the analysis stage.\newline
+Following the completion of the Workshops, the system analysis and design phase guide the transition from requirements specification to technical implementation. The main goal will be to ensure that the proposed architecture, domain entities, and component responsibilities are consistent with the user stories, acceptance criteria, and stakeholder needs identified during the analysis stage.\newline
 
 The analysis focus on consolidating the functional requirements derived from the user stories created in Workshop~1. Each user story will be mapped to a corresponding set of system components, defining clear inputs, processes, and outputs. CRC (Class–Responsibility–Collaborator) cards previously designed will serve as the foundation for assigning responsibilities among classes, while maintaining object-oriented design principles. This mapping will guarantee that each functional requirement has a direct representation within the software model.\newline
 
@@ -130,9 +135,118 @@ This analysis and design process will establish a clear technical blueprint for 
 
 
 % ======================================================================
-\section{Implementation Progress (Workshops Summary)}
-\label{sec:progress}
-\subsection{Web UI}
+\section{System Design and Architecture}
+\label{sec:design}
+
+
+\subsection{User Stories and Requirements}
+
+The functional requirements of the system were captured through user stories following agile methodology principles. Each story represents a specific user need and includes well-defined acceptance criteria that guide both development and testing activities. The stories were structured using the standard template: "As a [user role], I want to [perform action], so that [achieve benefit]." This approach ensures that every feature delivers clear value to stakeholders and remains traceable throughout the development lifecycle.\newline
+
+Five core user stories form the foundation of the system functionality, divided into administrative capabilities, end-user search features, and role-based navigation. These stories were prioritized based on their dependency relationships and their impact on delivering value to all stakeholder groups. Table~\ref{tab:user_stories} provides a summary of all user stories with their dependencies and roles.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{Core User Stories for System Functionality}
+	\label{tab:user_stories}
+	\begin{tabular}{@{}lp{3cm}p{2.3cm}p{2.5cm}@{}}
+		\toprule
+		\textbf{Story ID} & \textbf{Story Name} & \textbf{User Role} & \textbf{Dependencies} \\ 
+		\midrule
+		US\_CF\_01 & Registration of New Professors & System Administrator & None \\
+		US\_CF\_02 & Registration of New Courses & System Administrator & None \\
+		US\_CF\_03 & Link Professor to Courses & System Administrator & US\_CF\_01, US\_CF\_02 \\
+		US\_CF\_04 & Search Courses by Professor and Vice Versa & System User & US\_CF\_03 \\
+		US\_CF\_05 & Home Page and Access Flow & Administrator /General User & US\_CF\_04, Auth Module \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+\subsubsection{Administrative User Stories}
+
+Three stories address the System Administrator role, enabling the creation and management of the academic catalog that supports the search functionality.
+
+\paragraph{US\_CourseFinder\_01: Registration of New Professors}
+
+This story addresses the need to register professors in the system by capturing their personal and academic details through a dedicated registration form.\newline
+
+\textit{User Need:} The administrator requires the ability to add new professors to the platform by entering their personal and academic information, ensuring the professor database remains current and complete.\newline
+
+\textit{Justification:} Maintaining an up-to-date professor database ensures that users have access to accurate and complete information when consulting the system, supporting informed decision-making during course selection.\newline
+
+\textit{Key Validations:} The system must validate all required fields before persisting data, including name, identification number, email, and specialty. Email uniqueness must be enforced to prevent duplicate registrations. The identification number must also be unique across all professor records.\newline
+
+\textit{Acceptance Criteria:} The administrator can access the registration form from the main admin panel. All required fields are validated before saving data. The system displays a confirmation message upon successful registration. The new professor appears in the general professor list without requiring a page reload. Duplicate registrations based on email or identification number are prevented with appropriate error messages.\newline
+
+\textit{INVEST Characteristics:} This story is independent and does not depend on other stories for development. It is negotiable in terms of specific fields and validation rules, which can be adjusted according to academic requirements. The story provides immediate value by establishing the foundational data required for the platform. Development effort is estimable based on form complexity and validation logic. The scope is small enough to complete within a single sprint. The story is testable through field validation tests, database persistence verification, and UI confirmation message checks.\newline
+
+\paragraph{US\_CourseFinder\_02: Registration of New Courses}
+
+This story enables administrators to expand the academic catalog by adding new courses with comprehensive metadata.\newline
+
+\textit{User Need:} The administrator wants to add new courses to the system, including details such as course name, code, description, credits, and category.\newline
+
+\textit{Justification:} Expanding and maintaining the academic offerings ensures users have access to current course information, supporting effective academic planning and course discovery.\newline
+
+\textit{Key Validations:} The system must validate course code uniqueness to prevent duplicate entries. All required fields must be completed before submission. If a professor is assigned during course creation, the relationship must be validated to ensure the professor exists in the database.\newline
+
+\textit{Acceptance Criteria:} The administrator can access the course registration form from the main panel. All required fields are validated before saving. A confirmation message appears upon successful registration. The new course appears in the course list without page reload. The system prevents creation of duplicate courses based on course code. If a professor is assigned, the relationship is correctly recorded in the database.\newline
+
+\textit{INVEST Characteristics:} This story is independent and can be developed without dependencies on other stories. Fields and professor relationships are negotiable based on academic system needs. The story expands the information base, increasing platform utility for end users. Effort is estimable considering form implementation, validations, and database operations. The scope fits within a single sprint. Testing validates field requirements, database persistence, and relationship integrity.\newline
+
+\paragraph{US\_CourseFinder\_03: Link Professor to One or Multiple Courses}
+
+This story implements the core relationship management functionality that establishes the many-to-many associations between professors and courses.\newline
+
+\textit{User Need:} The administrator wants to link existing professors to one or more existing courses, establishing the teaching assignments that users will query.\newline
+
+\textit{Justification:} Correct professor-course associations enable users to view accurate relationships when searching, supporting informed course selection based on instructor preferences.\newline
+
+\textit{Key Validations:} Both the professor and course must exist in the database before linking. The system should prevent duplicate assignments of the same professor-course-group combination. If a course is already assigned to another professor in the same group, the system should warn the administrator or prevent the duplication based on business rules.\newline
+
+\textit{Acceptance Criteria:} The administrator can access a dedicated interface for linking professors to courses. The system displays only existing professors and courses. The administrator can select one professor and one or multiple courses to link. Upon confirmation, the links are stored and visible in both entity profiles. Error messages appear if attempting to link non-existent entities. The system prevents or warns about duplicate course assignments. The administrator can unlink or modify existing relationships. A confirmation message appears after successful linking.\newline
+
+\textit{INVEST Characteristics:} This story depends on US\_CF\_01 and US\_CF\_02, as both entities must exist before linking. The user interface and workflow are negotiable based on administrator feedback. The story provides core administrative control over relationships, ensuring data accuracy. Development time is estimable based on form complexity, relationship logic, and validations. The scope fits within a single sprint for a small team. Testing validates UI interactions and backend relationship integrity.
+
+\subsubsection{End-User Functionality}
+
+Two stories address the primary use cases for general users: discovering course and professor information through search and accessing the system through role-appropriate entry points.\newline
+
+\paragraph{US\_CourseFinder\_04: Search Courses by Professor and Professors by Course}
+
+This story provides the core bidirectional search functionality that motivated the project development.\newline
+
+\textit{User Need:} System users want to search for courses taught by a specific professor and search for courses to view their assigned professors.\newline
+
+\textit{Justification:} Easy access to accurate professor-course relationships improves navigation and course discovery, helping users make informed academic decisions efficiently.\newline
+
+\textit{Key Validations:} Search queries must handle partial text matches and ignore case sensitivity. The system must validate that search results accurately reflect the professor-course relationships established by administrators. Results must be complete and consistent with the database state.\newline
+
+\textit{Acceptance Criteria:} Users can search by professor name and view all associated courses. Users can search by course name and view all assigned professors. The system displays clear, accurate, and complete results for each query. Search supports partial text matching and is case-insensitive. Friendly messages appear when no results are found. Search performance remains under two seconds for average query loads. The interface is responsive and adapts to desktop and mobile devices.\newline
+
+\textit{INVEST Characteristics:} This story depends on US\_CF\_03, as accurate search requires established professor-course associations. Search filters, display format, and pagination are negotiable based on usability feedback. The story provides core functionality for navigating relationships, improving user experience significantly. Effort is estimable based on filter implementation, database queries, and frontend integration. The scope fits within a single sprint for a small development team. Testing validates that results accurately match linked data between professors and courses.\newline
+
+\paragraph{US\_CourseFinder\_05: Home Page and Access Flow for Administrator and User}
+
+This story defines the main entry point of the system, providing role-appropriate navigation paths for administrators and general users.\newline
+
+\textit{User Need:} Administrators want to access a dashboard summarizing key metrics with shortcuts to management actions. General users want immediate access to the search feature without unnecessary navigation.\newline
+
+\textit{Justification:} Role-based entry points enable both user types to efficiently access the system according to their needs—administrators can manage data quickly, and users can immediately start searching.\newline
+
+\textit{Key Validations:} The system must correctly identify the user's role after login. Role-based routing must function reliably, directing administrators to the dashboard and general users to the search interface. The homepage must load within acceptable performance thresholds (under two seconds). Administrative elements must be completely hidden from general user views.\newline
+
+\textit{Acceptance Criteria:} The system redirects users based on their role: administrators to the dashboard, general users to the search page. The homepage loads correctly and displays personalized content. The admin dashboard shows relevant metrics (total professors, total courses, recent updates) and quick management options. The general user view focuses exclusively on search functionality. The interface is responsive and loads within performance thresholds. Navigation between homepage and other sections works without errors.\newline
+
+\textit{INVEST Characteristics:} This story depends on US\_CF\_04 and the authentication module, as it requires functional search capabilities and role identification. Homepage layout, design elements, and dashboard widgets are negotiable based on feedback and usability tests. The story provides personalized entry points, ensuring efficient access and navigation for both roles. The scope is measurable by estimating layout design, routing logic, and conditional rendering. Implementation fits within a single sprint. Testing verifies redirection logic, role-based rendering, and proper section access.\newline
+
+\subsubsection{Story Management and Traceability}
+
+The user stories were managed in the Taiga project management platform, where they were assigned story points, prioritized in the product backlog, and allocated to specific sprints during sprint planning sessions. Each story's progress was tracked through states (New, In Progress, Done) and linked to specific tasks. Story points were estimated using planning poker sessions, with the team achieving consensus on complexity based on technical effort, uncertainty and integration requirements.\newline
+
+The dependency chain from administrative stories through search functionality to role-based navigation guided sprint planning, ensuring that foundational data management capabilities were delivered before user-facing features. This traceability ensures that every implemented feature can be validated against its original acceptance criteria and that test coverage aligns with user expectations. The acceptance criteria defined in each story directly influenced the test scenarios documented in Section~\ref{sec:implementation} and the evaluation metrics presented in Section~\ref{sec:results}.
+
+\subsection{Web User Interface}
 This section presents the main artifacts developed during all the Workshops, which represent the foundation for the system implementation. Each artifact serves a specific purpose in documenting the design decisions and validating the feasibility of the proposed solution. The progression from conceptual models to concrete specifications ensures traceability from requirements to implementation.
 
 \includepdf[
@@ -141,7 +255,7 @@ This section presents the main artifacts developed during all the Workshops, whi
   pagecommand={%
     \thispagestyle{plain}%
     \centering
-    \captionof{figure}{Web UI Mockup (v1.0)}
+    \captionof{figure}{Web User Interface (v1.0)}
   }
 ]{"5. WebUI MockUps.pdf"}
 
@@ -153,7 +267,6 @@ The interface accommodates three distinct user roles with different access level
 Design decisions emphasized consistency across views through standardized navigation patterns, uniform typography, and coherent color schemes that distinguish between public and administrative sections. The responsive layout adapts to different screen sizes, ensuring accessibility across desktop and mobile devices. Form validation provides immediate feedback to users, reducing errors during data entry. The role-based design ensures that administrative functions remain hidden from unauthorized users while maintaining an intuitive experience for all stakeholder groups.\newline
 
 The previous figures presents the final implemented views of the web application, demonstrating the translation from initial mockups to functional interfaces. These views validate the usability requirements established during the requirements analysis phase and confirm that the system meets the interaction needs identified in the user stories.
-
 
 \subsection{Architecture Overview}
 The system architecture implements a microservices approach with clear separation of concerns across three main components: frontend, an authentication service and a business logic service. This architectural decision was mandated by project requirements and offers several strategic advantages for development, deployment, and maintenance.\newline
@@ -173,15 +286,8 @@ Component communication follows RESTful principles through well-defined API cont
 
 Figure~\ref{fig:arch} illustrates the high-level architecture, showing the relationships between components, the data flow from user interaction through business logic to persistence layers, and the external interfaces exposed by each service. This diagram serves as the reference model for understanding system boundaries and component responsibilities throughout the development process.
 
-\subsection{Deployment View}
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.9\linewidth]{deployDiagram.png}
-  \caption{Deployment diagram (v1.0).}
-  \label{fig:deploy}
-\end{figure}
 
-\subsection{Data Model}
+\subsection{Data Model and Database Schema}
 
 The data model defines four primary entities that capture the essential academic domain: Professor, Course, Admin, and ProfessorCourse. This structure was designed to support the core user requirements identified during the analysis phase, particularly the need to search courses by multiple criteria and maintain clear associations between professors and their teaching assignments.\newline
 
@@ -204,10 +310,54 @@ Design decisions prioritized query performance for the primary use case: searchi
 Figure~\ref{fig:classdiagram} presents the complete class diagram including entities, repositories, services, and controllers across all architectural layers. This diagram demonstrates how the data model integrates with business logic components and exposes functionality through controller endpoints. The layered structure visible in the diagram reinforces the architectural principles of separation of concerns and dependency management established in the system design.
 
 
+\subsection{API Endpoints and Contracts}  % NUEVA
+% Documentación de endpoints REST, request/response examples,
+% authentication flow
+
+\subsection{Deployment View}
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\linewidth]{deployDiagram.png}
+  \caption{Deployment diagram (v1.0).}
+  \label{fig:deploy}
+\end{figure}
+
+
+\section{Implementation and Quality Assurance}  % NUEVA SECCIÓN
+\label{sec:implementation}
+
+\subsection{Development Environment and Tools}
+% Tecnologías: React, Spring Boot, FastAPI, Docker, Git
+
+\subsection{Testing Strategy}  % NUEVA
+% Filosofía de testing, tipos de pruebas (unit, integration, acceptance, stress)
+% Herramientas: JUnit, pytest, Cucumber, JMeter
+
+\subsection{CI/CD Pipeline}  % NUEVA
+% GitHub Actions workflow, Docker containerization,
+% automated testing, deployment process
+
+\subsection{Code Quality and Standards}
+% Code coverage, linting, code reviews
+
 % ======================================================================
 \section{Results and Discussion}
+\label{sec:results}
 The outcomes of Workshops~1 and~2 have established a solid analytical foundation for the project. The main deliverables include the problem definition, user stories with acceptance criteria, CRC cards, architectural and deployment diagrams, and early Web UI mockups. These artifacts provide a coherent view of the system’s objectives and structure, enabling the team to validate the feasibility of the proposed solution before implementation.
 
+
+\subsection{Testing Results}  % NUEVA
+% Unit test results, integration test results,
+% acceptance test scenarios, stress test metrics
+
+\subsection{System Performance Evaluation}  % NUEVA
+% Response times, throughput, scalability analysis
+
+\subsection{Achievement of Objectives}
+% Comparación con objetivos iniciales, qué se logró
+
+\subsection{Limitations and Lessons Learned}
+% Limitaciones encontradas, aprendizajes del equipo
 
 % ======================================================================
 \section{Conclusions}
