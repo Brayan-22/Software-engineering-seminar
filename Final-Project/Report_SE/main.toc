@@ -7,79 +7,84 @@
 \contentsline {section}{\numberline {3}Methodology}{7}{section.3}%
 \contentsline {subsection}{\numberline {3.1}Process and Team Practices}{7}{subsection.3.1}%
 \contentsline {subsection}{\numberline {3.2}Scrum Implementation and Project Management}{8}{subsection.3.2}%
-\contentsline {subsection}{\numberline {3.3}System Analysis and Design}{8}{subsection.3.3}%
-\contentsline {section}{\numberline {4}System Design and Architecture}{9}{section.4}%
-\contentsline {subsection}{\numberline {4.1}User Stories and Requirements}{9}{subsection.4.1}%
-\contentsline {subsubsection}{\numberline {4.1.1}Administrative User Stories}{10}{subsubsection.4.1.1}%
-\contentsline {paragraph}{US\_CourseFinder\_01: Registration of New Professors}{10}{section*.5}%
-\contentsline {paragraph}{US\_CourseFinder\_02: Registration of New Courses}{11}{section*.6}%
-\contentsline {paragraph}{US\_CourseFinder\_03: Link Professor to One or Multiple Courses}{12}{section*.7}%
-\contentsline {subsubsection}{\numberline {4.1.2}End-User Functionality}{13}{subsubsection.4.1.2}%
-\contentsline {paragraph}{US\_CourseFinder\_04: Search Courses by Professor and Professors by Course}{13}{section*.8}%
-\contentsline {paragraph}{US\_CourseFinder\_05: Home Page and Access Flow for Administrator and User}{14}{section*.9}%
-\contentsline {subsubsection}{\numberline {4.1.3}Story Management and Traceability}{14}{subsubsection.4.1.3}%
-\contentsline {subsection}{\numberline {4.2}Web User Interface}{15}{subsection.4.2}%
-\contentsline {subsection}{\numberline {4.3}Architecture Overview}{22}{subsection.4.3}%
-\contentsline {subsection}{\numberline {4.4}Data Model and Database Schema}{24}{subsection.4.4}%
-\contentsline {subsubsection}{\numberline {4.4.1}Domain Entities and Relationships}{24}{subsubsection.4.4.1}%
-\contentsline {subsubsection}{\numberline {4.4.2}Business Logic Database}{25}{subsubsection.4.4.2}%
-\contentsline {subsubsection}{\numberline {4.4.3}Authentication Database}{26}{subsubsection.4.4.3}%
-\contentsline {subsubsection}{\numberline {4.4.4}Schema Design Rationale}{27}{subsubsection.4.4.4}%
-\contentsline {subsection}{\numberline {4.5}API Endpoints and Contracts}{28}{subsection.4.5}%
-\contentsline {subsubsection}{\numberline {4.5.1}Authentication Service API}{28}{subsubsection.4.5.1}%
-\contentsline {paragraph}{Login Endpoint}{28}{section*.14}%
-\contentsline {subsubsection}{\numberline {4.5.2}Business Logic Service API}{30}{subsubsection.4.5.2}%
-\contentsline {paragraph}{Professor Endpoints}{31}{section*.19}%
-\contentsline {paragraph}{Course Endpoints}{32}{section*.21}%
-\contentsline {paragraph}{Assignment Endpoints}{33}{section*.23}%
-\contentsline {paragraph}{Search Endpoints}{34}{section*.25}%
-\contentsline {subsubsection}{\numberline {4.5.3}API Design Principles and Error Handling}{35}{subsubsection.4.5.3}%
-\contentsline {subsection}{\numberline {4.6}Deployment View}{37}{subsection.4.6}%
-\contentsline {section}{\numberline {5}Implementation and Quality Assurance}{38}{section.5}%
-\contentsline {subsection}{\numberline {5.1}Testing Strategy}{38}{subsection.5.1}%
-\contentsline {subsubsection}{\numberline {5.1.1}Unit Testing}{38}{subsubsection.5.1.1}%
-\contentsline {paragraph}{Python Backend - Business Logic Service}{38}{section*.28}%
-\contentsline {paragraph}{Java Backend - Authentication Service}{39}{section*.30}%
-\contentsline {subsubsection}{\numberline {5.1.2}Acceptance Testing with Cucumber}{40}{subsubsection.5.1.2}%
-\contentsline {paragraph}{Feature: Registration of New Teachers (US\_CF\_01)}{40}{section*.31}%
-\contentsline {paragraph}{Feature: Registration of New Subjects (US\_CF\_02)}{41}{section*.32}%
-\contentsline {paragraph}{Feature: Assignment of Professors to Courses (US\_CF\_03)}{41}{section*.33}%
-\contentsline {paragraph}{Feature: Search Courses by Professor and Professors by Course (US\_CF\_04)}{41}{section*.34}%
-\contentsline {subsubsection}{\numberline {5.1.3}Stress Testing with JMeter}{42}{subsubsection.5.1.3}%
-\contentsline {subsubsection}{\numberline {5.1.4}Testing Infrastructure and Automation}{43}{subsubsection.5.1.4}%
-\contentsline {subsection}{\numberline {5.2}CI/CD Pipeline}{43}{subsection.5.2}%
-\contentsline {subsubsection}{\numberline {5.2.1}Pipeline Architecture and Workflow Organization}{44}{subsubsection.5.2.1}%
-\contentsline {subsubsection}{\numberline {5.2.2}Frontend Pipeline}{44}{subsubsection.5.2.2}%
-\contentsline {subsubsection}{\numberline {5.2.3}Java Backend Pipeline - Authentication Service}{45}{subsubsection.5.2.3}%
-\contentsline {subsubsection}{\numberline {5.2.4}Python Backend Pipeline - Business Logic Service}{46}{subsubsection.5.2.4}%
-\contentsline {subsubsection}{\numberline {5.2.5}Containerization with Docker}{47}{subsubsection.5.2.5}%
-\contentsline {paragraph}{Python Backend Dockerfile}{47}{section*.39}%
-\contentsline {paragraph}{Java Backend Dockerfile}{47}{section*.40}%
-\contentsline {paragraph}{Frontend Dockerfile}{48}{section*.41}%
-\contentsline {subsubsection}{\numberline {5.2.6}Container Orchestration with Docker Compose}{48}{subsubsection.5.2.6}%
-\contentsline {subsubsection}{\numberline {5.2.7}Pipeline Performance and Reliability Metrics}{49}{subsubsection.5.2.7}%
-\contentsline {subsubsection}{\numberline {5.2.8}Continuous Deployment with Jenkins}{51}{subsubsection.5.2.8}%
-\contentsline {subsubsection}{\numberline {5.2.9}Benefits and Impact of CI/CD Implementation}{51}{subsubsection.5.2.9}%
-\contentsline {subsection}{\numberline {5.3}Code Quality and Standards}{52}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}Frontend Code Standards}{52}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Authentication Backend Code Standards}{53}{subsubsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.3}Business logic Backend Code Standards}{54}{subsubsection.5.3.3}%
-\contentsline {subsubsection}{\numberline {5.3.4}Documentation Standards and API Specification}{55}{subsubsection.5.3.4}%
-\contentsline {subsubsection}{\numberline {5.3.5}Automated Quality Gates and Enforcement}{56}{subsubsection.5.3.5}%
-\contentsline {subsubsection}{\numberline {5.3.6}Testing Standards and Coverage}{57}{subsubsection.5.3.6}%
-\contentsline {subsubsection}{\numberline {5.3.7}Impact on Development Workflow}{58}{subsubsection.5.3.7}%
-\contentsline {section}{\numberline {6}Tests Results and Discussion}{59}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Unit Tests}{59}{subsection.6.1}%
-\contentsline {subsubsection}{\numberline {6.1.1}Java Backend}{59}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}Python Backend}{59}{subsubsection.6.1.2}%
-\contentsline {subsubsection}{\numberline {6.1.3}General Overview}{60}{subsubsection.6.1.3}%
-\contentsline {subsection}{\numberline {6.2}End-to-End Tests with Cucumber}{60}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Testing Approach}{60}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Implemented Feature Files}{60}{subsubsection.6.2.2}%
-\contentsline {subsubsection}{\numberline {6.2.3}Execution Summary}{61}{subsubsection.6.2.3}%
-\contentsline {subsection}{\numberline {6.3}System Performance Evaluation}{63}{subsection.6.3}%
-\contentsline {subsubsection}{\numberline {6.3.1}Stress Testing Scenario}{63}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}Test Plan Design with JMeter}{63}{subsubsection.6.3.2}%
-\contentsline {subsubsection}{\numberline {6.3.3}Stress Testing Results}{65}{subsubsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.4}Achievement of Objectives}{67}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Conclusions}{68}{section.7}%
+\contentsline {subsubsection}{\numberline {3.2.1}Scrum Methodology Overview}{8}{subsubsection.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2}Scrum Roles and Team Organization}{9}{subsubsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.3}Product Backlog Management}{10}{subsubsection.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.4}Sprint Planning and Execution}{11}{subsubsection.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.5}Task Management and Progress Tracking}{12}{subsubsection.3.2.5}%
+\contentsline {subsection}{\numberline {3.3}System Analysis and Design}{13}{subsection.3.3}%
+\contentsline {section}{\numberline {4}System Design and Architecture}{14}{section.4}%
+\contentsline {subsection}{\numberline {4.1}User Stories and Requirements}{14}{subsection.4.1}%
+\contentsline {subsubsection}{\numberline {4.1.1}Administrative User Stories}{15}{subsubsection.4.1.1}%
+\contentsline {paragraph}{US\_CourseFinder\_01: Registration of New Professors}{15}{section*.11}%
+\contentsline {paragraph}{US\_CourseFinder\_02: Registration of New Courses}{16}{section*.12}%
+\contentsline {paragraph}{US\_CourseFinder\_03: Link Professor to One or Multiple Courses}{17}{section*.13}%
+\contentsline {subsubsection}{\numberline {4.1.2}End-User Functionality}{17}{subsubsection.4.1.2}%
+\contentsline {paragraph}{US\_CourseFinder\_04: Search Courses by Professor and Professors by Course}{18}{section*.14}%
+\contentsline {paragraph}{US\_CourseFinder\_05: Home Page and Access Flow for Administrator and User}{18}{section*.15}%
+\contentsline {subsubsection}{\numberline {4.1.3}Story Management and Traceability}{19}{subsubsection.4.1.3}%
+\contentsline {subsection}{\numberline {4.2}Web User Interface}{20}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Architecture Overview}{27}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Data Model and Database Schema}{29}{subsection.4.4}%
+\contentsline {subsubsection}{\numberline {4.4.1}Domain Entities and Relationships}{29}{subsubsection.4.4.1}%
+\contentsline {subsubsection}{\numberline {4.4.2}Business Logic Database}{30}{subsubsection.4.4.2}%
+\contentsline {subsubsection}{\numberline {4.4.3}Authentication Database}{31}{subsubsection.4.4.3}%
+\contentsline {subsubsection}{\numberline {4.4.4}Schema Design Rationale}{32}{subsubsection.4.4.4}%
+\contentsline {subsection}{\numberline {4.5}API Endpoints and Contracts}{33}{subsection.4.5}%
+\contentsline {subsubsection}{\numberline {4.5.1}Authentication Service API}{33}{subsubsection.4.5.1}%
+\contentsline {paragraph}{Login Endpoint}{33}{section*.20}%
+\contentsline {subsubsection}{\numberline {4.5.2}Business Logic Service API}{35}{subsubsection.4.5.2}%
+\contentsline {paragraph}{Professor Endpoints}{36}{section*.25}%
+\contentsline {paragraph}{Course Endpoints}{37}{section*.27}%
+\contentsline {paragraph}{Assignment Endpoints}{38}{section*.29}%
+\contentsline {paragraph}{Search Endpoints}{39}{section*.31}%
+\contentsline {subsubsection}{\numberline {4.5.3}API Design Principles and Error Handling}{40}{subsubsection.4.5.3}%
+\contentsline {subsection}{\numberline {4.6}Deployment View}{42}{subsection.4.6}%
+\contentsline {section}{\numberline {5}Implementation and Quality Assurance}{43}{section.5}%
+\contentsline {subsection}{\numberline {5.1}Testing Strategy}{43}{subsection.5.1}%
+\contentsline {subsubsection}{\numberline {5.1.1}Unit Testing}{43}{subsubsection.5.1.1}%
+\contentsline {paragraph}{Python Backend - Business Logic Service}{43}{section*.34}%
+\contentsline {paragraph}{Java Backend - Authentication Service}{44}{section*.36}%
+\contentsline {subsubsection}{\numberline {5.1.2}Acceptance Testing with Cucumber}{45}{subsubsection.5.1.2}%
+\contentsline {paragraph}{Feature: Registration of New Teachers (US\_CF\_01)}{45}{section*.37}%
+\contentsline {paragraph}{Feature: Registration of New Subjects (US\_CF\_02)}{46}{section*.38}%
+\contentsline {paragraph}{Feature: Assignment of Professors to Courses (US\_CF\_03)}{46}{section*.39}%
+\contentsline {paragraph}{Feature: Search Courses by Professor and Professors by Course (US\_CF\_04)}{46}{section*.40}%
+\contentsline {subsubsection}{\numberline {5.1.3}Stress Testing with JMeter}{47}{subsubsection.5.1.3}%
+\contentsline {subsubsection}{\numberline {5.1.4}Testing Infrastructure and Automation}{48}{subsubsection.5.1.4}%
+\contentsline {subsection}{\numberline {5.2}CI/CD Pipeline}{48}{subsection.5.2}%
+\contentsline {subsubsection}{\numberline {5.2.1}Pipeline Architecture and Workflow Organization}{49}{subsubsection.5.2.1}%
+\contentsline {subsubsection}{\numberline {5.2.2}Frontend Pipeline}{49}{subsubsection.5.2.2}%
+\contentsline {subsubsection}{\numberline {5.2.3}Java Backend Pipeline - Authentication Service}{50}{subsubsection.5.2.3}%
+\contentsline {subsubsection}{\numberline {5.2.4}Python Backend Pipeline - Business Logic Service}{51}{subsubsection.5.2.4}%
+\contentsline {subsubsection}{\numberline {5.2.5}Containerization with Docker}{52}{subsubsection.5.2.5}%
+\contentsline {paragraph}{Python Backend Dockerfile}{52}{section*.45}%
+\contentsline {paragraph}{Java Backend Dockerfile}{52}{section*.46}%
+\contentsline {paragraph}{Frontend Dockerfile}{53}{section*.47}%
+\contentsline {subsubsection}{\numberline {5.2.6}Container Orchestration with Docker Compose}{53}{subsubsection.5.2.6}%
+\contentsline {subsubsection}{\numberline {5.2.7}Pipeline Performance and Reliability Metrics}{54}{subsubsection.5.2.7}%
+\contentsline {subsubsection}{\numberline {5.2.8}Continuous Deployment with Jenkins}{56}{subsubsection.5.2.8}%
+\contentsline {subsubsection}{\numberline {5.2.9}Benefits and Impact of CI/CD Implementation}{56}{subsubsection.5.2.9}%
+\contentsline {subsection}{\numberline {5.3}Code Quality and Standards}{57}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Frontend Code Standards}{57}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Authentication Backend Code Standards}{58}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Business logic Backend Code Standards}{59}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Documentation Standards and API Specification}{60}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Automated Quality Gates and Enforcement}{61}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}Testing Standards and Coverage}{62}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.3.7}Impact on Development Workflow}{63}{subsubsection.5.3.7}%
+\contentsline {section}{\numberline {6}Tests Results and Discussion}{64}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Unit Tests}{64}{subsection.6.1}%
+\contentsline {subsubsection}{\numberline {6.1.1}Java Backend}{64}{subsubsection.6.1.1}%
+\contentsline {subsubsection}{\numberline {6.1.2}Python Backend}{64}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.3}General Overview}{65}{subsubsection.6.1.3}%
+\contentsline {subsection}{\numberline {6.2}End-to-End Tests with Cucumber}{65}{subsection.6.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Testing Approach}{65}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Implemented Feature Files}{65}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.3}Execution Summary}{66}{subsubsection.6.2.3}%
+\contentsline {subsection}{\numberline {6.3}System Performance Evaluation}{68}{subsection.6.3}%
+\contentsline {subsubsection}{\numberline {6.3.1}Stress Testing Scenario}{68}{subsubsection.6.3.1}%
+\contentsline {subsubsection}{\numberline {6.3.2}Test Plan Design with JMeter}{68}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.3}Stress Testing Results}{70}{subsubsection.6.3.3}%
+\contentsline {subsection}{\numberline {6.4}Achievement of Objectives}{72}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Conclusions}{73}{section.7}%

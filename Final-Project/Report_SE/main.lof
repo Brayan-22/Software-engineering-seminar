@@ -1,34 +1,40 @@
 \babel@toc {english}{}\relax 
-\contentsline {figure}{\numberline {1}{\ignorespaces Web User Interface (v1.0)}}{16}{figure.1}%
-\contentsline {figure}{\numberline {2}{\ignorespaces Web User Interface (v1.0)}}{17}{figure.2}%
-\contentsline {figure}{\numberline {3}{\ignorespaces Web User Interface (v1.0)}}{18}{figure.3}%
-\contentsline {figure}{\numberline {4}{\ignorespaces Web User Interface (v1.0)}}{19}{figure.4}%
-\contentsline {figure}{\numberline {5}{\ignorespaces Web User Interface (v1.0)}}{20}{figure.5}%
-\contentsline {figure}{\numberline {6}{\ignorespaces Web User Interface (v1.0)}}{21}{figure.6}%
-\contentsline {figure}{\numberline {7}{\ignorespaces Architecture Diagram (v1.0).}}{23}{figure.caption.10}%
-\contentsline {figure}{\numberline {8}{\ignorespaces Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}}{27}{figure.caption.13}%
-\contentsline {figure}{\numberline {9}{\ignorespaces Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas.}}{29}{figure.caption.15}%
-\contentsline {figure}{\numberline {10}{\ignorespaces Login endpoint request example showing the JSON payload structure with username and password fields.}}{29}{figure.caption.16}%
-\contentsline {figure}{\numberline {11}{\ignorespaces Successful login response showing the generated JWT token that must be used for authenticated requests.}}{30}{figure.caption.17}%
-\contentsline {figure}{\numberline {12}{\ignorespaces Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments).}}{31}{figure.caption.18}%
-\contentsline {figure}{\numberline {13}{\ignorespaces Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format.}}{32}{figure.caption.20}%
-\contentsline {figure}{\numberline {14}{\ignorespaces Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements.}}{33}{figure.caption.22}%
-\contentsline {figure}{\numberline {15}{\ignorespaces Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details.}}{34}{figure.caption.24}%
-\contentsline {figure}{\numberline {16}{\ignorespaces Deployment diagram (v1.0).}}{37}{figure.caption.27}%
-\contentsline {figure}{\numberline {17}{\ignorespaces Frontend CI workflow performance metrics showing average run time of 35 seconds and 67\% job failure rate primarily due to linting violations caught during development.}}{45}{figure.caption.37}%
-\contentsline {figure}{\numberline {18}{\ignorespaces Java backend CI workflow performance metrics showing average run time of 1 minute 11 seconds and 67\% job failure rate reflecting test failures during development.}}{46}{figure.caption.38}%
-\contentsline {figure}{\numberline {19}{\ignorespaces GitHub Actions usage metrics showing 16 total minutes consumed and 13 job runs across all workflows in the current month.}}{49}{figure.caption.42}%
-\contentsline {figure}{\numberline {20}{\ignorespaces Pipeline performance metrics showing 42-second average runtime, 2-second queue time, 31\% failure rate, and 4 minutes consumed by failed jobs.}}{50}{figure.caption.43}%
-\contentsline {figure}{\numberline {21}{\ignorespaces Recent workflow runs showing successful and failed executions with duration times ranging from 1 minute 8 seconds to 1 minute 19 seconds.}}{50}{figure.caption.44}%
-\contentsline {figure}{\numberline {22}{\ignorespaces Pull request checks showing parallel workflow execution with 2 failing checks (Frontend), 1 skipped check (Frontend Build), and 2 successful checks (Java Backend, Python Backend).}}{51}{figure.caption.45}%
-\contentsline {figure}{\numberline {23}{\ignorespaces Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}}{54}{figure.caption.46}%
-\contentsline {figure}{\numberline {24}{\ignorespaces Unit test results for the authentication backend.}}{59}{figure.caption.48}%
-\contentsline {figure}{\numberline {25}{\ignorespaces Unit test results for the business logic backend.}}{60}{figure.caption.49}%
-\contentsline {figure}{\numberline {26}{\ignorespaces Execution results for \texttt {courses.feature}}}{61}{figure.caption.50}%
-\contentsline {figure}{\numberline {27}{\ignorespaces Execution results for \texttt {professors.feature}}}{62}{figure.caption.51}%
-\contentsline {figure}{\numberline {28}{\ignorespaces Execution results for \texttt {assignments.feature}}}{62}{figure.caption.52}%
-\contentsline {figure}{\numberline {29}{\ignorespaces Execution results for \texttt {search.feature}}}{62}{figure.caption.53}%
-\contentsline {figure}{\numberline {30}{\ignorespaces JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}}{64}{figure.caption.54}%
-\contentsline {figure}{\numberline {31}{\ignorespaces Average response time recorded across all tested endpoints under peak load.}}{65}{figure.caption.55}%
-\contentsline {figure}{\numberline {32}{\ignorespaces Minimum and maximum response times observed during the stress test.}}{66}{figure.caption.56}%
-\contentsline {figure}{\numberline {33}{\ignorespaces Throughput measured during the execution of the stress test.}}{67}{figure.caption.57}%
+\contentsline {figure}{\numberline {1}{\ignorespaces Scrum overview and sprint structure in Taiga}}{9}{figure.caption.4}%
+\contentsline {figure}{\numberline {2}{\ignorespaces Team organization and role distribution in Taiga}}{10}{figure.caption.5}%
+\contentsline {figure}{\numberline {3}{\ignorespaces Product backlog management in Taiga}}{11}{figure.caption.6}%
+\contentsline {figure}{\numberline {4}{\ignorespaces Sprint planning and execution in Taiga}}{12}{figure.caption.7}%
+\contentsline {figure}{\numberline {5}{\ignorespaces Sprint planning and execution in Taiga}}{12}{figure.caption.8}%
+\contentsline {figure}{\numberline {6}{\ignorespaces Task management and progress tracking in Taiga}}{13}{figure.caption.9}%
+\contentsline {figure}{\numberline {7}{\ignorespaces Web User Interface (v1.0)}}{21}{figure.7}%
+\contentsline {figure}{\numberline {8}{\ignorespaces Web User Interface (v1.0)}}{22}{figure.8}%
+\contentsline {figure}{\numberline {9}{\ignorespaces Web User Interface (v1.0)}}{23}{figure.9}%
+\contentsline {figure}{\numberline {10}{\ignorespaces Web User Interface (v1.0)}}{24}{figure.10}%
+\contentsline {figure}{\numberline {11}{\ignorespaces Web User Interface (v1.0)}}{25}{figure.11}%
+\contentsline {figure}{\numberline {12}{\ignorespaces Web User Interface (v1.0)}}{26}{figure.12}%
+\contentsline {figure}{\numberline {13}{\ignorespaces Architecture Diagram (v1.0).}}{28}{figure.caption.16}%
+\contentsline {figure}{\numberline {14}{\ignorespaces Class diagram showing domain entities, repositories, services, and controllers across all architectural layers.}}{32}{figure.caption.19}%
+\contentsline {figure}{\numberline {15}{\ignorespaces Swagger UI documentation for the authentication service showing the login endpoint specification with request/response schemas.}}{34}{figure.caption.21}%
+\contentsline {figure}{\numberline {16}{\ignorespaces Login endpoint request example showing the JSON payload structure with username and password fields.}}{34}{figure.caption.22}%
+\contentsline {figure}{\numberline {17}{\ignorespaces Successful login response showing the generated JWT token that must be used for authenticated requests.}}{35}{figure.caption.23}%
+\contentsline {figure}{\numberline {18}{\ignorespaces Swagger UI overview of the business logic service showing all CRUD endpoints organized by resource (professors, courses, assignments).}}{36}{figure.caption.24}%
+\contentsline {figure}{\numberline {19}{\ignorespaces Professor creation endpoint documentation showing request schema with required fields (name, email, specialty) and expected response format.}}{37}{figure.caption.26}%
+\contentsline {figure}{\numberline {20}{\ignorespaces Course CRUD endpoints documentation showing all available operations (POST, GET, PUT, DELETE) with their respective paths and authentication requirements.}}{38}{figure.caption.28}%
+\contentsline {figure}{\numberline {21}{\ignorespaces Assignment creation endpoint showing request schema with professor\_id, course\_id, and status fields, along with the nested response structure including professor and course details.}}{39}{figure.caption.30}%
+\contentsline {figure}{\numberline {22}{\ignorespaces Deployment diagram (v1.0).}}{42}{figure.caption.33}%
+\contentsline {figure}{\numberline {23}{\ignorespaces Frontend CI workflow performance metrics showing average run time of 35 seconds and 67\% job failure rate primarily due to linting violations caught during development.}}{50}{figure.caption.43}%
+\contentsline {figure}{\numberline {24}{\ignorespaces Java backend CI workflow performance metrics showing average run time of 1 minute 11 seconds and 67\% job failure rate reflecting test failures during development.}}{51}{figure.caption.44}%
+\contentsline {figure}{\numberline {25}{\ignorespaces GitHub Actions usage metrics showing 16 total minutes consumed and 13 job runs across all workflows in the current month.}}{54}{figure.caption.48}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Pipeline performance metrics showing 42-second average runtime, 2-second queue time, 31\% failure rate, and 4 minutes consumed by failed jobs.}}{55}{figure.caption.49}%
+\contentsline {figure}{\numberline {27}{\ignorespaces Recent workflow runs showing successful and failed executions with duration times ranging from 1 minute 8 seconds to 1 minute 19 seconds.}}{55}{figure.caption.50}%
+\contentsline {figure}{\numberline {28}{\ignorespaces Pull request checks showing parallel workflow execution with 2 failing checks (Frontend), 1 skipped check (Frontend Build), and 2 successful checks (Java Backend, Python Backend).}}{56}{figure.caption.51}%
+\contentsline {figure}{\numberline {29}{\ignorespaces Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}}{59}{figure.caption.52}%
+\contentsline {figure}{\numberline {30}{\ignorespaces Unit test results for the authentication backend.}}{64}{figure.caption.54}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Unit test results for the business logic backend.}}{65}{figure.caption.55}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Execution results for \texttt {courses.feature}}}{66}{figure.caption.56}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Execution results for \texttt {professors.feature}}}{67}{figure.caption.57}%
+\contentsline {figure}{\numberline {34}{\ignorespaces Execution results for \texttt {assignments.feature}}}{67}{figure.caption.58}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Execution results for \texttt {search.feature}}}{67}{figure.caption.59}%
+\contentsline {figure}{\numberline {36}{\ignorespaces JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}}{69}{figure.caption.60}%
+\contentsline {figure}{\numberline {37}{\ignorespaces Average response time recorded across all tested endpoints under peak load.}}{70}{figure.caption.61}%
+\contentsline {figure}{\numberline {38}{\ignorespaces Minimum and maximum response times observed during the stress test.}}{71}{figure.caption.62}%
+\contentsline {figure}{\numberline {39}{\ignorespaces Throughput measured during the execution of the stress test.}}{72}{figure.caption.63}%
