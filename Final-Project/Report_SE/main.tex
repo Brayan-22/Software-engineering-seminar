@@ -970,21 +970,154 @@ The outcomes of Workshops~1 and~2 have established a solid analytical foundation
 
 \subsection{Testing Results} 
 % Unit test results, integration test results,
-% acceptance test scenarios, stress test metrics
+
+\subsubsection{Unit tests}
+
+
+\subsubsection{End-to-End Tests with Cucumber}
+
+\paragraph{Purpose and Rationale}
+End-to-end testing was selected as the primary method for validating the system from the perspective of a real user. These tests operate as acceptance tests, ensuring that the application behaves correctly across full workflows rather than isolated components. By combining Cucumber (for behavior-driven specification) with Playwright (for browser automation), the team validated both functional correctness and consistency of the user experience. This approach provides traceability from requirements to executable scenarios, improving confidence in the final product’s readiness.
+
+\paragraph{Testing Approach}
+The E2E test suite was structured using Gherkin-based feature files, where each scenario describes user actions and expected system responses. The test plan focused on the core administrative operations of the platform: managing courses, handling professor data, creating assignments, and using the search functionality. For each feature, a dedicated step-definition file was implemented, linking the natural-language steps to automated Playwright interactions. This structure ensures clarity, maintainability, and full coverage of critical workflows.
+
+\paragraph{Implemented Feature Files}
+The following feature files were created to cover the main functional areas of the system:
+
+\begin{itemize}
+    \item \textbf{courses.feature}: Validates the creation, listing and ensures that administrators can manage academic offerings correctly.
+    \item \textbf{professors.feature}: Covers workflows related to professor registration, updates, and data consistency.
+    \item \textbf{assignments.feature}: Tests the creation and management of assignment entities, including validation of required fields and navigation flows.
+    \item \textbf{search.feature}: Ensures that the global search functionality retrieves accurate results and handles edge cases properly.
+\end{itemize}
+
+Each feature file contains multiple scenarios using the \texttt{Given–When–Then} notation, capturing typical and boundary interactions an administrator would perform.
+
+\paragraph{Execution Summary}
+All scenarios across the four feature files were executed using Playwright’s automated browser environment. The system responded consistently according to the acceptance criteria, and all tests completed without failures. The following figures summarize the execution output for each feature:
+
+\begin{itemize}
+    \item \textbf{Courses Feature}  
+    The test suite validated course creation and listing flows.  
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/e2e_tests_results/courses-results.png}
+        \caption{Execution results for \texttt{courses.feature}}
+    \end{figure}
+
+    \item \textbf{Professors Feature}  
+    Scenarios confirmed consistent behavior for professor registration.  
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/e2e_tests_results/professors-results.png}
+        \caption{Execution results for \texttt{professors.feature}}
+    \end{figure}
+
+    \item \textbf{Assignments Feature}  
+    Tests validated assignment creation, field validation, and navigation.  
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/e2e_tests_results/assignments-results.png}
+        \caption{Execution results for \texttt{assignments.feature}}
+    \end{figure}
+
+    \item \textbf{Search Feature}  
+    The scenarios confirmed correct retrieval of search results and handling of edge cases.  
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/e2e_tests_results/search-results.png}
+        \caption{Execution results for \texttt{search.feature}}
+    \end{figure}
+\end{itemize}
+
+The successful execution of all end-to-end scenarios demonstrates that the system delivers a consistent and reliable user experience across its core administrative workflows. By validating complete interactions rather than isolated components, these acceptance tests confirm that the platform behaves as expected from the client’s perspective. The coverage achieved through the implemented feature files strengthens confidence in the product’s functional quality and ensures that the delivered solution aligns with the operational requirements and expectations defined for the final system.
+
 
 \subsection{System Performance Evaluation} 
 % Response times, throughput, scalability analysis
 
+\subsubsection{API Stress Tests}
+The system consists of two distinct backends: one dedicated solely to authentication and the other handling the core business logic, including courses, professors, assignments, and search functionalities. The authentication backend is designed to handle a minimal load, as it is only invoked during login attempts, typically by a single administrator at any given time. Consequently, this backend does not require extensive stress testing due to its limited usage.
+
+On the other hand, the business logic backend plays a crucial role in the day-to-day operation of the system. It handles high-frequency requests related to courses, professor data, assignment management, and search functionality. Given the complexity and volume of requests this backend must manage, it is critical to ensure that it can scale effectively under heavy load.
+
+\subsubsection{Stress Testing Scenario}
+To simulate real-world conditions and test the system's limits, we envisioned a scenario in which the backend of the business logic must support a large volume of users, similar to a university during peak registration periods. During such times, there is typically a surge in activity as students and faculty access the system simultaneously.
+
+For our stress test, we assumed a peak load of 15,000 concurrent users accessing the platform during the enrollment period. These users would be engaging in various activities such as enrolling in courses, viewing assignments, and performing searches. This scenario was chosen because it reflects the maximum expected usage of the system and ensures that the backend can withstand high traffic levels without degrading performance.
+
+\subsubsection{Test Plan Design with JMeter}
+The stress test was implemented using Apache JMeter, structured around two separate Thread Groups to reflect the distinct workloads of the system’s backends.
+
+The first Thread Group focused on the administrator workflow, which represents a low-load scenario. Although only one administrator is expected to use the system at a time, the group was configured with up to 10 virtual users to introduce a small operational margin. This group executed a sequence of requests involving both backends: an authentication request to the login service, followed by course listing, course creation, professor retrieval, professor creation, assignment listing, and assignment creation on the business logic backend. This setup ensured that all administrator actions were validated under a controlled but slightly elevated load.
+
+The second Thread Group was dedicated exclusively to stress-testing the search endpoint of the business logic backend. This component is expected to experience the highest demand during peak usage periods. To simulate such conditions, the group was configured with 15,000 virtual users issuing search requests concurrently. This design allowed us to evaluate the system’s behavior under extreme traffic and identify performance constraints specific to the search functionality.
+
+Together, these two Thread Groups formed a comprehensive test plan that captured both typical administrative operations and high-intensity user activity on critical endpoints.
+
+\begin{figure}[H]
+	\centering
+	\includegraphics[width=0.5\textwidth]{stress_tests_results/tests-plan.png}
+	\caption{JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}
+\end{figure}
+
+\paragraph{Stress Testing the Business Logic Backend}
+The test plan focused on simulating 15,000 simultaneous users performing various operations on the business logic backend. These included submitting course enrollments, querying professor data, creating assignments, and executing search queries. Performance metrics such as response time, throughput, and failure rates were closely monitored to identify any potential bottlenecks or areas of improvement.
+
+
+The results of these tests provide valuable insights into how the system behaves under extreme conditions and highlight areas where optimization may be needed.
+
+\subsubsection{Stress Testing Results}
+The stress test produced three key performance metrics: average response times, minimum and maximum response times, and overall throughput. These metrics allow us to evaluate how the system behaved under the simulated peak load of 15{,}000 concurrent users.
+
+During the execution, the search endpoint showed a significantly high average response time of approximately 23 seconds. A similar delay was also observed in the login request, despite serving a much smaller load. This behavior is likely due to both backends being deployed on the same local machine, which was limited to 8 GB of RAM and a 4–core processor. Under these hardware constraints, resource contention between the services can lead to increased latency. The remaining operations from the business logic backend exhibited variable performance but followed the same pattern of degradation as the load increased.
+
+The following figures summarize the results obtained from the test runs:
+\subparagraph{Average Response Time}
+The average response time for the search endpoint showed a significant increase, reaching approximately 23 seconds under peak load. A similar delay was observed in login requests, likely due to both backends being hosted on the same machine with limited hardware resources (8 GB RAM and 4 CPU cores). Other operations from the business logic backend also exhibited elevated response times, though none as drastic as the search endpoint.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{media/stress_tests_results/average.png}
+    \caption{Average response time recorded across all tested endpoints under peak load.}
+\end{figure}
+\subparagraph{Minimum and Maximum Response Times}
+The minimum and maximum response times displayed the expected variance under heavy stress. Search requests showed the highest spread, with some responses completing relatively fast at low concurrency levels while others spiked significantly as the system became saturated. The remaining operations followed a more stable pattern but still showed noticeable delays as load increased.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{media/stress_tests_results/minmax.png}
+    \caption{Minimum and maximum response times observed during the stress test.}
+\end{figure}
+\subparagraph{Throughput}
+Throughput analysis revealed that the search endpoint reached a maximum processing capacity of approximately 240 requests per second before performance degraded. All other operations remained far below this threshold, averaging under 1 request per second, which aligns with their lower expected usage and the system’s resource limitations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{media/stress_tests_results/throughput.png}
+    \caption{Throughput measured during the execution of the stress test.}
+\end{figure}
+
+The stress test results reveal significant performance limitations in the current deployment environment, particularly in scenarios that resemble real peak usage. The most critical finding is the excessive average response time for the search endpoint, which reached approximately 23 seconds under load. In a real university enrollment period, such delays would be unacceptable, as users expect the system to respond quickly and consistently while handling thousands of simultaneous operations. The low throughput for most endpoints—especially those outside the search functionality—further indicates that the system is not prepared to operate efficiently under high concurrency conditions.
+
+These findings must be interpreted in the context of the deployment infrastructure used during testing. Both backends were hosted on the same machine with only 8 GB of RAM and 4 CPU cores, creating an unavoidable bottleneck that affected all measurements. While the architecture of the system may still require optimization, the hardware limitations heavily constrained its ability to scale and respond to concurrent requests. Therefore, the results should not be viewed as an absolute measure of backend capability, but rather as evidence of the need for stronger infrastructure, load distribution, and possibly architectural adjustments before the system can meet real-world demand during high-traffic academic periods.
 \subsection{Achievement of Objectives}
 % Comparación con objetivos iniciales, qué se logró
 
-\subsection{Limitations and Lessons Learned}
+\section{Limitations and Lessons Learned}
 % Limitaciones encontradas, aprendizajes del equipo
 
 % ======================================================================
 \section{Conclusions}
 \label{sec:conclusions}
-This first report consolidates the analytical and design foundations of the project, demonstrating coherent progress from requirement elicitation to system architecture definition. The established artifacts and planning ensure a clear path toward implementation, testing, and integration in the following workshop stages.
+Based on the comprehensive documentation provided, here are the concluding paragraphs in English, summarizing the work, results, achievements, and future suggestions for the "Course Finder" web system project:
+
+This project successfully designed and implemented "Course Finder," a web-based system aimed at centralizing and streamlining the search and management of academic courses and instructor relationships. The work effectively addressed the initial problem of fragmented course information by delivering a consolidated platform with clear data organization, efficient bidirectional search functionality, and robust administrative controls. Guided by Scrum methodology and supported by a microservices architecture—separating authentication and business logic services—the development process was both structured and agile. Key achievements include the full specification of user stories, the creation of a modular and scalable system architecture, the implementation of a complete CI/CD pipeline with Docker and GitHub Actions, and the successful execution of comprehensive acceptance and stress testing. The resulting system provides students, professors, and administrators with a unified, user-friendly interface that simplifies course discovery, planning, and management, directly tackling the inefficiencies identified at the project's outset.
+
+The success of this work is evident in its fulfillment of the core objectives: it delivers a reliable web system that meets stakeholder needs, establishes a clear implementation roadmap, and synthesizes the problem context into a consistent technical baseline. The system's functionality was validated through passing end-to-end tests for all critical user stories, confirming that features like professor and course registration, assignment linking, and bidirectional search operate as intended. While stress testing under constrained hardware revealed performance limitations—particularly for the search endpoint under high concurrency—it successfully validated the architecture's soundness and pinpointed specific areas for infrastructure scaling. The project thus not only provides a functional solution to the central problem but also demonstrates professional-grade software engineering practices, including automated testing, containerization, and continuous integration.
+
+For future work, several avenues for enhancement and investigation remain. The most immediate priority is infrastructure scaling, such as deploying services on separate, more powerful machines or using cloud-based auto-scaling groups to address the performance bottlenecks identified during stress testing. Additionally, the system could be extended with advanced features like student enrollment management, personalized dashboards, calendar integration, and more granular scheduling capabilities. Further optimization of database queries and API response caching would also improve performance under load. Finally, a longitudinal study of the system's adoption and impact in a real academic setting would provide valuable insights into its practical utility and uncover new requirements for iterative improvement.
 
 
 \section*{Glossary}
