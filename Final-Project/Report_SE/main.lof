@@ -21,3 +21,4 @@
 \contentsline {figure}{\numberline {20}{\ignorespaces Pipeline performance metrics showing 42-second average runtime, 2-second queue time, 31\% failure rate, and 4 minutes consumed by failed jobs.}}{49}{figure.caption.43}%
 \contentsline {figure}{\numberline {21}{\ignorespaces Recent workflow runs showing successful and failed executions with duration times ranging from 1 minute 8 seconds to 1 minute 19 seconds.}}{49}{figure.caption.44}%
 \contentsline {figure}{\numberline {22}{\ignorespaces Pull request checks showing parallel workflow execution with 2 failing checks (Frontend), 1 skipped check (Frontend Build), and 2 successful checks (Java Backend, Python Backend).}}{50}{figure.caption.45}%
+\contentsline {figure}{\numberline {23}{\ignorespaces Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}}{53}{figure.caption.46}%

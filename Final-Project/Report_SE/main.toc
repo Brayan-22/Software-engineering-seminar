@@ -61,9 +61,16 @@
 \contentsline {subsubsection}{\numberline {5.2.8}Continuous Deployment with Jenkins}{50}{subsubsection.5.2.8}%
 \contentsline {subsubsection}{\numberline {5.2.9}Benefits and Impact of CI/CD Implementation}{50}{subsubsection.5.2.9}%
 \contentsline {subsection}{\numberline {5.3}Code Quality and Standards}{51}{subsection.5.3}%
-\contentsline {section}{\numberline {6}Results and Discussion}{51}{section.6}%
-\contentsline {subsection}{\numberline {6.1}Testing Results}{52}{subsection.6.1}%
-\contentsline {subsection}{\numberline {6.2}System Performance Evaluation}{52}{subsection.6.2}%
-\contentsline {subsection}{\numberline {6.3}Achievement of Objectives}{52}{subsection.6.3}%
-\contentsline {subsection}{\numberline {6.4}Limitations and Lessons Learned}{52}{subsection.6.4}%
-\contentsline {section}{\numberline {7}Conclusions}{52}{section.7}%
+\contentsline {subsubsection}{\numberline {5.3.1}Frontend Code Standards}{51}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Authentication Backend Code Standards}{52}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Business logic Backend Code Standards}{53}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Documentation Standards and API Specification}{54}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Automated Quality Gates and Enforcement}{55}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}Testing Standards and Coverage}{56}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.3.7}Impact on Development Workflow}{57}{subsubsection.5.3.7}%
+\contentsline {section}{\numberline {6}Results and Discussion}{58}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Testing Results}{58}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}System Performance Evaluation}{58}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Achievement of Objectives}{58}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Limitations and Lessons Learned}{58}{subsection.6.4}%
+\contentsline {section}{\numberline {7}Conclusions}{58}{section.7}%

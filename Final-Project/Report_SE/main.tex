@@ -22,6 +22,9 @@
 \usepackage{enumitem}
 \usepackage{titling}
 
+% ==============================
+\graphicspath{{media/}}
+% ==============================
 
 % ==== HYPERREF LAST ====
 \usepackage{hyperref}
@@ -37,7 +40,7 @@
 
 % Custom subtitle using titling
 \pretitle{\begin{center}\Large\bfseries}
-	\posttitle{\par\vspace{0.5em}\large\itshape First Report\end{center}\vspace{1em}}
+	\posttitle{\par\vspace{0.5em}\large\itshape Final Report\end{center}\vspace{1em}}
 
 
 % ==== TITLE ====
@@ -761,7 +764,7 @@ Each service includes a multi-stage Dockerfile optimizing for image size, build 
 
 \paragraph{Python Backend Dockerfile}
 
-The Python backend uses a two-stage build process based on \texttt{python:3.11-slim}. The builder stage installs Poetry, system build dependencies (gcc, libpq-dev), and project dependencies in a virtual environment. Poetry's configuration creates the virtual environment within the project directory ((\nolinkurl{POETRY_VIRTUALENVS_IN_PROJECT=1})), simplifying the copy to the runtime stage.\newline
+The Python backend uses a two-stage build process based on \texttt{python:3.11-slim}. The builder stage installs Poetry, system build dependencies (gcc, libpq-dev), and project dependencies in a virtual environment. Poetry's configuration creates the virtual environment within the project directory (\nolinkurl{POETRY_VIRTUALENVS_IN_PROJECT=1}), simplifying the copy to the runtime stage.\newline
 
 The runtime stage uses a fresh \texttt{python:3.11-slim} base, copies only the virtual environment from the builder (avoiding Poetry and build tools), installs runtime system packages (libpq5 for PostgreSQL client), and creates a non-root user (\texttt{appuser}) for security. The \texttt{HEALTHCHECK} directive defines an endpoint for container orchestration to monitor service health. The final image exposes port 8000 and starts the application with Uvicorn ASGI server.
 
@@ -850,7 +853,114 @@ Containerization through Docker provides consistency across development, testing
 The CI/CD infrastructure serves as the foundation for continuous delivery practices, enabling the team to deploy changes rapidly and reliably. As the project matures, additional stages including integration testing, security scanning, and automated deployment to staging environments can be integrated into the existing pipeline structure without fundamental architectural changes.
 
 \subsection{Code Quality and Standards}
-% Code coverage, linting, code reviews
+
+Maintaining consistent code quality across multiple programming languages and frameworks requires well-defined standards, automated enforcement, and clear documentation. The Course Finder platform implements quality standards through configuration-driven linting tools, structured project organization, comprehensive documentation, and automated quality gates integrated into the CI/CD pipeline. These practices ensure code maintainability, facilitate team collaboration, and reduce technical debt accumulation.
+
+\subsubsection{Frontend Code Standards}
+
+The frontend application follows modern JavaScript and React best practices enforced through ESLint with TypeScript support. The linting configuration extends multiple recommended rule sets providing comprehensive coverage of potential issues.\newline
+
+The ESLint configuration (\texttt{eslint.config.js}) uses the new flat config format introduced in ESLint 9, defining rules through composable configuration objects. The configuration extends four base rule sets: \texttt{js.configs.recommended} for core JavaScript best practices, \texttt{tseslint.configs.recommended} for TypeScript-specific rules, \nolinkurl{reactHooks.configs['recommended-latest']}  for React Hooks usage patterns, and \nolinkurl{reactRefresh.configs.vite} for Vite-specific optimizations including Fast Refresh compatibility.\newline
+
+The language options specify ECMAScript 2020 features and browser globals, ensuring that the linter recognizes modern JavaScript syntax and browser-specific APIs without false positives. The configuration applies only to TypeScript files (\texttt{**/*.{ts,tsx}}), ignoring the \texttt{dist/} directory containing build artifacts.\newline
+
+Key enforced standards include proper React Hooks dependency arrays preventing stale closure bugs, exhaustive dependency declarations ensuring effects run when expected, component naming conventions for clarity and tooling support, proper TypeScript typing avoiding \texttt{any} types where possible, and unused variable detection preventing dead code accumulation. The ESLint check runs as a required stage in the CI pipeline, blocking merges when violations are detected.\newline
+
+The frontend follows a feature-based project structure organizing code by domain concern rather than technical layer. Components, hooks, services, and types related to a specific feature coexist in the same directory, improving cohesion and reducing coupling. Shared utilities and components reside in dedicated directories accessible across features. This organization pattern scales effectively as the application grows and facilitates code discovery for new team members.
+
+\subsubsection{Authentication Backend Code Standards}
+
+The Java authentication service follows conventional Spring Boot project structure with clear separation between technical layers. Figure~\ref{fig:java_project_structure} illustrates the package organization.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.35\textwidth]{java_project_structure.png}
+	\caption{Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}
+	\label{fig:java_project_structure}
+\end{figure}
+
+The layered package structure includes \texttt{config} for Spring configuration classes and beans, \texttt{controller} for REST API endpoints annotated with \texttt{@RestController}, \texttt{dto} (Data Transfer Objects) for request/response payloads, \texttt{entity} for JPA entities representing database tables, \texttt{repository} for Spring Data JPA repositories, \texttt{security} for authentication and authorization components including JWT utilities, and \texttt{service} for business logic implementation.\newline
+
+This organization follows Spring Boot conventions making the project structure immediately familiar to Java developers. Each package has a single, well-defined responsibility following the Single Responsibility Principle. Dependencies flow from controllers through services to repositories, maintaining proper layering without circular dependencies.\newline
+
+Naming conventions follow Java standards: classes use PascalCase, methods and variables use camelCase, constants use UPPER\_SNAKE\_CASE, interfaces describe capabilities (e.g., \texttt{Repository}, \texttt{Service}). Package names use lowercase without underscores.\newline
+
+\subsubsection{Business logic Backend Code Standards}
+
+The Python business logic service follows FastAPI best practices with a modular architecture emphasizing clear separation of concerns. The project uses Poetry for dependency management and modern Python tooling for code quality enforcement.\newline
+
+The \texttt{pyproject.toml} file defines project metadata, dependencies, development tools, and quality tool configurations. Table~\ref{tab:python_tools} summarizes the development tools and their purposes.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{Python Backend Development Tools}
+	\label{tab:python_tools}
+	\begin{tabular}{@{}llp{6cm}@{}}
+		\toprule
+		\textbf{Tool} & \textbf{Version} & \textbf{Purpose} \\ 
+		\midrule
+		pytest & \textasciitilde7.4.3 & Unit testing framework with fixtures and parametrization \\
+		pytest-asyncio & \textasciitilde0.21.1 & Async test support for FastAPI endpoints \\
+		pytest-cov & \textasciitilde7.0.0 & Code coverage measurement and reporting \\
+		ruff & \textasciitilde0.1.0 & Fast Python linter and formatter (Rust-based) \\
+		mypy & \textasciitilde1.7.0 & Static type checker for gradual typing \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The project structure organizes code by technical concern with clear boundaries between layers. The \texttt{api/} package contains route definitions and dependencies, \texttt{core/} includes configuration and database setup, \texttt{models/} defines SQLAlchemy ORM models, \texttt{repositories/} implements data access patterns, \texttt{schemas/} contains Pydantic models for validation and serialization, \texttt{services/} encapsulates business logic, and \texttt{specifications/} implements the Specification pattern for complex queries. This architecture maintains clear dependency flow: routes depend on services, services depend on repositories, and repositories depend on models.\newline
+
+Ruff serves as the primary code quality tool, combining linting and formatting in a single fast tool written in Rust. The configuration targets Python 3.11 with a 100-character line length. Selected rule sets include \texttt{E} (pycodestyle errors), \texttt{F} (Pyflakes), \texttt{I} (isort import sorting), \texttt{N} (PEP 8 naming conventions), and \texttt{W} (pycodestyle warnings). The \texttt{E501} rule (line too long) is explicitly ignored, relying on Ruff's formatter to handle line length pragmatically.\newline
+
+Mypy provides optional static type checking with \texttt{disallow\_untyped\_defs: false}, allowing gradual adoption of type hints without blocking development. The \texttt{warn\_return\_any} and \texttt{warn\_unused\_configs} options catch common type-related issues without requiring complete type coverage. This pragmatic approach balances type safety benefits against the overhead of comprehensive type annotations.\newline
+
+Naming conventions follow PEP 8: modules use snake\_case, classes use PascalCase, functions and variables use snake\_case, constants use UPPER\_SNAKE\_CASE, and "internal" names use leading underscore. Async functions include \texttt{async} in their name when the async nature is not obvious from context, improving code readability.\newline
+
+\subsubsection{Documentation Standards and API Specification}
+
+Each service includes comprehensive README documentation following consistent structure across projects. The Python backend README (representative of the documentation standard) includes quick start instructions with dependency installation, environment configuration, database initialization, and application startup commands. The documentation specifies exact versions of required tools and provides platform-specific installation instructions.\newline
+
+API documentation leverages OpenAPI (formerly Swagger) specifications automatically generated by FastAPI and Spring Boot frameworks. The Python backend exposes interactive documentation at \texttt{/api/v1/docs} (Swagger UI) and \texttt{/api/v1/redoc} (ReDoc), providing developers with self-service API exploration without requiring separate documentation maintenance. The Java backend similarly exposes Swagger UI at \texttt{/swagger-ui/index.html}.\newline
+
+The OpenAPI specifications include endpoint descriptions, request/response schemas with validation rules, authentication requirements, example payloads, and error response formats. This machine-readable documentation enables automatic client generation, API testing tools, and developer onboarding without manual documentation updates. The specifications stay synchronized with code automatically as framework annotations and type hints directly generate the OpenAPI schemas.\newline
+
+Project structure documentation in README files includes ASCII tree diagrams showing directory organization and brief descriptions of each package's purpose. This high-level view helps developers navigate unfamiliar codebases and understand architectural boundaries. Each README also documents core endpoints by category (Professors, Courses, Assignments), providing quick reference for API capabilities.\newline
+
+Security documentation explains authentication mechanisms, JWT token requirements, public key configuration, and protected endpoint usage. Code examples demonstrate how to use authentication dependencies in new endpoints, reducing friction when extending the API. Environment variable documentation specifies required configuration with examples and security recommendations.
+
+\subsubsection{Automated Quality Gates and Enforcement}
+
+The CI/CD pipeline enforces quality standards through automated checks that must pass before code can be merged. Pull requests require three passing checks: all unit tests must execute successfully with no failures, linting must complete without blocking violations, and builds must produce valid artifacts. GitHub branch protection rules prevent merging pull requests with failing checks, ensuring that the main branch maintains consistent quality standards.\newline
+
+The test requirement validates functional correctness through the comprehensive unit test suites documented in Section~\ref{sec:implementation}. Test failures indicate regression or incomplete implementation, requiring correction before merge. The fast test execution (under 2 minutes total across all services) provides rapid feedback without impeding development velocity.\newline
+
+The linting requirement catches style violations, potential bugs, and code quality issues before code review. Frontend linting failures block merges, enforcing consistent React and TypeScript patterns. Backend linting (Checkstyle for Java, Ruff for Python) runs with \texttt{continue-on-error: true}, generating reports without blocking merges. This pragmatic configuration acknowledges that style consistency matters but should not prevent delivery of correct functionality. Teams review linting reports during sprint retrospectives, gradually improving code quality through focused refactoring efforts.\newline
+
+The build requirement validates that code compiles, dependencies resolve, and packaging succeeds. Build failures indicate missing dependencies, syntax errors, or configuration issues that would prevent deployment. Successful builds produce Docker images or application artifacts ready for deployment.\newline
+
+These automated quality gates reduce manual review burden by catching objective issues (syntax errors, test failures, obvious style violations) before human reviewers examine code. Reviewers focus on architectural decisions, business logic correctness, and maintainability rather than mechanical issues the CI pipeline detects automatically.
+
+\subsubsection{Testing Standards and Coverage}
+
+The testing strategy documented in Section~\ref{sec:implementation} establishes standards for test organization, naming, and coverage. Each service includes unit tests for business logic components with comprehensive scenario coverage including success paths, error handling, validation failures, and edge cases.\newline
+
+Test organization follows consistent patterns across languages. Python tests use pytest with class-based grouping organizing related scenarios. Java tests use JUnit 5 with similar class organization and descriptive method names. Test fixture management through pytest fixtures and test data builders ensures consistent, maintainable test data across scenarios.\newline
+
+Test naming conventions emphasize clarity over brevity. Test method names describe the scenario and expected outcome: \texttt{test\_create\_professor\_success}, \nolinkurl{test\_create\_professor\_duplicate\_email}. This naming pattern makes test failures immediately understandable without examining test code, accelerating debugging.\newline
+
+Mock objects simulate external dependencies (databases, repositories) enabling fast, isolated unit tests. The consistent use of mocks across tests maintains test independence—tests can run in any order without side effects. This isolation supports parallel test execution and reliable CI pipeline results.
+
+\subsubsection{Impact on Development Workflow}
+
+The implemented quality standards and automation significantly impact development efficiency and code quality outcomes. Automated linting catches common mistakes during development before commit, reducing the cost of fixes. IDE integration with ESLint, Checkstyle, and Ruff provides real-time feedback, enabling developers to address issues immediately rather than discovering them in CI failures.\newline
+
+Comprehensive README documentation reduces setup friction. Clear instructions with copy-paste commands enable productive contribution within hours rather than days. API documentation through OpenAPI specifications reduces communication overhead—developers reference interactive documentation rather than asking colleagues about endpoint behaviors.\newline
+
+The layered architecture and clear package structure enforced through conventions reduce cognitive load when navigating unfamiliar code. Developers can predict where functionality resides based on architectural patterns, accelerating debugging and feature development. The consistent structure across services (frontend, authentication backend, business logic backend) enables knowledge transfer—patterns learned in one service apply to others.\newline
+
+Quality gates in the CI/CD pipeline maintain baseline quality without manual enforcement. Developers receive automated feedback rather than depending on manual code review to catch mechanical issues. This automation frees reviewers to focus on higher-level concerns: architectural decisions, business logic correctness, performance implications and security considerations.\newline
+
+The balance between strict enforcement (tests must pass, frontend must lint clean) and pragmatic warnings (backend linting non-blocking) acknowledges that different violation types have different impacts. Functional defects prevent deployment; style inconsistencies reduce maintainability but should not block progress. This focus approach maintains velocity while gradually improving quality metrics.
 
 % ======================================================================
 \section{Results and Discussion}
