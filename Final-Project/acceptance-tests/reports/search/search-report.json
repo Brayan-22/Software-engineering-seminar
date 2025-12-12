@@ -1,0 +1,277 @@
+[
+  {
+    "description": "  As a general system user\n  I want to search for courses taught by a specific professor and vice versa\n  So that I can access accurate and useful academic information",
+    "elements": [
+      {
+        "description": "",
+        "id": "search-courses-by-professor-and-professors-by-course;search-courses-by-professor-name",
+        "keyword": "Scenario",
+        "line": 6,
+        "name": "Search courses by professor name",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 684169699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the user is on the search page",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 193989700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "the user enters a professor's name",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:25"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 659292599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "the system must display all courses taught by that professor",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:31"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 7357100
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 109074500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "search-courses-by-professor-and-professors-by-course;search-professors-by-course-name",
+        "keyword": "Scenario",
+        "line": 11,
+        "name": "Search professors by course name",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 656978200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "the user is on the search page",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:21"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 213513699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "the user enters one course name",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:43"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 647030299
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 14,
+            "name": "the system must display all professors assigned to those courses",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:49"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 18323600
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 106878200
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "search-courses-by-professor-and-professors-by-course;partial-and-case-insensitive-match",
+        "keyword": "Scenario",
+        "line": 16,
+        "name": "Partial and case-insensitive match",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 661658999
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 17,
+            "name": "the user types an incomplete or lowercase search term",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:63"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 848437600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 18,
+            "name": "the system processes the query",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:70"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 215900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 19,
+            "name": "the results must still match relevant professors or courses",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:74"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6513300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 108952699
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "search-courses-by-professor-and-professors-by-course;show-message-when-no-results-are-found",
+        "keyword": "Scenario",
+        "line": 21,
+        "name": "Show message when no results are found",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 644929000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 22,
+            "name": "the user enters a search term with no matches",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:93"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 866909900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 23,
+            "name": "the search is submitted",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:100"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 431699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 24,
+            "name": "the system must display a friendly “No results found” message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\search.steps.js:104"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6823500
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 144512800
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "search-courses-by-professor-and-professors-by-course",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Search courses by professor and professors by course",
+    "tags": [],
+    "uri": "features\\search.feature"
+  }
+]

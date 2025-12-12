@@ -1,0 +1,36 @@
+services:
+  java-backend:
+    image: java-backend:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: java-backend
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    depends_on:
+      - java-backend-db
+    networks:
+      - java-backend-network
+  java-backend-db:
+    image: mysql:8.0
+    container_name: java-backend-db
+    env_file:
+      - .env
+    volumes:
+      - ./init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - java-backend-network
+
+volumes:
+  db_data:
+networks:
+  java-backend-network:
+    driver: bridge

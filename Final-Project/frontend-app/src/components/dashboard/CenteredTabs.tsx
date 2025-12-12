@@ -1,0 +1,37 @@
+import { useState } from 'react';
+import { Box } from '@mui/material';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+
+import { CoursesTab } from "../dashboard/tabs/CoursesTab"
+import { ProfessorsTab } from './tabs/ProfessorsTab';
+import { AssignmentsTab } from './tabs/AssignmentsTab';
+export const CenteredTabs = () => {
+    const [value, setValue] = useState(0);
+
+    const handleChange = (_: unknown, newValue: number) => {
+        setValue(newValue);
+    };
+
+    return (
+        <Box sx={{
+            width: '100%',
+            bgcolor: 'background.paper',
+            borderRadius: "16px"
+        }}>
+            <Tabs value={value} onChange={handleChange} centered>
+                <Tab label="Show Courses" data-testid="tab-courses" />
+                <Tab label="Show Professors" data-testid="tab-professors" />
+                <Tab label="Assignments" data-testid="tab-assignments" />
+
+            </Tabs>
+
+            {/* Contenido dinámico según tab */}
+            <Box sx={{ p: 3 }}>
+                {value === 0 && <CoursesTab></CoursesTab>}
+                {value === 1 && <ProfessorsTab></ProfessorsTab>}
+                {value === 2 && <AssignmentsTab></AssignmentsTab>}
+            </Box>
+        </Box>
+    );
+}

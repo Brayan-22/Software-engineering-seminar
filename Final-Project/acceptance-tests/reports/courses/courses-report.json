@@ -1,0 +1,395 @@
+[
+  {
+    "description": "  As a system administrator\n  I want to add new subjects including name, description, and relevant details\n  So that the academic offerings remain updated for all users",
+    "elements": [
+      {
+        "description": "",
+        "id": "registration-of-new-subjects;access-the-subject-registration-form",
+        "keyword": "Scenario",
+        "line": 6,
+        "name": "Access the subject registration form",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 836456600
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 7,
+            "name": "the administrator is logged in",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:18"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1077473900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 8,
+            "name": "the administrator accesses the main panel",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:24"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 23055900
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 9,
+            "name": "the system must display the \"Register Subject\" form option for courses",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:203"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 234294800
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 113928399
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-subjects;register-a-subject-with-valid-data",
+        "keyword": "Scenario",
+        "line": 11,
+        "name": "Register a subject with valid data",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 660934100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 12,
+            "name": "the administrator is on the subject registration form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:48"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1480313799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 13,
+            "name": "all required fields are filled with valid information for course",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:121"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1987715799
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 14,
+            "name": "the administrator submits the form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 871476499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 15,
+            "name": "the system must display a success confirmation message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:54"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 18899499
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 16,
+            "name": "the new subject must appear in the general list without reloading the page",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:208"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 6954999
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 580391700
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-subjects;validate-required-fields",
+        "keyword": "Scenario",
+        "line": 18,
+        "name": "Validate required fields",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 908754700
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 19,
+            "name": "the administrator is on the subject registration form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:48"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1527665899
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 20,
+            "name": "required fields are left empty for course",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:133"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 40880100
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 21,
+            "name": "the administrator submits the form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:28"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 614668200
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 22,
+            "name": "the system must display validation messages for missing fields",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:76"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 16567300
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 527197500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-subjects;prevent-duplicate-subjects",
+        "keyword": "Scenario",
+        "line": 24,
+        "name": "Prevent duplicate subjects",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 737948300
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 25,
+            "name": "a subject with the same name already exists",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:53"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 5024990699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 26,
+            "name": "the administrator attempts to register the same subject again",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:139"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 4941837400
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 27,
+            "name": "the system must prevent the creation and show an error message",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\common.steps.js:100"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 35255799
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 484281500
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      },
+      {
+        "description": "",
+        "id": "registration-of-new-subjects;register-subject-with-an-assigned-teacher",
+        "keyword": "Scenario",
+        "line": 29,
+        "name": "Register subject with an assigned teacher",
+        "steps": [
+          {
+            "keyword": "Before",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 631234000
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "line": 30,
+            "name": "an existing teacher is available in the system",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:88"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1574281800
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "line": 31,
+            "name": "the administrator assigns this teacher to the new subject",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:165"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 2366581599
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "line": 32,
+            "name": "submits the form",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:196"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 1923362699
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "line": 33,
+            "name": "the relationship must be correctly stored in the database",
+            "match": {
+              "location": "file:\\C:\\Users\\Santiago%20Rios\\Documents\\GitHub\\Software-engineering-seminar\\Workshop-4\\frontend-tests\\steps\\courses.steps.js:217"
+            },
+            "result": {
+              "status": "passed",
+              "duration": 11719000
+            }
+          },
+          {
+            "keyword": "After",
+            "hidden": true,
+            "result": {
+              "status": "passed",
+              "duration": 105670399
+            }
+          }
+        ],
+        "tags": [],
+        "type": "scenario"
+      }
+    ],
+    "id": "registration-of-new-subjects",
+    "line": 1,
+    "keyword": "Feature",
+    "name": "Registration of new subjects",
+    "tags": [],
+    "uri": "features\\courses.feature"
+  }
+]

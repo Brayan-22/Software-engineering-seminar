@@ -1,0 +1,106 @@
+version: '3.8'
+
+services:
+  java-backend-db:
+    image: mysql:8.0
+    container_name: java-backend-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-rootpassword}
+      MYSQL_DATABASE: ${MYSQL_DATABASE:-java-backend-db}
+      MYSQL_USER: ${MYSQL_USER:-authuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-authpassword}
+    volumes:
+      - ./java-backend/init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER:-authuser}", "-p${MYSQL_PASSWORD:-authpassword}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workshop-network
+
+  java-backend:
+    build:
+      context: ./java-backend
+      dockerfile: Dockerfile
+    image: java-backend:latest
+    container_name: java-backend
+    restart: unless-stopped
+    environment:
+      MYSQL_URL: jdbc:mysql://java-backend-db:3306/${MYSQL_DATABASE:-java-backend-db}?allowPublicKeyRetrieval=true&useSSL=false
+      MYSQL_USER: ${MYSQL_USER:-authuser}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD:-authpassword}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-mysecretkey}
+    depends_on:
+      java-backend-db:
+        condition: service_healthy
+    networks:
+      - workshop-network
+
+  python-backend-db:
+    image: postgres:15-alpine
+    container_name: python-backend-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-coursefinderdb}
+      POSTGRES_USER: ${DATABASE_USER:-courseuser}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:-coursepassword}
+    volumes:
+      - ./python-backend/init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql:ro
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-courseuser} -d ${DATABASE_NAME:-coursefinderdb}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - workshop-network
+
+  python-backend:
+    build:
+      context: ./python-backend
+      dockerfile: Dockerfile
+    image: python-backend:latest
+    container_name: python-backend
+    restart: unless-stopped
+    environment:
+      DATABASE_USER: ${DATABASE_USER:-courseuser}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:-coursepassword}
+      DATABASE_HOST: python-backend-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: ${DATABASE_NAME:-coursefinderdb}
+      DEBUG: ${DEBUG:-False}
+    volumes:
+      - ./python-backend/keys:/app/keys:ro
+    depends_on:
+      python-backend-db:
+        condition: service_healthy
+    networks:
+      - workshop-network
+
+  frontend:
+    build:
+      context: ./frontend-app
+      dockerfile: Dockerfile
+    image: frontend:latest
+    container_name: frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - java-backend
+      - python-backend
+    networks:
+      - workshop-network
+
+volumes:
+  mysql_data:
+    driver: local
+  postgres_data:
+    driver: local
+
+networks:
+  workshop-network:
+    driver: bridge

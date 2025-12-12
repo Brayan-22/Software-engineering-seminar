@@ -1,0 +1,57 @@
+version: '3.8'
+services:
+  java-backend:
+    image: java-backend:latest
+    env_file:
+      - .env
+    depends_on:
+      - java-backend-db
+    networks:
+      - java-backend-network
+      - reverse_proxy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+        delay: 10s
+        max_attempts: 5
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.java-backend.entrypoints=websecure"
+        - "traefik.http.routers.java-backend.tls.certresolver=production"
+        - "traefik.http.routers.java-backend.tls=true"
+        - "traefik.http.routers.java-backend.rule=Host(`authbackbs.glud.org`)"
+        - "traefik.http.routers.java-backend.service=java-backend"
+        - "traefik.http.services.java-backend.loadbalancer.server.port=8080"
+  java-backend-db:
+    image: mysql:8.0
+    env_file:
+      - .env
+    volumes:
+      - ./init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql
+      - db_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "${MYSQL_USER}", "-p${MYSQL_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - java-backend-network
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+volumes:
+  db_data:
+networks:
+  java-backend-network:
+    driver: overlay
+  reverse_proxy:
+    external: true

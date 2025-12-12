@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+  python-backend:
+    image: python-backend:latest
+    env_file:
+      - .env
+    depends_on:
+      - python-backend-db
+    command: uvicorn src.main:app --host 0.0.0.0 --port 8000
+    networks:
+      - backend-network
+      - reverse_proxy
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=reverse_proxy"
+        - "traefik.http.routers.python-backend.entrypoints=websecure"
+        - "traefik.http.routers.python-backend.tls.certresolver=production"
+        - "traefik.http.routers.python-backend.tls=true"
+        - "traefik.http.routers.python-backend.rule=Host(`coursefinderbs.glud.org`)"
+        - "traefik.http.routers.python-backend.service=python-backend"
+        - "traefik.http.services.python-backend.loadbalancer.server.port=8000"
+  python-backend-db:
+    image: postgres:15-alpine
+    env_file:
+      - .env
+    networks:
+      - backend-network
+    volumes:
+      - ./init_db_scripts/schema_db.sql:/docker-entrypoint-initdb.d/schema_db.sql:ro
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: on-failure
+      placement:
+        constraints:
+          - node.role == manager
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  backend-network:
+    driver: overlay
+  reverse_proxy:
+    external: true

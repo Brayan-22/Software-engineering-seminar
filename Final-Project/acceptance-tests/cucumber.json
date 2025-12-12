@@ -1,0 +1,55 @@
+{
+  "default": {
+    "paths": [
+      "features"
+    ],
+    "require": [
+      "support/world.js",
+      "support/hooks.js",
+      "steps/*.steps.js"
+    ]
+  },
+  "courses": {
+    "paths": [
+      "features/courses.feature"
+    ],
+    "require": [
+      "support/world.js",
+      "support/hooks.js",
+      "steps/common.steps.js",
+      "steps/courses.steps.js"
+    ]
+  },
+  "professors": {
+    "paths": [
+      "features/professors.feature"
+    ],
+    "require": [
+      "support/world.js",
+      "support/hooks.js",
+      "steps/common.steps.js",
+      "steps/professors.steps.js"
+    ]
+  },
+  "assignments": {
+    "paths": [
+      "features/assignments.feature"
+    ],
+    "require": [
+      "support/world.js",
+      "support/hooks.js",
+      "steps/common.steps.js",
+      "steps/assignments.steps.js"
+    ]
+  },
+  "search": {
+    "paths": [
+      "features/search.feature"
+    ],
+    "require": [
+      "support/world.js",
+      "support/hooks.js",
+      "steps/search.steps.js"
+    ]
+  }
+}
