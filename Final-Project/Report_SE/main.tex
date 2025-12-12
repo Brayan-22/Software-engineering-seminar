@@ -963,26 +963,46 @@ Quality gates in the CI/CD pipeline maintain baseline quality without manual enf
 The balance between strict enforcement (tests must pass, frontend must lint clean) and pragmatic warnings (backend linting non-blocking) acknowledges that different violation types have different impacts. Functional defects prevent deployment; style inconsistencies reduce maintainability but should not block progress. This focus approach maintains velocity while gradually improving quality metrics.
 
 % ======================================================================
-\section{Results and Discussion}
+\section{Tests Results and Discussion}
 \label{sec:results}
 The outcomes of Workshops~1 and~2 have established a solid analytical foundation for the project. The main deliverables include the problem definition, user stories with acceptance criteria, CRC cards, architectural and deployment diagrams, and early Web UI mockups. These artifacts provide a coherent view of the system’s objectives and structure, enabling the team to validate the feasibility of the proposed solution before implementation.
 
+\subsection{Unit Tests}
 
-\subsection{Testing Results} 
-% Unit test results, integration test results,
+Unit testing was carried out to ensure that the internal logic of both backends behaved correctly before validating full workflows or applying high-load scenarios. These tests help identify faults early and guarantee that each component performs as expected in isolation.
 
-\subsubsection{Unit tests}
+\subsubsection{Java Backend}
+
+The Java backend corresponds to the authentication service, responsible only for processing login requests and validating tokens. Due to its limited scope, the unit tests covered both endpoints, verifying proper credential handling, expected responses, and correct validation behavior.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{media/unit_tests_results/java-results.png}
+    \caption{Unit test results for the authentication backend.}
+\end{figure}
+
+\subsubsection{Python Backend}
+
+The Python backend represents the core business service, handling all remaining operations: courses, professors, assignments, and search functionality. Unit tests focused on validating internal functions, controllers, and expected behaviors for key operations.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.85\textwidth]{media/unit_tests_results/python-results.png}
+    \caption{Unit test results for the business logic backend.}
+\end{figure}
+
+\subsubsection{General Overview}
+
+In both backends, the unit tests were concise yet sufficient to cover the critical behaviors of each module. All tests passed successfully, confirming that the internal services operate correctly and providing a stable baseline for subsequent validation stages.
 
 
-\subsubsection{End-to-End Tests with Cucumber}
-
-\paragraph{Purpose and Rationale}
+\subsection{End-to-End Tests with Cucumber}
 End-to-end testing was selected as the primary method for validating the system from the perspective of a real user. These tests operate as acceptance tests, ensuring that the application behaves correctly across full workflows rather than isolated components. By combining Cucumber (for behavior-driven specification) with Playwright (for browser automation), the team validated both functional correctness and consistency of the user experience. This approach provides traceability from requirements to executable scenarios, improving confidence in the final product’s readiness.
 
-\paragraph{Testing Approach}
+\subsubsection{Testing Approach}
 The E2E test suite was structured using Gherkin-based feature files, where each scenario describes user actions and expected system responses. The test plan focused on the core administrative operations of the platform: managing courses, handling professor data, creating assignments, and using the search functionality. For each feature, a dedicated step-definition file was implemented, linking the natural-language steps to automated Playwright interactions. This structure ensures clarity, maintainability, and full coverage of critical workflows.
 
-\paragraph{Implemented Feature Files}
+\subsubsection{Implemented Feature Files}
 The following feature files were created to cover the main functional areas of the system:
 
 \begin{itemize}
@@ -994,7 +1014,7 @@ The following feature files were created to cover the main functional areas of t
 
 Each feature file contains multiple scenarios using the \texttt{Given–When–Then} notation, capturing typical and boundary interactions an administrator would perform.
 
-\paragraph{Execution Summary}
+\subsubsection{Execution Summary}
 All scenarios across the four feature files were executed using Playwright’s automated browser environment. The system responded consistently according to the acceptance criteria, and all tests completed without failures. The following figures summarize the execution output for each feature:
 
 \begin{itemize}
@@ -1033,12 +1053,8 @@ All scenarios across the four feature files were executed using Playwright’s a
 
 The successful execution of all end-to-end scenarios demonstrates that the system delivers a consistent and reliable user experience across its core administrative workflows. By validating complete interactions rather than isolated components, these acceptance tests confirm that the platform behaves as expected from the client’s perspective. The coverage achieved through the implemented feature files strengthens confidence in the product’s functional quality and ensures that the delivered solution aligns with the operational requirements and expectations defined for the final system.
 
-
-\subsection{System Performance Evaluation} 
-% Response times, throughput, scalability analysis
-
-\subsubsection{API Stress Tests}
-The system consists of two distinct backends: one dedicated solely to authentication and the other handling the core business logic, including courses, professors, assignments, and search functionalities. The authentication backend is designed to handle a minimal load, as it is only invoked during login attempts, typically by a single administrator at any given time. Consequently, this backend does not require extensive stress testing due to its limited usage.
+\subsection{System Performance Evaluation}
+To evaluate the performance and scalability of the system’s APIs, a series of stress tests were executed using Apache JMeter. The system consists of two distinct backends: one dedicated solely to authentication and the other handling the core business logic, including courses, professors, assignments, and search functionalities. The authentication backend is designed to handle a minimal load, as it is only invoked during login attempts, typically by a single administrator at any given time. Consequently, this backend does not require extensive stress testing due to its limited usage.
 
 On the other hand, the business logic backend plays a crucial role in the day-to-day operation of the system. It handles high-frequency requests related to courses, professor data, assignment management, and search functionality. Given the complexity and volume of requests this backend must manage, it is critical to ensure that it can scale effectively under heavy load.
 
@@ -1058,13 +1074,11 @@ Together, these two Thread Groups formed a comprehensive test plan that captured
 
 \begin{figure}[H]
 	\centering
-	\includegraphics[width=0.5\textwidth]{stress_tests_results/tests-plan.png}
+	\includegraphics[width=0.3\textwidth]{stress_tests_results/tests-plan.png}
 	\caption{JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}
 \end{figure}
 
-\paragraph{Stress Testing the Business Logic Backend}
 The test plan focused on simulating 15,000 simultaneous users performing various operations on the business logic backend. These included submitting course enrollments, querying professor data, creating assignments, and executing search queries. Performance metrics such as response time, throughput, and failure rates were closely monitored to identify any potential bottlenecks or areas of improvement.
-
 
 The results of these tests provide valuable insights into how the system behaves under extreme conditions and highlight areas where optimization may be needed.
 
@@ -1074,36 +1088,45 @@ The stress test produced three key performance metrics: average response times, 
 During the execution, the search endpoint showed a significantly high average response time of approximately 23 seconds. A similar delay was also observed in the login request, despite serving a much smaller load. This behavior is likely due to both backends being deployed on the same local machine, which was limited to 8 GB of RAM and a 4–core processor. Under these hardware constraints, resource contention between the services can lead to increased latency. The remaining operations from the business logic backend exhibited variable performance but followed the same pattern of degradation as the load increased.
 
 The following figures summarize the results obtained from the test runs:
-\subparagraph{Average Response Time}
-The average response time for the search endpoint showed a significant increase, reaching approximately 23 seconds under peak load. A similar delay was observed in login requests, likely due to both backends being hosted on the same machine with limited hardware resources (8 GB RAM and 4 CPU cores). Other operations from the business logic backend also exhibited elevated response times, though none as drastic as the search endpoint.
+\begin{itemize}
+    \item \textbf{Average Response Time}\\
+    The average response time for the search endpoint showed a significant increase, reaching approximately 23 seconds under peak load. A similar delay was observed in login requests, likely due to both backends being hosted on the same machine with limited hardware resources (8 GB RAM and 4 CPU cores). Other operations from the business logic backend also exhibited elevated response times, though none as drastic as the search endpoint.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{media/stress_tests_results/average.png}
-    \caption{Average response time recorded across all tested endpoints under peak load.}
-\end{figure}
-\subparagraph{Minimum and Maximum Response Times}
-The minimum and maximum response times displayed the expected variance under heavy stress. Search requests showed the highest spread, with some responses completing relatively fast at low concurrency levels while others spiked significantly as the system became saturated. The remaining operations followed a more stable pattern but still showed noticeable delays as load increased.
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/stress_tests_results/average.png}
+        \caption{Average response time recorded across all tested endpoints under peak load.}
+    \end{figure}
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{media/stress_tests_results/minmax.png}
-    \caption{Minimum and maximum response times observed during the stress test.}
-\end{figure}
-\subparagraph{Throughput}
-Throughput analysis revealed that the search endpoint reached a maximum processing capacity of approximately 240 requests per second before performance degraded. All other operations remained far below this threshold, averaging under 1 request per second, which aligns with their lower expected usage and the system’s resource limitations.
+    \item \textbf{Minimum and Maximum Response Times}\\
+    The minimum and maximum response times displayed the expected variance under heavy stress. Search requests showed the highest spread, with some responses completing relatively fast at low concurrency levels while others spiked significantly as the system became saturated. The remaining operations followed a more stable pattern but still showed noticeable delays as load increased.
 
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.85\textwidth]{media/stress_tests_results/throughput.png}
-    \caption{Throughput measured during the execution of the stress test.}
-\end{figure}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/stress_tests_results/minmax.png}
+        \caption{Minimum and maximum response times observed during the stress test.}
+    \end{figure}
+
+    \item \textbf{Throughput}\\
+    Throughput analysis revealed that the search endpoint reached a maximum processing capacity of approximately 240 requests per second before performance degraded. All other operations remained far below this threshold, averaging under 1 request per second, which aligns with their lower expected usage and the system’s resource limitations.
+
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.85\textwidth]{media/stress_tests_results/throughput.png}
+        \caption{Throughput measured during the execution of the stress test.}
+    \end{figure}
+\end{itemize}
 
 The stress test results reveal significant performance limitations in the current deployment environment, particularly in scenarios that resemble real peak usage. The most critical finding is the excessive average response time for the search endpoint, which reached approximately 23 seconds under load. In a real university enrollment period, such delays would be unacceptable, as users expect the system to respond quickly and consistently while handling thousands of simultaneous operations. The low throughput for most endpoints—especially those outside the search functionality—further indicates that the system is not prepared to operate efficiently under high concurrency conditions.
 
 These findings must be interpreted in the context of the deployment infrastructure used during testing. Both backends were hosted on the same machine with only 8 GB of RAM and 4 CPU cores, creating an unavoidable bottleneck that affected all measurements. While the architecture of the system may still require optimization, the hardware limitations heavily constrained its ability to scale and respond to concurrent requests. Therefore, the results should not be viewed as an absolute measure of backend capability, but rather as evidence of the need for stronger infrastructure, load distribution, and possibly architectural adjustments before the system can meet real-world demand during high-traffic academic periods.
 \subsection{Achievement of Objectives}
 % Comparación con objetivos iniciales, qué se logró
+The project goals were met across design, implementation, and validation. The system’s architecture and functionalities were specified with enough detail to support reliable search, management, and maintenance of course and instructor information. The development roadmap aligned with the problem context and stakeholder needs, guiding the project through iterative construction and testing.
+
+The baseline analysis of context, stakeholders, and scope proved effective, establishing shared terminology and a consistent framework for decision-making during development.
+
+All testing stages supported the achievement of these objectives. Unit tests confirmed the correctness of core logic and data handling. Acceptance tests verified that key user workflows behaved as expected and matched stakeholder requirements. Stress tests revealed performance limits and validated the system’s reliability under load, confirming that the design is robust while also highlighting areas for future optimization.
 
 \section{Limitations and Lessons Learned}
 % Limitaciones encontradas, aprendizajes del equipo
@@ -1125,8 +1148,27 @@ For future work, several avenues for enhancement and investigation remain. The m
   \item[API] Application Programming Interface.
   \item[CI/CD] Continuous Integration / Continuous Deployment.
   \item[JWT] JSON Web Token.
-  \item[CRC] Class - Responsability - Collaboration Cards
+  \item[CRC] Class–Responsibility–Collaboration Cards.
+  \item[Backend] Server-side components responsible for business logic, data processing, and system operations.
+  \item[Frontend] Client-side interface that users interact with directly.
+  \item[BDD] Behavior-Driven Development, an approach that uses natural-language scenarios to define expected behavior.
+  \item[UML] Unified Modeling Language, a standardized notation for modeling software systems.
+  \item[Use Case] A description of system behavior from the perspective of an actor interacting with the system.
+  \item[Stakeholder] Any individual or group affected by or interested in the system.
+  \item[Requirement] A documented need or expectation that the system must satisfy.
+  \item[Functional Requirement] A specification of system behavior or functionality.
+  \item[Non-functional Requirement] Constraints on system qualities such as performance, usability, security, or reliability.
+  \item[Refactoring] Improving internal code structure without altering external behavior.
+  \item[Unit Test] A test that verifies the behavior of an isolated function or module.
+  \item[Integration Test] A test focused on validating interactions between multiple components.
+  \item[End-to-End Test] A test that validates full workflows from the perspective of the final user.
+  \item[Throughput] The number of requests a system can process per unit of time.
+  \item[Latency] The time it takes for a system to respond to a request.
+  \item[Load Testing] Evaluation of system behavior under expected or peak workload conditions.
+  \item[Scalability] The system’s ability to handle increasing workload by adding resources.
+  \item[Data Model] The logical structure used to organize and manage data within a system.
 \end{description}
+
 
 
 \end{document}
