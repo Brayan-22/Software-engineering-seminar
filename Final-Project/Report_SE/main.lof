@@ -22,13 +22,13 @@
 \contentsline {figure}{\numberline {21}{\ignorespaces Recent workflow runs showing successful and failed executions with duration times ranging from 1 minute 8 seconds to 1 minute 19 seconds.}}{50}{figure.caption.44}%
 \contentsline {figure}{\numberline {22}{\ignorespaces Pull request checks showing parallel workflow execution with 2 failing checks (Frontend), 1 skipped check (Frontend Build), and 2 successful checks (Java Backend, Python Backend).}}{51}{figure.caption.45}%
 \contentsline {figure}{\numberline {23}{\ignorespaces Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}}{54}{figure.caption.46}%
-\contentsline {figure}{\numberline {24}{\ignorespaces Unit test results for the authentication backend.}}{60}{figure.caption.48}%
-\contentsline {figure}{\numberline {25}{\ignorespaces Unit test results for the business logic backend.}}{61}{figure.caption.49}%
-\contentsline {figure}{\numberline {26}{\ignorespaces Execution results for \texttt {courses.feature}}}{63}{figure.caption.50}%
-\contentsline {figure}{\numberline {27}{\ignorespaces Execution results for \texttt {professors.feature}}}{63}{figure.caption.51}%
-\contentsline {figure}{\numberline {28}{\ignorespaces Execution results for \texttt {assignments.feature}}}{63}{figure.caption.52}%
-\contentsline {figure}{\numberline {29}{\ignorespaces Execution results for \texttt {search.feature}}}{64}{figure.caption.53}%
-\contentsline {figure}{\numberline {30}{\ignorespaces JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}}{66}{figure.caption.54}%
-\contentsline {figure}{\numberline {31}{\ignorespaces Average response time recorded across all tested endpoints under peak load.}}{67}{figure.caption.55}%
-\contentsline {figure}{\numberline {32}{\ignorespaces Minimum and maximum response times observed during the stress test.}}{68}{figure.caption.56}%
-\contentsline {figure}{\numberline {33}{\ignorespaces Throughput measured during the execution of the stress test.}}{68}{figure.caption.57}%
+\contentsline {figure}{\numberline {24}{\ignorespaces Unit test results for the authentication backend.}}{59}{figure.caption.48}%
+\contentsline {figure}{\numberline {25}{\ignorespaces Unit test results for the business logic backend.}}{60}{figure.caption.49}%
+\contentsline {figure}{\numberline {26}{\ignorespaces Execution results for \texttt {courses.feature}}}{61}{figure.caption.50}%
+\contentsline {figure}{\numberline {27}{\ignorespaces Execution results for \texttt {professors.feature}}}{62}{figure.caption.51}%
+\contentsline {figure}{\numberline {28}{\ignorespaces Execution results for \texttt {assignments.feature}}}{62}{figure.caption.52}%
+\contentsline {figure}{\numberline {29}{\ignorespaces Execution results for \texttt {search.feature}}}{62}{figure.caption.53}%
+\contentsline {figure}{\numberline {30}{\ignorespaces JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}}{64}{figure.caption.54}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Average response time recorded across all tested endpoints under peak load.}}{65}{figure.caption.55}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Minimum and maximum response times observed during the stress test.}}{66}{figure.caption.56}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Throughput measured during the execution of the stress test.}}{67}{figure.caption.57}%
