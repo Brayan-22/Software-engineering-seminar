@@ -379,4 +379,4 @@ By combining these practices, the project achieved reproducible deployments, rel
 *Universidad Distrital Francisco José de Caldas*
 *Systems Engineering Program*
 *Software Engineering Seminar*
-*Bogotá D.C., Colombia - November 29, 2025*
+*Bogotá D.C., Colombia - December 11, 2025*
