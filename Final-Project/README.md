@@ -358,6 +358,8 @@ All components of the system—including the Java backend, Python backend, and f
 ### Acceptance Testing with Cucumber
 Frontend acceptance tests were implemented using Cucumber to validate critical user stories. The **Create Professor** feature illustrated how administrators interact with the system, covering scenarios such as form access, valid teacher registration, required field validation, and duplicate prevention. Although some steps failed, the test provided valuable feedback on UI behavior and set a foundation for future automated frontend validations.
 
+### Stress Testing With Jmeter
+
 ### CI/CD Pipeline
 A modular CI/CD pipeline using GitHub Actions was created for the entire project. Each service—frontend, Java backend, and Python backend—has dedicated workflows for installing dependencies, running tests, and building Docker images. A unified workflow was also implemented to ensure system-wide integrity. This setup enforces consistent quality, detects regressions early, and streamlines deployment processes.
 
