@@ -27,14 +27,15 @@
 \contentsline {figure}{\numberline {26}{\ignorespaces Pipeline performance metrics showing 42-second average runtime, 2-second queue time, 31\% failure rate, and 4 minutes consumed by failed jobs.}}{55}{figure.caption.49}%
 \contentsline {figure}{\numberline {27}{\ignorespaces Recent workflow runs showing successful and failed executions with duration times ranging from 1 minute 8 seconds to 1 minute 19 seconds.}}{55}{figure.caption.50}%
 \contentsline {figure}{\numberline {28}{\ignorespaces Pull request checks showing parallel workflow execution with 2 failing checks (Frontend), 1 skipped check (Frontend Build), and 2 successful checks (Java Backend, Python Backend).}}{56}{figure.caption.51}%
-\contentsline {figure}{\numberline {29}{\ignorespaces Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}}{59}{figure.caption.52}%
-\contentsline {figure}{\numberline {30}{\ignorespaces Unit test results for the authentication backend.}}{64}{figure.caption.54}%
-\contentsline {figure}{\numberline {31}{\ignorespaces Unit test results for the business logic backend.}}{65}{figure.caption.55}%
-\contentsline {figure}{\numberline {32}{\ignorespaces Execution results for \texttt {courses.feature}}}{66}{figure.caption.56}%
-\contentsline {figure}{\numberline {33}{\ignorespaces Execution results for \texttt {professors.feature}}}{67}{figure.caption.57}%
-\contentsline {figure}{\numberline {34}{\ignorespaces Execution results for \texttt {assignments.feature}}}{67}{figure.caption.58}%
-\contentsline {figure}{\numberline {35}{\ignorespaces Execution results for \texttt {search.feature}}}{67}{figure.caption.59}%
-\contentsline {figure}{\numberline {36}{\ignorespaces JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}}{69}{figure.caption.60}%
-\contentsline {figure}{\numberline {37}{\ignorespaces Average response time recorded across all tested endpoints under peak load.}}{70}{figure.caption.61}%
-\contentsline {figure}{\numberline {38}{\ignorespaces Minimum and maximum response times observed during the stress test.}}{71}{figure.caption.62}%
-\contentsline {figure}{\numberline {39}{\ignorespaces Throughput measured during the execution of the stress test.}}{72}{figure.caption.63}%
+\contentsline {figure}{\numberline {29}{\ignorespaces High-level architecture of the Jenkins deployment pipeline integrating with GitHub Actions CI and target environments.}}{57}{figure.caption.52}%
+\contentsline {figure}{\numberline {30}{\ignorespaces Java backend package structure organized by technical layers: config, controller, dto, entity, repository, security, and service.}}{59}{figure.caption.53}%
+\contentsline {figure}{\numberline {31}{\ignorespaces Unit test results for the authentication backend.}}{65}{figure.caption.55}%
+\contentsline {figure}{\numberline {32}{\ignorespaces Unit test results for the business logic backend.}}{65}{figure.caption.56}%
+\contentsline {figure}{\numberline {33}{\ignorespaces Execution results for \texttt {courses.feature}}}{67}{figure.caption.57}%
+\contentsline {figure}{\numberline {34}{\ignorespaces Execution results for \texttt {professors.feature}}}{67}{figure.caption.58}%
+\contentsline {figure}{\numberline {35}{\ignorespaces Execution results for \texttt {assignments.feature}}}{67}{figure.caption.59}%
+\contentsline {figure}{\numberline {36}{\ignorespaces Execution results for \texttt {search.feature}}}{68}{figure.caption.60}%
+\contentsline {figure}{\numberline {37}{\ignorespaces JMeter test plan structure showing the two Thread Groups used for administrator workflows and high-load search endpoint stress testing.}}{70}{figure.caption.61}%
+\contentsline {figure}{\numberline {38}{\ignorespaces Average response time recorded across all tested endpoints under peak load.}}{71}{figure.caption.62}%
+\contentsline {figure}{\numberline {39}{\ignorespaces Minimum and maximum response times observed during the stress test.}}{72}{figure.caption.63}%
+\contentsline {figure}{\numberline {40}{\ignorespaces Throughput measured during the execution of the stress test.}}{72}{figure.caption.64}%

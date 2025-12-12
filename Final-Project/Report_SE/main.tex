@@ -929,6 +929,15 @@ The continuous deployment pipeline extends beyond GitHub Actions to include Jenk
 
 Jenkins deployment pipelines handle environment-specific configuration, secret injection, database migrations, health checks, and rollback procedures. The deployment automation reduces manual errors, accelerates release cycles, and provides audit trails for compliance and troubleshooting. Detailed deployment workflows and infrastructure specifications will be documented in subsequent project phases as the deployment architecture matures.\newline
 
+Figure~\ref{fig:jenkins_deployment} illustrates the high-level architecture of the Jenkins deployment pipeline integrating with the GitHub Actions CI pipeline and target deployment environments.
+
+\begin{figure}[H]  % Capital H forces exact placement (requires \usepackage{float})
+    \centering
+    \includegraphics[width=0.9\textwidth]{jenkins_deploys.png}
+    \caption{High-level architecture of the Jenkins deployment pipeline integrating with GitHub Actions CI and target environments.}
+    \label{fig:jenkins_deployment}
+\end{figure}
+
 \subsubsection{Benefits and Impact of CI/CD Implementation}
 
 The implemented CI/CD pipeline provides significant benefits to the development process. Automated testing catches defects within minutes of code changes, dramatically reducing the feedback cycle compared to manual testing. Parallel job execution across multiple services optimizes total pipeline time, providing rapid feedback without sacrificing thoroughness. Path-based filtering and dependency caching minimize unnecessary work, conserving CI resources and reducing costs.\newline

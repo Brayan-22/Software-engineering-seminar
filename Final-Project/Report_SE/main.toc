@@ -64,27 +64,27 @@
 \contentsline {subsubsection}{\numberline {5.2.6}Container Orchestration with Docker Compose}{53}{subsubsection.5.2.6}%
 \contentsline {subsubsection}{\numberline {5.2.7}Pipeline Performance and Reliability Metrics}{54}{subsubsection.5.2.7}%
 \contentsline {subsubsection}{\numberline {5.2.8}Continuous Deployment with Jenkins}{56}{subsubsection.5.2.8}%
-\contentsline {subsubsection}{\numberline {5.2.9}Benefits and Impact of CI/CD Implementation}{56}{subsubsection.5.2.9}%
-\contentsline {subsection}{\numberline {5.3}Code Quality and Standards}{57}{subsection.5.3}%
-\contentsline {subsubsection}{\numberline {5.3.1}Frontend Code Standards}{57}{subsubsection.5.3.1}%
-\contentsline {subsubsection}{\numberline {5.3.2}Authentication Backend Code Standards}{58}{subsubsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.3}Business logic Backend Code Standards}{59}{subsubsection.5.3.3}%
-\contentsline {subsubsection}{\numberline {5.3.4}Documentation Standards and API Specification}{60}{subsubsection.5.3.4}%
-\contentsline {subsubsection}{\numberline {5.3.5}Automated Quality Gates and Enforcement}{61}{subsubsection.5.3.5}%
-\contentsline {subsubsection}{\numberline {5.3.6}Testing Standards and Coverage}{62}{subsubsection.5.3.6}%
+\contentsline {subsubsection}{\numberline {5.2.9}Benefits and Impact of CI/CD Implementation}{57}{subsubsection.5.2.9}%
+\contentsline {subsection}{\numberline {5.3}Code Quality and Standards}{58}{subsection.5.3}%
+\contentsline {subsubsection}{\numberline {5.3.1}Frontend Code Standards}{58}{subsubsection.5.3.1}%
+\contentsline {subsubsection}{\numberline {5.3.2}Authentication Backend Code Standards}{59}{subsubsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.3}Business logic Backend Code Standards}{60}{subsubsection.5.3.3}%
+\contentsline {subsubsection}{\numberline {5.3.4}Documentation Standards and API Specification}{61}{subsubsection.5.3.4}%
+\contentsline {subsubsection}{\numberline {5.3.5}Automated Quality Gates and Enforcement}{62}{subsubsection.5.3.5}%
+\contentsline {subsubsection}{\numberline {5.3.6}Testing Standards and Coverage}{63}{subsubsection.5.3.6}%
 \contentsline {subsubsection}{\numberline {5.3.7}Impact on Development Workflow}{63}{subsubsection.5.3.7}%
 \contentsline {section}{\numberline {6}Tests Results and Discussion}{64}{section.6}%
 \contentsline {subsection}{\numberline {6.1}Unit Tests}{64}{subsection.6.1}%
 \contentsline {subsubsection}{\numberline {6.1.1}Java Backend}{64}{subsubsection.6.1.1}%
-\contentsline {subsubsection}{\numberline {6.1.2}Python Backend}{64}{subsubsection.6.1.2}%
+\contentsline {subsubsection}{\numberline {6.1.2}Python Backend}{65}{subsubsection.6.1.2}%
 \contentsline {subsubsection}{\numberline {6.1.3}General Overview}{65}{subsubsection.6.1.3}%
 \contentsline {subsection}{\numberline {6.2}End-to-End Tests with Cucumber}{65}{subsection.6.2}%
-\contentsline {subsubsection}{\numberline {6.2.1}Testing Approach}{65}{subsubsection.6.2.1}%
-\contentsline {subsubsection}{\numberline {6.2.2}Implemented Feature Files}{65}{subsubsection.6.2.2}%
+\contentsline {subsubsection}{\numberline {6.2.1}Testing Approach}{66}{subsubsection.6.2.1}%
+\contentsline {subsubsection}{\numberline {6.2.2}Implemented Feature Files}{66}{subsubsection.6.2.2}%
 \contentsline {subsubsection}{\numberline {6.2.3}Execution Summary}{66}{subsubsection.6.2.3}%
 \contentsline {subsection}{\numberline {6.3}System Performance Evaluation}{68}{subsection.6.3}%
 \contentsline {subsubsection}{\numberline {6.3.1}Stress Testing Scenario}{68}{subsubsection.6.3.1}%
-\contentsline {subsubsection}{\numberline {6.3.2}Test Plan Design with JMeter}{68}{subsubsection.6.3.2}%
+\contentsline {subsubsection}{\numberline {6.3.2}Test Plan Design with JMeter}{69}{subsubsection.6.3.2}%
 \contentsline {subsubsection}{\numberline {6.3.3}Stress Testing Results}{70}{subsubsection.6.3.3}%
-\contentsline {subsection}{\numberline {6.4}Achievement of Objectives}{72}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.4}Achievement of Objectives}{73}{subsection.6.4}%
 \contentsline {section}{\numberline {7}Conclusions}{73}{section.7}%
