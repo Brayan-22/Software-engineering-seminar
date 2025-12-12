@@ -1,5 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1765560611.94246 "main.tex" "main.pdf" "main" 1765560614.83744 2
+["pdflatex"] 1765563963.85833 "/home/alejandro/Documentos/personal/seminario/repoDuplicado/Final-Project/Report_SE/main.tex" "main.pdf" "main" 1765563965.34514 0
+  "/home/alejandro/Documentos/personal/seminario/repoDuplicado/Final-Project/Report_SE/main.tex" 1765563963.63758 142825 5284f0d3ec45e628ea36c3b5238d72f0 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1755987285 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/share/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc" 1755987285 3031 6c4d3515bf7115d8518af1c9ab97ca44 ""
   "/usr/share/texmf-dist/fonts/tfm/jknappen/ec/ecrm1200.tfm" 1755987285 3584 f80ddd985bd00e29e9a6047ebd9d4781 ""
@@ -125,12 +126,12 @@
   "/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map" 1765553241 5306876 69c328245ae101f6bc10b01e1f2bf9d5 ""
   "/var/lib/texmf/web2c/pdftex/pdflatex.fmt" 1765553477 2008236 2fefcb49a215fcecc022b1c4a0f719a0 ""
   "5. WebUI MockUps.pdf" 1765487819.78629 14823980 f36f0f53ab6ffc73563112069d59e9ff ""
-  "main.aux" 1765560614.73205 27180 64f05f91e9d2b9b171bc6c47ac6b088d "pdflatex"
-  "main.lof" 1765560614.73538 6494 1fbc115216d5d944f8ec60a21bc174b7 "pdflatex"
-  "main.lot" 1765560614.73538 922 2283a35153e32be21608502427c0a956 "pdflatex"
-  "main.out" 1765560614.73538 14284 b04b56e842d781187a97886264b1cf4a "pdflatex"
-  "main.tex" 1765560609.44873 135301 761b2de1d9de75dcf52002e48d8c871d ""
-  "main.toc" 1765560614.73538 8600 72dd52139e40a07ee269b0f3195ef6b8 "pdflatex"
+  "main.aux" 1765563965.24424 27734 deddf3f6acf4f72e95070008d73c4193 "pdflatex"
+  "main.lof" 1765563965.24424 6494 1fbc115216d5d944f8ec60a21bc174b7 "pdflatex"
+  "main.lot" 1765563965.24424 922 2283a35153e32be21608502427c0a956 "pdflatex"
+  "main.out" 1765563965.24424 15198 83fb511e28a6673ca94aeccd82e04f17 "pdflatex"
+  "main.tex" 1765563963.63758 142825 5284f0d3ec45e628ea36c3b5238d72f0 ""
+  "main.toc" 1765563965.24424 8990 0a40fffb842e159192fa99e5e4e3cf0d "pdflatex"
   "media/assignment_create.jpeg" 1765519226.14386 104859 a1a46f46c49631caa1fdb048d0c9751b ""
   "media/auth_login_request.png" 1765519226.14386 21284 3dc5ce45b2088df7148a2ac7df9bac10 ""
   "media/auth_login_response.png" 1765519226.1472 62370 f837b097d4dc105abd70fb0b5b22c5ca ""
