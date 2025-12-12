@@ -678,9 +678,176 @@ Test results are reported through the GitHub Actions interface, with detailed lo
 
 Local development environments support test execution through simple commands (\texttt{pytest} for Python unit tests, \texttt{mvn test} for Java unit tests, \texttt{npm run test:cucumber} for acceptance tests), enabling developers to validate changes before committing. Mock-based unit tests execute extremely quickly in local environments, supporting test-driven development workflows even for components with complex dependencies.
 
-\subsection{CI/CD Pipeline}  
-% GitHub Actions workflow, Docker containerization,
-% automated testing, deployment process
+\subsection{CI/CD Pipeline}
+
+The Course Finder platform implements a comprehensive Continuous Integration and Continuous Deployment (CI/CD) pipeline using GitHub Actions for automated testing and building, with Jenkins handling deployment orchestration. This automated pipeline ensures code quality, catches defects early, and accelerates the development cycle by providing rapid feedback on every code change. The pipeline architecture follows modern DevOps practices including containerization with Docker, parallel job execution, and infrastructure as code principles.
+
+\subsubsection{Pipeline Architecture and Workflow Organization}
+
+The CI/CD infrastructure consists of four GitHub Actions workflows organized by component and responsibility. Table~\ref{tab:cicd_workflows} summarizes the workflow structure and execution triggers.\newline
+
+\begin{table}[htbp]
+	\centering
+	\caption{GitHub Actions Workflows Configuration}
+	\label{tab:cicd_workflows}
+	\small
+	\begin{tabular}{@{}lp{4cm}p{4.5cm}@{}}
+		\toprule
+		\textbf{Workflow} & \textbf{Triggers} & \textbf{Components} \\ 
+		\midrule
+		Workshop 4 - CI Pipeline & Push/PR to main, master, develop; Manual dispatch & All three services (parallel execution) \\
+		Workshop 4 - Frontend CI & Push/PR affecting frontend paths; Manual dispatch & Lint → Build (sequential) \\
+		Workshop 4 - Java Backend CI & Push/PR affecting Java backend paths; Manual dispatch & Test, Lint (parallel) → Build \\
+		Workshop 4 - Python Backend CI & Push/PR affecting Python backend paths; Manual dispatch & Test, Lint (parallel) → Build \\
+		\bottomrule
+	\end{tabular}
+\end{table}
+
+The primary workflow (\texttt{Workshop 4 - CI Pipeline}) executes all service pipelines in parallel when changes affect the \texttt{Workshop-4/} directory, providing comprehensive validation across the entire application stack. Individual service workflows target specific paths, triggering only when relevant code changes, optimizing CI resource usage and execution time. All workflows support manual triggering through \texttt{workflow\_dispatch}, enabling on-demand validation and testing.\newline
+
+Path-based filtering ensures efficient resource utilization by preventing unnecessary builds. For example, changes exclusively to frontend code trigger only the frontend workflow, while changes to shared configuration or multiple components trigger the comprehensive pipeline. This selective execution reduces average pipeline time and GitHub Actions compute minutes consumption.
+
+\subsubsection{Frontend Pipeline}
+
+The frontend pipeline builds and validates the React-based user interface through two sequential stages: linting and building. The pipeline uses Node.js 18 with npm caching to accelerate dependency installation across workflow runs.\newline
+
+The lint stage executes ESLint with the project's configured rules, validating code style consistency, identifying potential bugs through static analysis, and enforcing React best practices. ESLint checks cover JavaScript syntax errors, unused variables, improper hook usage, and accessibility violations. Failed linting blocks the build stage, ensuring that only style-compliant code progresses through the pipeline.\newline
+
+The build stage compiles the React application using Vite, producing an optimized production bundle with minified JavaScript, CSS extraction, and asset optimization. The build process validates that all imports resolve correctly, TypeScript types compile without errors, and environment variable references are satisfied. Successful builds generate distributable artifacts in the \texttt{dist/} directory ready for containerization.\newline
+
+Figure~\ref{fig:frontend_pipeline_metrics} shows the performance metrics for the frontend workflows. The average execution time of 35 seconds makes this the fastest component in the pipeline, with the majority of time spent on dependency installation and Vite compilation. The 67\% failure rate reflects active development with frequent linting issues that are caught and corrected before merge.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{frontend_pipeline_metrics.png}
+	\caption{Frontend CI workflow performance metrics showing average run time of 35 seconds and 67\% job failure rate primarily due to linting violations caught during development.}
+	\label{fig:frontend_pipeline_metrics}
+\end{figure}
+
+\subsubsection{Java Backend Pipeline - Authentication Service}
+
+The Java backend pipeline validates the Spring Boot authentication service through three stages: testing, static analysis, and building. The pipeline uses JDK 21 with Maven caching for dependency management.\newline
+
+The test stage executes JUnit 5 unit tests in an environment with a containerized MySQL 8.0 database service. GitHub Actions services provide the MySQL instance with health checks ensuring database readiness before test execution. Tests run with environment variables configuring test database connection parameters and JWT secret keys. The Maven command \texttt{mvn test} executes the complete test suite covering authentication logic, password encoding, JWT generation, and repository operations.\newline
+
+The static analysis stage runs Maven Checkstyle with the project's configured ruleset. Checkstyle validates Java code formatting, naming conventions, import organization, and complexity metrics. The stage uses \texttt{continue-on-error: true}, treating Checkstyle violations as warnings rather than blocking failures. This configuration acknowledges that style violations are less critical than functional defects while still providing visibility into code quality trends.\newline
+
+The build stage compiles the application and packages it as an executable JAR file using \texttt{mvn clean package -DskipTests}. The \texttt{-DskipTests} flag prevents redundant test execution since tests already ran in the dedicated test stage. The resulting JAR includes all dependencies and Spring Boot's embedded Tomcat server, producing a self-contained artifact ready for containerization.\newline
+
+Figure~\ref{fig:java_pipeline_metrics} illustrates the Java backend pipeline performance. The average execution time of 1 minute 11 seconds primarily reflects Maven dependency resolution and test execution against the MySQL container. The 67\% failure rate indicates active development with test failures caught during feature implementation before code review.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.85\textwidth]{java_pipeline_metrics.png}
+	\caption{Java backend CI workflow performance metrics showing average run time of 1 minute 11 seconds and 67\% job failure rate reflecting test failures during development.}
+	\label{fig:java_pipeline_metrics}
+\end{figure}
+
+\subsubsection{Python Backend Pipeline - Business Logic Service}
+
+The Python backend pipeline validates the FastAPI business logic service through testing, linting, and building stages. The pipeline uses Python 3.11 with Poetry for dependency management and a containerized PostgreSQL 15 database for testing.\newline
+
+The test stage installs Poetry, creates the project's virtual environment, generates temporary RSA key pairs for JWT operations, and executes pytest against a PostgreSQL container. The database service includes health checks ensuring PostgreSQL readiness before test execution. Tests run with environment variables configuring database connection parameters. The \texttt{poetry run pytest tests/} command discovers and executes all test modules covering service layer operations, repository interactions, and schema validations.\newline
+
+The lint stage runs Pylint with the project's configuration, analyzing code quality, detecting potential errors, and enforcing PEP 8 style guidelines. Similar to the Java pipeline, Pylint uses \texttt{continue-on-error: true}, treating style violations as non-blocking warnings. This pragmatic approach prioritizes functional correctness while maintaining visibility into code quality metrics.\newline
+
+The build stage uses \texttt{poetry build} to create distributable Python wheel and source distribution packages. While these packages are not directly deployed (the Docker image includes source code instead), the build validates that the project structure is correct and dependencies are properly declared in \texttt{pyproject.toml}.\newline
+
+Performance metrics for the Python backend show reasonable execution times balanced against thorough validation. The testing stage including PostgreSQL initialization, Poetry environment setup, and test execution completes within acceptable timeframes for developer feedback.
+
+\subsubsection{Containerization with Docker}
+
+Each service includes a multi-stage Dockerfile optimizing for image size, build speed, and security. The multi-stage approach separates build dependencies from runtime requirements, significantly reducing final image sizes and attack surfaces.
+
+\paragraph{Python Backend Dockerfile}
+
+The Python backend uses a two-stage build process based on \texttt{python:3.11-slim}. The builder stage installs Poetry, system build dependencies (gcc, libpq-dev), and project dependencies in a virtual environment. Poetry's configuration creates the virtual environment within the project directory ((\nolinkurl{POETRY_VIRTUALENVS_IN_PROJECT=1})), simplifying the copy to the runtime stage.\newline
+
+The runtime stage uses a fresh \texttt{python:3.11-slim} base, copies only the virtual environment from the builder (avoiding Poetry and build tools), installs runtime system packages (libpq5 for PostgreSQL client), and creates a non-root user (\texttt{appuser}) for security. The \texttt{HEALTHCHECK} directive defines an endpoint for container orchestration to monitor service health. The final image exposes port 8000 and starts the application with Uvicorn ASGI server.
+
+\paragraph{Java Backend Dockerfile}
+
+The Java backend uses \texttt{maven:\allowbreak 3.9.11-\allowbreak amazoncorretto-\allowbreak 25-\allowbreak alpine} for building and \texttt{amazoncorretto:25-alpine} for runtime. The builder stage copies the POM file, downloads dependencies (cached by Maven), copies source code, and packages the application with \texttt{mvn clean package -DskipTests}. This ordering maximizes Docker layer caching—dependency layers rebuild only when POM changes.\newline
+
+The runtime stage copies only the JAR file from the builder, avoiding Maven, source code, and build artifacts in the final image. Amazon Corretto provides an optimized OpenJDK distribution with performance improvements and long-term support. The image exposes port 8080 and uses \texttt{ENTRYPOINT} to start the Spring Boot application.
+
+\paragraph{Frontend Dockerfile}
+
+The frontend uses \texttt{node:18-alpine} for building and \texttt{nginx:alpine} for serving. The builder stage installs dependencies, copies source code, and executes \texttt{npm run build} to generate the production Vite bundle. The runtime stage uses Nginx Alpine (a minimal 20MB base image) to serve static files efficiently.\newline
+
+The Dockerfile copies the Vite output (\texttt{dist/}) to Nginx's HTML root and applies a custom \texttt{nginx.conf} configuring routing, caching headers, and compression. This approach produces extremely small images (under 50MB) optimized for serving static content with high performance and low resource consumption.
+
+\subsubsection{Container Orchestration with Docker Compose}
+
+The \texttt{docker-compose.yml} file orchestrates all services and their dependencies for local development and testing environments. The composition includes five services: two databases (MySQL, PostgreSQL), two backend services, and the frontend, all connected through a custom bridge network.\newline
+
+Database services use official images (mysql:8.0, postgres:15-alpine) with environment variables configuring credentials, persistent volumes for data durability, and health checks ensuring readiness before dependent services start. The MySQL service mounts an initialization script (\texttt{schema\_db.sql}) automatically creating the authentication database schema. Similarly, the PostgreSQL service initializes the business logic database schema.\newline
+
+Backend services depend on their respective databases with \texttt{condition: service\_healthy}, ensuring proper startup ordering. The Java backend connects to MySQL using JDBC, while the Python backend connects to PostgreSQL using asyncpg. Both services receive database connection parameters and secrets through environment variables, supporting the twelve-factor app configuration methodology.\newline
+
+The frontend service depends on both backends and exposes port 80, providing the entry point for browser access. The custom bridge network (\texttt{workshop-network}) enables service discovery through DNS—services reference each other by container name (e.g., \texttt{java-backend-db:3306}) rather than IP addresses.\newline
+
+Named volumes (\texttt{mysql\_data}, \texttt{postgres\_data}) persist database state across container restarts, preventing data loss during development. Environment variables use defaults with override capability through \texttt{.env} files, supporting different configurations for development, testing, and production environments.
+
+\subsubsection{Pipeline Performance and Reliability Metrics}
+
+GitHub Actions Insights provides comprehensive metrics tracking pipeline performance and reliability. Figure~\ref{fig:pipeline_usage_metrics} shows the aggregate usage across all workflows for the current month.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{pipeline_usage_metrics.png}
+	\caption{GitHub Actions usage metrics showing 16 total minutes consumed and 13 job runs across all workflows in the current month.}
+	\label{fig:pipeline_usage_metrics}
+\end{figure}
+
+The metrics reveal efficient resource utilization with 16 total minutes across 13 job runs, averaging approximately 1.2 minutes per job. This efficiency results from path-based filtering, parallel job execution, and aggressive caching strategies. The primary workflow (\texttt{workshop4-ci.yml}) accounts for 12 minutes across 3 runs (4 minutes average), while individual service workflows consume less time due to focused scope.\newline
+
+Figure~\ref{fig:pipeline_performance_metrics} presents detailed performance metrics including average job run time (42 seconds), average queue time (2 seconds), job failure rate (31\%), and failed job usage (4 minutes).\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{pipeline_performance_metrics.png}
+	\caption{Pipeline performance metrics showing 42-second average runtime, 2-second queue time, 31\% failure rate, and 4 minutes consumed by failed jobs.}
+	\label{fig:pipeline_performance_metrics}
+\end{figure}
+
+The 31\% overall failure rate reflects normal development activity where code changes trigger pipeline runs that may fail due to test failures, linting violations, or build errors. Failed jobs are caught before code review and merge, fulfilling the primary purpose of continuous integration: detecting defects early when they are cheapest to fix. The majority of failures occur during active feature development, with the failure rate dropping significantly as code approaches merge readiness.\newline
+
+Figure~\ref{fig:workflow_runs} shows the recent workflow execution history with status indicators. The mix of successful (green checkmarks) and failed (red X marks) runs demonstrates the pipeline's effectiveness at catching issues during development while allowing clean code to proceed.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.9\textwidth]{workflow_runs.png}
+	\caption{Recent workflow runs showing successful and failed executions with duration times ranging from 1 minute 8 seconds to 1 minute 19 seconds.}
+	\label{fig:workflow_runs}
+\end{figure}
+
+Figure~\ref{fig:pr_checks} illustrates the pull request check status for a specific commit. Multiple workflow checks run in parallel, with clear status indicators showing which checks passed (Java Backend, Python Backend) and which failed (Frontend, Frontend Lint). This granular feedback enables developers to identify and address specific issues quickly.\newline
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[width=0.7\textwidth]{pr_checks.png}
+	\caption{Pull request checks showing parallel workflow execution with 2 failing checks (Frontend), 1 skipped check (Frontend Build), and 2 successful checks (Java Backend, Python Backend).}
+	\label{fig:pr_checks}
+\end{figure}
+
+Pull requests cannot be merged until all required checks pass, enforcing code quality gates and preventing regression. This protection mechanism ensures that the main branch maintains a stable, deployable state at all times.
+
+\subsubsection{Continuous Deployment with Jenkins}
+
+The continuous deployment pipeline extends beyond GitHub Actions to include Jenkins-based deployment orchestration. Jenkins monitors the repository for successful builds on the main branch and triggers automated deployment workflows. The deployment infrastructure leverages the Docker images produced by the CI pipeline, deploying containerized services to target environments.\newline
+
+Jenkins deployment pipelines handle environment-specific configuration, secret injection, database migrations, health checks, and rollback procedures. The deployment automation reduces manual errors, accelerates release cycles, and provides audit trails for compliance and troubleshooting. Detailed deployment workflows and infrastructure specifications will be documented in subsequent project phases as the deployment architecture matures.\newline
+
+\subsubsection{Benefits and Impact of CI/CD Implementation}
+
+The implemented CI/CD pipeline provides significant benefits to the development process. Automated testing catches defects within minutes of code changes, dramatically reducing the feedback cycle compared to manual testing. Parallel job execution across multiple services optimizes total pipeline time, providing rapid feedback without sacrificing thoroughness. Path-based filtering and dependency caching minimize unnecessary work, conserving CI resources and reducing costs.\newline
+
+The pipeline enforces quality gates through required status checks on pull requests, preventing low-quality code from reaching the main branch. Developers receive immediate, actionable feedback through GitHub's UI, enabling quick iteration and correction. The combination of unit tests, linting, and build validation ensures multiple layers of quality control without requiring manual intervention.\newline
+
+Containerization through Docker provides consistency across development, testing, and production environments, eliminating "works on my machine" issues. Docker Compose simplifies local development setup, enabling new team members to start contributing quickly. The multi-stage Dockerfile approach balances build convenience with production image efficiency and security.\newline
+
+The CI/CD infrastructure serves as the foundation for continuous delivery practices, enabling the team to deploy changes rapidly and reliably. As the project matures, additional stages including integration testing, security scanning, and automated deployment to staging environments can be integrated into the existing pipeline structure without fundamental architectural changes.
 
 \subsection{Code Quality and Standards}
 % Code coverage, linting, code reviews
